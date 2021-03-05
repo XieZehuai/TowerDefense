@@ -1,0 +1,117 @@
+fileFormatVersion: 2
+guid: 68adbdd63629d40429abbe979d07013b
+timeCreated: 1465271204
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Gatling
+    100002: //RootNode
+    100004: Gatling_Turret
+    100006: Gatling_Upgrade_Armor
+    100008: Gatling_Upgrade_Gun
+    100010: Gatling_Upgrade_Range
+    100012: Gatling_Up_Aim
+    100014: Gatling_Up_Armor
+    100016: Gatling_Up_Gun
+    400000: Gatling
+    400002: //RootNode
+    400004: Gatling_Turret
+    400006: Gatling_Upgrade_Armor
+    400008: Gatling_Upgrade_Gun
+    400010: Gatling_Upgrade_Range
+    400012: Gatling_Up_Aim
+    400014: Gatling_Up_Armor
+    400016: Gatling_Up_Gun
+    2300000: Gatling
+    2300002: //RootNode
+    2300004: Gatling_Turret
+    2300006: Gatling_Upgrade_Armor
+    2300008: Gatling_Upgrade_Gun
+    2300010: Gatling_Upgrade_Range
+    2300012: Gatling_Up_Aim
+    2300014: Gatling_Up_Armor
+    2300016: Gatling_Up_Gun
+    3300000: Gatling
+    3300002: //RootNode
+    3300004: Gatling_Turret
+    3300006: Gatling_Upgrade_Armor
+    3300008: Gatling_Upgrade_Gun
+    3300010: Gatling_Upgrade_Range
+    3300012: Gatling_Up_Aim
+    3300014: Gatling_Up_Armor
+    3300016: Gatling_Up_Gun
+    4300000: Gatling_Base
+    4300002: Gatling_Turret
+    4300004: Gatling
+    4300006: Gatling_Upgrade_Gun
+    4300008: Gatling_Upgrade_Range
+    4300010: Gatling_Upgrade_Armor
+    4300012: Gatling_Up_Gun
+    4300014: Gatling_Up_Aim
+    4300016: Gatling_Up_Armor
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
