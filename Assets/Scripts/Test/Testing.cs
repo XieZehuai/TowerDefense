@@ -1,6 +1,7 @@
 ﻿using System;
 using CodeMonkey.Utils;
 using UnityEngine;
+using TowerDefense;
 
 namespace TowerDefense.Test
 {
@@ -11,6 +12,11 @@ namespace TowerDefense.Test
         private void Awake()
         {
             grid = new Grid<int>(4, 2, 1);
+        }
+
+        private void Start()
+        {
+            UIManager.Instance.Open<UIMainScene>();
         }
 
         private void Update()

@@ -1,0 +1,1 @@
+UIMainScene=Prefab/UI/UIMainScene

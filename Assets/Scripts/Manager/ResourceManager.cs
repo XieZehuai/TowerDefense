@@ -33,7 +33,7 @@ namespace TowerDefense
         {
             if (!configMap.ContainsKey(name))
             {
-                Debug.Log("找不到资源文件对应的路径 " + name);
+                Debug.LogError("找不到资源文件对应的路径 " + name);
                 return null;
             }
 
