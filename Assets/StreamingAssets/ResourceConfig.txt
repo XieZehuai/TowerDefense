@@ -1,1 +1,6 @@
+DestinationPrefab=Prefab/GameScene/DestinationPrefab
+EmptyPrefab=Prefab/GameScene/EmptyPrefab
+RoadPrefab=Prefab/GameScene/RoadPrefab
+SpawnPointPrefab=Prefab/GameScene/SpawnPointPrefab
+WallPrefab=Prefab/GameScene/WallPrefab
 UIMainScene=Prefab/UI/UIMainScene

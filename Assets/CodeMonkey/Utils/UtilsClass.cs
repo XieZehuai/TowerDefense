@@ -319,7 +319,7 @@ namespace CodeMonkey.Utils
 
         public static Vector3 GetMouseWorldPosition(Vector2 screenPos)
         {
-            Vector3 pos = new Vector3(screenPos.x, screenPos.y, 10f);
+            Vector3 pos = new Vector3(screenPos.x, screenPos.y, 20f);
             return GetMouseWorldPositionWithZ(pos, Camera.main);
         }
 
