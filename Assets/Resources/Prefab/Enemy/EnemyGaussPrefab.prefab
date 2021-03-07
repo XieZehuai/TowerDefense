@@ -77,9 +77,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     id: 0
-    name: Gauss
+    name: EnemyGauss
     hp: 100
-    speed: 4
+    speed: 8
     armorType: 0
     model: {fileID: 731834149938668465}
 --- !u!1 &731834149938668465

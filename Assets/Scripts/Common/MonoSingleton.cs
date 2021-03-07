@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
+    /// <summary>
+    /// MonoBehaviour单例
+    /// </summary>
+    /// <typeparam name="T">必须传入继承自这个类的类本身</typeparam>
+    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
+        private static T instance;
+
         public static T Instance
         {
             get
@@ -18,8 +24,6 @@ namespace TowerDefense
                 return instance;
             }
         }
-
-        private static T instance;
 
         private void Awake()
         {
@@ -38,8 +42,6 @@ namespace TowerDefense
         /// <summary>
         /// 在单例初始化时调用
         /// </summary>
-        protected virtual void OnInit()
-        {
-        }
+        protected virtual void OnInit() { }
     }
 }

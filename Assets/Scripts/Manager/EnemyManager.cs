@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense
@@ -33,10 +31,6 @@ namespace TowerDefense
         public void SetPaths(List<Vector3>[] paths)
         {
             this.paths = paths;
-            foreach (var item in paths)
-            {
-                Debug.Log("起点" + item[0]);
-            }
         }
 
         private void CreateEnemy()
@@ -52,9 +46,13 @@ namespace TowerDefense
         {
             if (enemys.Count == 0) return;
 
-            foreach (var enemy in enemys)
+            for (int i = 0; i < enemys.Count; i++)
             {
-                enemy.OnUpdate();
+                if (!enemys[i].OnUpdate())
+                {
+                    ObjectPool.Instance.Unspawn(enemys[i].data.name, enemys[i].gameObject);
+                    enemys.QuickRemove(i--);
+                }
             }
         }
     }

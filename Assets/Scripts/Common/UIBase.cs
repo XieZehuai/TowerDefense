@@ -8,6 +8,9 @@ namespace TowerDefense
     }
 
 
+    /// <summary>
+    /// UI的基类
+    /// </summary>
     public abstract class UIBase : MonoBehaviour
     {
         public bool IsOpen { get; private set; } = false;
@@ -46,12 +49,26 @@ namespace TowerDefense
             OnClose();
         }
 
+        /// <summary>
+        /// 在UI被加载时调用
+        /// </summary>
+        /// <param name="uiData">要传递的参数</param>
         protected virtual void OnInit(UIDataBase uiData) { }
 
+        /// <summary>
+        /// 打开UI时调用
+        /// </summary>
+        /// <param name="uiData">要传递的参数</param>
         protected virtual void OnOpen(UIDataBase uiData) { }
 
+        /// <summary>
+        /// 隐藏UI时调用
+        /// </summary>
         protected virtual void OnHide() { }
 
+        /// <summary>
+        /// 关闭UI时调用
+        /// </summary>
         protected virtual void OnClose() { }
     }
 }

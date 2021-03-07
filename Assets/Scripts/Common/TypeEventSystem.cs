@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 基于类型的事件系统
+    /// </summary>
     public static class TypeEventSystem
     {
         // 以参数类型作为Key，用HashSet作为Value，保存每一种类型的事件

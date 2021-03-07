@@ -3,10 +3,14 @@ using System.Collections.Generic;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 优先队列
+    /// </summary>
+    /// <typeparam name="T">元素的类型，必须实现IComparable接口</typeparam>
     public class PriorityQueue<T> where T : IComparable<T>
     {
         private T[] datas; // 保存所有数据
-        private HashSet<T> set;
+        private readonly HashSet<T> set; // 用一个HashSet来保存所有元素，提高Contains判断的速度
 
         /// <summary>
         /// 创建一个容量为capacity的优先队列

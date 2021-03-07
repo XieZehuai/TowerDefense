@@ -27,11 +27,12 @@ namespace TowerDefense
 
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private EnemyData data;
+        public EnemyData data;
 
         private List<Vector3> path;
-        private int curr = 0;
-        private Vector3 direction = Vector3.zero;
+        private int curr;
+        private float distance = 0f;
+        private float progress = 0f;
 
         public void SetPath(List<Vector3> path)
         {
@@ -39,34 +40,36 @@ namespace TowerDefense
 
             this.path = path;
             transform.localPosition = path[0];
-            direction = path[1] - path[0];
-            direction = direction.normalized;
-            transform.LookAt(transform.localPosition + direction);
+            transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
+            distance = Vector3.Distance(path[1], path[0]);
             curr = 1;
         }
 
-        public void OnUpdate()
+        public bool OnUpdate()
         {
-            Move();
+            return Move();
         }
 
-        private void Move()
+        private bool Move()
         {
-            if (curr >= path.Count) return;
+            if (curr >= path.Count) return false;
 
-            transform.localPosition += direction * Time.deltaTime * data.speed;
+            progress += Time.deltaTime * data.speed;
+            transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance);
 
-            if (Vector3.Distance(transform.localPosition, path[curr]) < 0.1f)
+            if (progress >= distance)
             {
                 curr++;
+                progress = 0f;
+
                 if (curr < path.Count)
                 {
-                    direction = path[curr] - path[curr - 1];
-                    direction = direction.normalized;
-                    transform.LookAt(transform.localPosition + direction);
+                    distance = Vector3.Distance(path[curr], path[curr - 1]);
+                    transform.localRotation = Quaternion.LookRotation(path[curr] - path[curr - 1]);
                 }
             }
 
+            return true;
         }
     }
 }
