@@ -32,13 +32,15 @@ namespace TowerDefense
             else if (inactiveList.Count > 0)
             {
                 obj = inactiveList.First();
+                obj.SetActive(true);
                 obj.transform.SetParent(parent);
                 obj.transform.localPosition = pos;
                 obj.transform.localRotation = rot;
                 inactiveList.Remove(obj);
             }
 
-            activeList.Add(obj);
+            if (obj != null) activeList.Add(obj);
+
             return obj;
         }
 
@@ -101,17 +103,17 @@ namespace TowerDefense
 
         public GameObject Spawn(string tag)
         {
-            return Spawn(tag, Vector3.zero, Quaternion.identity, transform);
+            return Spawn(tag, Vector3.zero, Quaternion.identity, null);
         }
 
         public GameObject Spawn(string tag, Vector3 pos)
         {
-            return Spawn(tag, pos, Quaternion.identity, transform);
+            return Spawn(tag, pos, Quaternion.identity, null);
         }
 
         public GameObject Spawn(string tag, Vector3 pos, Quaternion rot)
         {
-            return Spawn(tag, pos, rot, transform);
+            return Spawn(tag, pos, rot, null);
         }
 
         public GameObject Spawn(string tag, Vector3 pos, Quaternion rot, Transform parent)

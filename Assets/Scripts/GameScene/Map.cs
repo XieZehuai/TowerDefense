@@ -228,6 +228,7 @@ namespace TowerDefense
             //obj.transform.localScale *= cellSize;
             //objs[x, y] = obj;
 
+            Debug.Log("加载模型" + type.ToString());
             Vector3 pos = GetWorldPosition(x, y);
             GameObject obj = ObjectPool.Instance.Spawn(type.ToString(), pos);
             obj.transform.localScale *= cellSize;
@@ -236,7 +237,7 @@ namespace TowerDefense
 
         private void UnloadModel(int x, int y)
         {
-            Debug.Log(GetGridType(x, y).ToString());
+            Debug.Log("回收模型" + GetGridType(x, y).ToString());
             ObjectPool.Instance.Unspawn(GetGridType(x, y).ToString(), objs[x, y]);
         }
 
