@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using CodeMonkey.Utils;
 
 namespace TowerDefense
 {
@@ -51,7 +50,7 @@ namespace TowerDefense
 
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 pos = UtilsClass.GetMouseWorldPosition(Input.mousePosition);
+                Vector3 pos = Utils.GetMousePosition();
                 map.SetGridType(pos, type);
             }
 
@@ -65,7 +64,7 @@ namespace TowerDefense
 
             if (Input.GetMouseButtonDown(2))
             {
-                Vector3 pos = UtilsClass.GetMouseWorldPosition(Input.mousePosition);
+                Vector3 pos = Utils.GetMousePosition();
                 Debug.Log(map.GetGridType(pos));
             }
         }

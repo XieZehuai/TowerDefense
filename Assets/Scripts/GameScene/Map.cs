@@ -160,7 +160,9 @@ namespace TowerDefense
                 spawnPoints.Remove(gridArray[x, y]);
             }
 
+            UnloadModel(x, y);
             gridArray[x, y].type = type;
+
             if (type == MapObjectType.SpawnPoint)
             {
                 spawnPoints.Add(gridArray[x, y]);
@@ -173,7 +175,6 @@ namespace TowerDefense
                 SetGridType(xTemp, yTemp, MapObjectType.Road);
             }
 
-            GameObject.Destroy(objs[x, y]);
             LoadModel(x, y, type);
         }
 
@@ -220,12 +221,23 @@ namespace TowerDefense
 
         private void LoadModel(int x, int y, MapObjectType type)
         {
-            string prefabName = type + "Prefab";
-            GameObject obj = ResourceManager.Load<GameObject>(prefabName);
+            //string prefabName = type + "Prefab";
+            //GameObject obj = ResourceManager.Load<GameObject>(prefabName);
+            //Vector3 pos = GetWorldPosition(x, y);
+            //obj = GameObject.Instantiate(obj, pos, Quaternion.identity, gridParent);
+            //obj.transform.localScale *= cellSize;
+            //objs[x, y] = obj;
+
             Vector3 pos = GetWorldPosition(x, y);
-            obj = GameObject.Instantiate(obj, pos, Quaternion.identity, gridParent);
+            GameObject obj = ObjectPool.Instance.Spawn(type.ToString(), pos);
             obj.transform.localScale *= cellSize;
             objs[x, y] = obj;
+        }
+
+        private void UnloadModel(int x, int y)
+        {
+            Debug.Log(GetGridType(x, y).ToString());
+            ObjectPool.Instance.Unspawn(GetGridType(x, y).ToString(), objs[x, y]);
         }
 
         public bool SetPath()

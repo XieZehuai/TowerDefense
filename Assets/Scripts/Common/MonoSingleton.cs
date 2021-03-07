@@ -9,15 +9,16 @@ namespace TowerDefense
         {
             get
             {
-                if (instance != null)
+                if (instance == null)
                 {
-                    return instance;
+                    GameObject obj = new GameObject(typeof(T).Name);
+                    obj.AddComponent(typeof(T));
                 }
 
-                throw new NullReferenceException("场景中没有" + typeof(T).ToString() + "对应的实例");
+                return instance;
             }
         }
-        
+
         private static T instance;
 
         private void Awake()
