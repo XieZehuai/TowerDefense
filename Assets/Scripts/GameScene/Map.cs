@@ -247,114 +247,123 @@ namespace TowerDefense
             }
         }
 
-        private bool FindPath(MapObject start, List<MapObject> path)
-        {
-            if (!IsWalkable(start)) return false;
+        #region 深度优先搜索寻路算法
+        // 基于深度优先搜索的寻路算法
+        //private bool FindPath(MapObject start, List<MapObject> path)
+        //{
+        //    if (!IsWalkable(start)) return false;
 
-            Queue<MapObject> queue = new Queue<MapObject>();
-            bool[,] hasSearch = new bool[width, height];
-            MapObject[,] edgeTo = new MapObject[width, height];
+        //    Queue<MapObject> queue = new Queue<MapObject>();
+        //    bool[,] hasSearch = new bool[width, height];
+        //    MapObject[,] edgeTo = new MapObject[width, height];
 
-            queue.Enqueue(start);
-            hasSearch[start.x, start.y] = true;
+        //    queue.Enqueue(start);
+        //    hasSearch[start.x, start.y] = true;
 
-            while (queue.Count > 0)
-            {
-                MapObject temp = queue.Dequeue();
-                Debug.Log(temp.type);
+        //    while (queue.Count > 0)
+        //    {
+        //        MapObject temp = queue.Dequeue();
+        //        Debug.Log(temp.type);
 
-                if (temp.type == MapObjectType.Destination)
-                {
-                    while (temp != start)
-                    {
-                        path.Add(temp);
-                        temp = edgeTo[temp.x, temp.y];
-                    }
+        //        if (temp.type == MapObjectType.Destination)
+        //        {
+        //            while (temp != start)
+        //            {
+        //                path.Add(temp);
+        //                temp = edgeTo[temp.x, temp.y];
+        //            }
 
-                    path.Add(start);
-                    return true;
-                }
+        //            path.Add(start);
+        //            return true;
+        //        }
 
-                int x = temp.x;
-                int y = temp.y;
+        //        int x = temp.x;
+        //        int y = temp.y;
 
-                bool left = IsWalkable(GetValue(x - 1, y));
-                bool right = IsWalkable(GetValue(x + 1, y));
-                bool up = IsWalkable(GetValue(x, y + 1));
-                bool down = IsWalkable(GetValue(x, y - 1));
-                bool leftDown = IsWalkable(GetValue(x - 1, y - 1));
-                bool rightDown = IsWalkable(GetValue(x + 1, y - 1));
-                bool leftUp = IsWalkable(GetValue(x - 1, y + 1));
-                bool rightUp = IsWalkable(GetValue(x + 1, y + 1));
+        //        bool left = IsWalkable(GetValue(x - 1, y));
+        //        bool right = IsWalkable(GetValue(x + 1, y));
+        //        bool up = IsWalkable(GetValue(x, y + 1));
+        //        bool down = IsWalkable(GetValue(x, y - 1));
+        //        bool leftDown = IsWalkable(GetValue(x - 1, y - 1));
+        //        bool rightDown = IsWalkable(GetValue(x + 1, y - 1));
+        //        bool leftUp = IsWalkable(GetValue(x - 1, y + 1));
+        //        bool rightUp = IsWalkable(GetValue(x + 1, y + 1));
 
-                if (x - 1 >= 0 && y - 1 >= 0 && !hasSearch[x - 1, y - 1] && left && down && leftDown)
-                {
-                    queue.Enqueue(GetValue(x - 1, y - 1));
-                    hasSearch[x - 1, y - 1] = true;
-                    edgeTo[x - 1, y - 1] = temp;
-                }
-                if (x + 1 < width && y - 1 >= 0 && !hasSearch[x + 1, y - 1] && right && down && rightDown)
-                {
-                    queue.Enqueue(GetValue(x + 1, y - 1));
-                    hasSearch[x + 1, y - 1] = true;
-                    edgeTo[x + 1, y - 1] = temp;
-                }
-                if (x - 1 >= 0 && y + 1 < height && !hasSearch[x - 1, y + 1] && left && up && leftUp)
-                {
-                    queue.Enqueue(GetValue(x - 1, y + 1));
-                    hasSearch[x - 1, y + 1] = true;
-                    edgeTo[x - 1, y + 1] = temp;
-                }
-                if (x + 1 < width && y + 1 < height && !hasSearch[x + 1, y + 1] && right && up && rightUp)
-                {
-                    queue.Enqueue(GetValue(x + 1, y + 1));
-                    hasSearch[x + 1, y + 1] = true;
-                    edgeTo[x + 1, y + 1] = temp;
-                }
-                if (x - 1 >= 0 && !hasSearch[x - 1, y] && left)
-                {
-                    queue.Enqueue(GetValue(x - 1, y));
-                    hasSearch[x - 1, y] = true;
-                    edgeTo[x - 1, y] = temp;
-                }
-                if (x + 1 < width && !hasSearch[x + 1, y] && right)
-                {
-                    queue.Enqueue(GetValue(x + 1, y));
-                    hasSearch[x + 1, y] = true;
-                    edgeTo[x + 1, y] = temp;
-                }
-                if (y - 1 >= 0 && !hasSearch[x, y - 1] && down)
-                {
-                    queue.Enqueue(GetValue(x, y - 1));
-                    hasSearch[x, y - 1] = true;
-                    edgeTo[x, y - 1] = temp;
-                }
-                if (y + 1 < height && !hasSearch[x, y + 1] && up)
-                {
-                    queue.Enqueue(GetValue(x, y + 1));
-                    hasSearch[x, y + 1] = true;
-                    edgeTo[x, y + 1] = temp;
-                }
-            }
+        //        if (x - 1 >= 0 && y - 1 >= 0 && !hasSearch[x - 1, y - 1] && left && down && leftDown)
+        //        {
+        //            queue.Enqueue(GetValue(x - 1, y - 1));
+        //            hasSearch[x - 1, y - 1] = true;
+        //            edgeTo[x - 1, y - 1] = temp;
+        //        }
+        //        if (x + 1 < width && y - 1 >= 0 && !hasSearch[x + 1, y - 1] && right && down && rightDown)
+        //        {
+        //            queue.Enqueue(GetValue(x + 1, y - 1));
+        //            hasSearch[x + 1, y - 1] = true;
+        //            edgeTo[x + 1, y - 1] = temp;
+        //        }
+        //        if (x - 1 >= 0 && y + 1 < height && !hasSearch[x - 1, y + 1] && left && up && leftUp)
+        //        {
+        //            queue.Enqueue(GetValue(x - 1, y + 1));
+        //            hasSearch[x - 1, y + 1] = true;
+        //            edgeTo[x - 1, y + 1] = temp;
+        //        }
+        //        if (x + 1 < width && y + 1 < height && !hasSearch[x + 1, y + 1] && right && up && rightUp)
+        //        {
+        //            queue.Enqueue(GetValue(x + 1, y + 1));
+        //            hasSearch[x + 1, y + 1] = true;
+        //            edgeTo[x + 1, y + 1] = temp;
+        //        }
+        //        if (x - 1 >= 0 && !hasSearch[x - 1, y] && left)
+        //        {
+        //            queue.Enqueue(GetValue(x - 1, y));
+        //            hasSearch[x - 1, y] = true;
+        //            edgeTo[x - 1, y] = temp;
+        //        }
+        //        if (x + 1 < width && !hasSearch[x + 1, y] && right)
+        //        {
+        //            queue.Enqueue(GetValue(x + 1, y));
+        //            hasSearch[x + 1, y] = true;
+        //            edgeTo[x + 1, y] = temp;
+        //        }
+        //        if (y - 1 >= 0 && !hasSearch[x, y - 1] && down)
+        //        {
+        //            queue.Enqueue(GetValue(x, y - 1));
+        //            hasSearch[x, y - 1] = true;
+        //            edgeTo[x, y - 1] = temp;
+        //        }
+        //        if (y + 1 < height && !hasSearch[x, y + 1] && up)
+        //        {
+        //            queue.Enqueue(GetValue(x, y + 1));
+        //            hasSearch[x, y + 1] = true;
+        //            edgeTo[x, y + 1] = temp;
+        //        }
+        //    }
 
-            Debug.Log("寻路失败");
-            return false;
-        }
+        //    Debug.Log("寻路失败");
+        //    return false;
+        //}
+        #endregion
 
+        // 判断目标格子是否可行走
         private bool IsWalkable(MapObject obj)
         {
             return obj != null && obj.IsWalkable();
         }
 
-        /***********************************************************
-         * A*寻路算法
-         ***********************************************************/
-
+        #region A*寻路算法
+        /// <summary>
+        /// A*寻路算法，寻路成功返回true并把路径保存到传入的path变量里
+        /// 寻路失败返回false，不改变path变量
+        /// </summary>
+        /// <param name="start">起点</param>
+        /// <param name="end">终点</param>
+        /// <param name="path">用于寻路成功时保存路径</param>
+        /// <returns>成功返回true，失败返回false</returns>
         private bool FindPath(MapObject start, MapObject end, ref List<MapObject> path)
         {
-            List<MapObject> openList = new List<MapObject>();
-            List<MapObject> closeList = new List<MapObject>();
-            MapObject[,] parents = new MapObject[width, height];
+            List<MapObject> openList = new List<MapObject>(); // 保存所有待寻路的节点（可用优先队列保存）
+            HashSet<MapObject> closeList = new HashSet<MapObject>(); // 保存所有已经寻路过的节点
+            MapObject[,] parents = new MapObject[width, height]; // 每个节点的父节点，构成一棵树，形成路径
             int[,] costG = new int[width, height]; // 保存起点到每个点的距离
             int[,] costH = new int[width, height]; // 保存每个点到终点的距离
 
@@ -365,6 +374,7 @@ namespace TowerDefense
             openList.Add(start);
             while (openList.Count > 0)
             {
+                // 找出最优节点，每次都从最优节点开始查找路径，最优节点为总距离及到终点距离最小的节点
                 MapObject curr = openList[0];
                 for (int i = 1; i < openList.Count; i++)
                 {
@@ -374,27 +384,34 @@ namespace TowerDefense
                     }
                 }
 
+                // 找到最优节点后，移动到closeList然后开始寻路
                 openList.Remove(curr);
                 closeList.Add(curr);
 
+                // 如果已经找到了终点，就获取路径并返回true
                 if (curr == end)
                 {
                     path = GetPathWithPos(parents, start, end);
                     return true;
                 }
 
+                // 遍历当前节点所有相邻并且可行走的节点
                 List<MapObject> neighbours = GetAroundGrid(curr);
                 foreach (MapObject node in neighbours)
                 {
-                    if (!node.IsWalkable() || closeList.Contains(node)) continue;
+                    // 跳过已经搜索过的节点
+                    if (closeList.Contains(node)) continue;
 
-                    int g = CostG(curr) + GetDistance(curr, node);
-                    bool hasSearch = openList.Contains(node);
+                    int g = CostG(curr) + GetDistance(curr, node); // 计算从起点到curr再到node的距离
+                    bool hasSearch = openList.Contains(node); // 判断node有没有被搜索过
+                    // 如果从起点到curr再到node的距离小于从起点到node的距离，
+                    // 或者node没有被搜索过，就更新node的路径，指向curr
                     if (g <= CostG(node) || !hasSearch)
                     {
                         costG[node.x, node.y] = g;
                         costH[node.x, node.y] = GetDistance(node, end);
                         parents[node.x, node.y] = curr;
+                        // 没搜索过就加入openList，等待搜索
                         if (!hasSearch)
                         {
                             openList.Add(node);
@@ -422,43 +439,50 @@ namespace TowerDefense
             }
         }
 
-        // 获取与目标格子相邻的所有格子
+        // 获取所有与当前格子相邻并且可行走的格子
         private List<MapObject> GetAroundGrid(MapObject obj)
         {
             List<MapObject> list = new List<MapObject>();
+            int x = obj.x;
+            int y = obj.y;
 
-            for (int i = -1; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    if (i == 0 && j == 0) continue;
+            MapObject left = GetValue(x - 1, y);
+            MapObject right = GetValue(x + 1, y);
+            MapObject up = GetValue(x, y + 1);
+            MapObject down = GetValue(x, y - 1);
 
-                    int x = obj.x + i;
-                    int y = obj.y + j;
-                    if (x >= 0 && x < width && y >= 0 && y < height)
-                    {
-                        list.Add(gridArray[x, y]);
-                    }
-                }
-            }
+            MapObject leftUp = GetValue(x - 1, y + 1);
+            MapObject rightUp = GetValue(x + 1, y + 1);
+            MapObject leftDown = GetValue(x - 1, y - 1);
+            MapObject rightDown = GetValue(x + 1, y - 1);
+
+            if (IsWalkable(left)) list.Add(left);
+            if (IsWalkable(right)) list.Add(right);
+            if (IsWalkable(up)) list.Add(up);
+            if (IsWalkable(down)) list.Add(down);
+
+            if (IsWalkable(leftUp) && IsWalkable(left) && IsWalkable(up)) list.Add(leftUp);
+            if (IsWalkable(rightUp) && IsWalkable(right) && IsWalkable(up)) list.Add(rightUp);
+            if (IsWalkable(leftDown) && IsWalkable(left) && IsWalkable(down)) list.Add(leftDown);
+            if (IsWalkable(rightDown) && IsWalkable(right) && IsWalkable(down)) list.Add(rightDown);
 
             return list;
         }
 
+        // 获取路径
         private List<MapObject> GetPathWithPos(MapObject[,] parents, MapObject start, MapObject end)
         {
             List<MapObject> list = new List<MapObject>();
             MapObject temp = end;
-            int cnt = 0;
 
-            while (temp != start && cnt < 20)
+            while (temp != start)
             {
                 list.Add(temp);
                 temp = parents[temp.x, temp.y];
-                cnt++;
             }
 
             return list;
         }
+        #endregion
     }
 }
