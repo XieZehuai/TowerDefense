@@ -118,13 +118,18 @@ namespace TowerDefense
         }
 
         // 将二维坐标转为世界坐标
-        protected virtual Vector3 GetWorldPosition(int x, int y)
+        public virtual Vector3 GetWorldPosition(int x, int y)
         {
             return new Vector3(x, 0f, y) * cellSize + originPos;
         }
 
+        public virtual Vector3 GetCenterPosition(int x, int y)
+        {
+            return GetWorldPosition(x, y) + new Vector3(0.5f, 0f, 0.5f) * cellSize;
+        }
+
         // 将世界坐标转为二维坐标
-        protected virtual bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
+        public virtual bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
         {
             Vector3 pos1 = GetWorldPosition(0, 0);
             Vector3 pos2 = GetWorldPosition(width, height);
