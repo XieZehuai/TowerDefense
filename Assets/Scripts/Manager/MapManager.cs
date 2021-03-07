@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,69 +9,50 @@ namespace TowerDefense
     {
         public MapObjectType type = MapObjectType.Empty;
 
+        public HashSet<MapObject> spawnPoints;
         public Dictionary<MapObject, List<Vector3>> paths;
 
-        [SerializeField] private int width = 10;
-        [SerializeField] private int height = 10;
-        [SerializeField] private int cellSize = 1;
-        [SerializeField] private Transform gridParent;
-
+        private int width;
+        private int height;
+        private int cellSize;
         private GameObject[,] objs;
-        private HashSet<MapObject> spawnPoints;
         private MapObject destination;
         private Map map;
 
         protected override void OnInit()
         {
-            objs = new GameObject[width, height];
             spawnPoints = new HashSet<MapObject>();
             paths = new Dictionary<MapObject, List<Vector3>>();
+        }
 
+        public void CreateMap(int width, int height, int cellSize)
+        {
+            this.width = width;
+            this.height = height;
+            this.cellSize = cellSize;
+
+            objs = new GameObject[width, height];
             map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
+            InitMap();
         }
 
-        private void Start()
+        public void CreateMap(MapObject[,] data, int cellSize)
         {
-            Init();
+            width = data.GetLength(0);
+            height = data.GetLength(1);
+            this.cellSize = cellSize;
+
+            objs = new GameObject[width, height];
+            map = new Map(data, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
+            InitMap();
         }
 
-        private void Update()
+        public List<Vector3>[] GetPaths()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                type = MapObjectType.Empty;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                type = MapObjectType.Road;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                type = MapObjectType.Wall;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                type = MapObjectType.SpawnPoint;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                type = MapObjectType.Destination;
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 pos = Utils.GetMousePosition();
-                SetGridType(pos, type);
-            }
-
-            if (Input.GetMouseButtonDown(2))
-            {
-                Vector3 pos = Utils.GetMousePosition();
-                Debug.Log(map.GetGridType(pos));
-            }
+            return paths.Values.ToArray();
         }
 
-        public void Init()
+        public void InitMap()
         {
             for (int x = 0; x < width; x++)
             {
@@ -321,18 +303,18 @@ namespace TowerDefense
         // 获取路径
         private List<Vector3> GetPathWithPos(MapObject[,] parents, MapObject start, MapObject end)
         {
-            List<Vector3> list = new List<Vector3>();
+            Stack<Vector3> stack = new Stack<Vector3>();
             MapObject temp = end;
 
             while (temp != start)
             {
-                list.Add(map.GetCenterPosition(temp.x, temp.y));
+                stack.Push(map.GetCenterPosition(temp.x, temp.y));
                 temp = parents[temp.x, temp.y];
             }
 
-            list.Add(map.GetCenterPosition(start.x, start.x));
+            stack.Push(map.GetCenterPosition(start.x, start.y));
 
-            return list;
+            return stack.ToList();
         }
         #endregion
     }

@@ -1,7 +1,7 @@
+EnemyGaussPrefab=Prefab/Enemy/EnemyGaussPrefab
 DestinationPrefab=Prefab/GameScene/DestinationPrefab
 EmptyPrefab=Prefab/GameScene/EmptyPrefab
 RoadPrefab=Prefab/GameScene/RoadPrefab
 SpawnPointPrefab=Prefab/GameScene/SpawnPointPrefab
 WallPrefab=Prefab/GameScene/WallPrefab
 WayPointPrefab=Prefab/GameScene/WayPointPrefab
-UIMainScene=Prefab/UI/UIMainScene

@@ -3,22 +3,79 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    public enum GameState
+    {
+        Init,
+        Playing,
+        Paused,
+        Over,
+    }
+
+
     public class GameManager : MonoSingleton<GameManager>
     {
-        public enum GameState
-        {
-            Init,
-            Playing,
-            Paused,
-            Over,
-        }
+        public MapObjectType type = MapObjectType.Empty;
 
-        private GameState state;
+        [Header("地图大小")]
+        [SerializeField] private Vector2Int mapSize = Vector2Int.one * 10;
+        [SerializeField] private int cellSize = 4;
+
+        [SerializeField] private float spawnInterval = 5f;
+
+        private bool spawn;
+        private GameState state = GameState.Init;
 
         public GameState State => state;
 
         protected override void OnInit()
         {
+            MapManager.Instance.CreateMap(mapSize.x, mapSize.y, cellSize);
+            //EnemyManager.Instance.SetLevelData(spawnInterval);
+            //EnemyManager.Instance.SetPath(MapManager.Instance.GetPaths());
+        }
+
+        private void Update()
+        {
+            ChangeMap();
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                spawn = true;
+                EnemyManager.Instance.SetLevelData(spawnInterval);
+                EnemyManager.Instance.SetPaths(MapManager.Instance.GetPaths());
+            }
+
+            if (spawn) EnemyManager.Instance.OnUpdate();
+        }
+
+        private void ChangeMap()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                type = MapObjectType.Empty;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                type = MapObjectType.Road;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                type = MapObjectType.Wall;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                type = MapObjectType.SpawnPoint;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                type = MapObjectType.Destination;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 pos = Utils.GetMousePosition();
+                MapManager.Instance.SetGridType(pos, type);
+            }
         }
     }
 }
