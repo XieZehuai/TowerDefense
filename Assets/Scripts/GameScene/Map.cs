@@ -25,11 +25,17 @@ namespace TowerDefense
     /// <summary>
     /// 地图上的格子
     /// </summary>
-    public class MapObject
+    public class MapObject : IComparable<MapObject>
     {
         public MapObjectType type;
         public int x;
         public int y;
+
+        public int CostG { get; set; } // 从起点到当前节点的距离
+
+        public int CostH { get; set; } // 从当前节点到终点的距离
+
+        public int CostF => CostG + CostH; // 从起点经过当前节点到终点的距离
 
         public MapObject()
         {
@@ -53,6 +59,14 @@ namespace TowerDefense
         public override int GetHashCode()
         {
             return x << 16 + y;
+        }
+
+        public int CompareTo(MapObject other)
+        {
+            return other.CostG - CostG;
+            //if (CostF < other.CostF) return 1;
+            //if (CostF > other.CostF && CostH > other.CostH) return -1;
+            //return 0;
         }
     }
     #endregion
@@ -361,31 +375,32 @@ namespace TowerDefense
         /// <returns>成功返回true，失败返回false</returns>
         private bool FindPath(MapObject start, MapObject end, ref List<MapObject> path)
         {
-            List<MapObject> openList = new List<MapObject>(); // 保存所有待寻路的节点（可用优先队列保存）
+            PriorityQueue<MapObject> openList = new PriorityQueue<MapObject>(8); // 保存所有待寻路的节点（可用优先队列保存）
             HashSet<MapObject> closeList = new HashSet<MapObject>(); // 保存所有已经寻路过的节点
             MapObject[,] parents = new MapObject[width, height]; // 每个节点的父节点，构成一棵树，形成路径
-            int[,] costG = new int[width, height]; // 保存起点到每个点的距离
-            int[,] costH = new int[width, height]; // 保存每个点到终点的距离
+            //int[,] costG = new int[width, height]; // 保存起点到每个点的距离
+            //int[,] costH = new int[width, height]; // 保存每个点到终点的距离
 
-            int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
-            int CostG(MapObject obj) => costG[obj.x, obj.y];
-            int CostH(MapObject obj) => costH[obj.x, obj.y];
+            //int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
+            //int CostG(MapObject obj) => costG[obj.x, obj.y];
+            //int CostH(MapObject obj) => costH[obj.x, obj.y];
 
             openList.Add(start);
-            while (openList.Count > 0)
+            while (!openList.IsEmpty)
             {
                 // 找出最优节点，每次都从最优节点开始查找路径，最优节点为总距离及到终点距离最小的节点
-                MapObject curr = openList[0];
-                for (int i = 1; i < openList.Count; i++)
-                {
-                    if (CostF(openList[i]) < CostF(curr) && CostH(openList[i]) < CostH(curr))
-                    {
-                        curr = openList[i];
-                    }
-                }
+                //MapObject curr = openList[0];
+                //for (int i = 1; i < openList.Count; i++)
+                //{
+                //    if (CostF(openList[i]) < CostF(curr) && CostH(openList[i]) < CostH(curr))
+                //    {
+                //        curr = openList[i];
+                //    }
+                //}
+                MapObject curr = openList.DeleteMax();
 
                 // 找到最优节点后，移动到closeList然后开始寻路
-                openList.Remove(curr);
+                //openList.Remove(curr);
                 closeList.Add(curr);
 
                 // 如果已经找到了终点，就获取路径并返回true
@@ -402,15 +417,21 @@ namespace TowerDefense
                     // 跳过已经搜索过的节点
                     if (closeList.Contains(node)) continue;
 
-                    int g = CostG(curr) + GetDistance(curr, node); // 计算从起点到curr再到node的距离
+                    //int g = CostG(curr) + GetDistance(curr, node); // 计算从起点到curr再到node的距离
+                    int g = curr.CostG + GetDistance(curr, node);
                     bool hasSearch = openList.Contains(node); // 判断node有没有被搜索过
+
                     // 如果从起点到curr再到node的距离小于从起点到node的距离，
                     // 或者node没有被搜索过，就更新node的路径，指向curr
-                    if (g <= CostG(node) || !hasSearch)
+                    //if (g <= CostG(node) || !hasSearch)
+                    if (g <= node.CostG || !hasSearch)
                     {
-                        costG[node.x, node.y] = g;
-                        costH[node.x, node.y] = GetDistance(node, end);
+                        //costG[node.x, node.y] = g;
+                        //costH[node.x, node.y] = GetDistance(node, end);
+                        node.CostG = g;
+                        node.CostH = GetDistance(node, end);
                         parents[node.x, node.y] = curr;
+
                         // 没搜索过就加入openList，等待搜索
                         if (!hasSearch)
                         {
