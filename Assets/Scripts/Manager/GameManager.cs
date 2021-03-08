@@ -16,7 +16,7 @@ namespace TowerDefense
     {
         public MapObjectType type = MapObjectType.Empty;
 
-        [Header("地图大小")]
+        [Header("地图大小")] 
         [SerializeField] private Vector2Int mapSize = Vector2Int.one * 10;
         [SerializeField] private int cellSize = 4;
 
@@ -29,8 +29,8 @@ namespace TowerDefense
 
         protected override void OnInit()
         {
+            EnemyManager.Instance.SetLevelData(spawnInterval);
             MapManager.Instance.CreateMap(mapSize.x, mapSize.y, cellSize);
-            //EnemyManager.Instance.SetLevelData(spawnInterval);
             //EnemyManager.Instance.SetPath(MapManager.Instance.GetPaths());
         }
 
@@ -42,7 +42,6 @@ namespace TowerDefense
             {
                 spawn = true;
                 EnemyManager.Instance.SetLevelData(spawnInterval);
-                EnemyManager.Instance.SetPaths(MapManager.Instance.GetPaths());
             }
 
             if (spawn) EnemyManager.Instance.OnUpdate();
@@ -74,7 +73,12 @@ namespace TowerDefense
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3 pos = Utils.GetMousePosition();
-                MapManager.Instance.SetGridType(pos, type);
+                MapManager.Instance.ChangeGridType(pos, type);
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                TowerManager.Instance.CreateTower(Utils.GetMousePosition());
             }
         }
     }

@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-	public class EnemyConfig : ScriptableObject
+	public class Tower : MonoBehaviour
 	{
+		public int x;
+		public int y;
 	}
 }

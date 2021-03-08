@@ -11,6 +11,17 @@ namespace TowerDefense
         private List<Vector3>[] paths;
         private List<Enemy> enemys = new List<Enemy>();
 
+        private string[] enemyName =
+        {
+            "EnemyGauss",
+            "EnemyDeminer",
+        };
+
+        protected override void OnInit()
+        {
+            TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
+        }
+
         public void OnUpdate()
         {
             createTimer += Time.deltaTime;
@@ -28,16 +39,16 @@ namespace TowerDefense
             this.spawnInterval = spawnInterval;
         }
 
-        public void SetPaths(List<Vector3>[] paths)
+        public void OnChangePaths(OnChangePaths context)
         {
-            this.paths = paths;
+            paths = context.paths;
         }
 
         private void CreateEnemy()
         {
-            int random = UnityEngine.Random.Range(0, paths.Length);
-            GameObject gauss = ObjectPool.Instance.Spawn("EnemyGauss");
+            GameObject gauss = ObjectPool.Instance.Spawn(enemyName[Random.Range(0, enemyName.Length)]);
             Enemy enemy = gauss.GetComponent<Enemy>();
+            int random = Random.Range(0, paths.Length);
             enemy.SetPath(paths[random]);
             enemys.Add(enemy);
         }

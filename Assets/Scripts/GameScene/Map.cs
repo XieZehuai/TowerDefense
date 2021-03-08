@@ -12,7 +12,8 @@ namespace TowerDefense
     {
         Empty, // 空格子
         Road, // 敌人行走的道路
-        Wall, // 防止炮塔的墙壁
+        RoadWithTower, // 放置了炮塔的路径
+        Wall, // 不能放置炮塔以及通过的墙壁
         SpawnPoint, // 敌人的出生点
         Destination, // 敌人的目标点
 
@@ -64,9 +65,6 @@ namespace TowerDefense
         public int CompareTo(MapObject other)
         {
             return other.CostG - CostG;
-            //if (CostF < other.CostF) return 1;
-            //if (CostF > other.CostF && CostH > other.CostH) return -1;
-            //return 0;
         }
     }
     #endregion

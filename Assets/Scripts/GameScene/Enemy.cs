@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    // 敌人护甲类型
     public enum ArmorType
     {
         Light, // 轻甲
@@ -21,25 +20,24 @@ namespace TowerDefense
         public int hp;
         public float speed;
         public ArmorType armorType;
-        public GameObject model;
     }
-
-
+    
+    
     public class Enemy : MonoBehaviour
     {
         public EnemyData data;
 
         private List<Vector3> path;
         private int curr;
-        private float distance = 0f;
-        private float progress = 0f;
+        private float distance;
+        private float progress;
 
         public void SetPath(List<Vector3> path)
         {
             if (path.Count <= 1) Debug.LogError("路径长度太短");
 
             this.path = path;
-            transform.localPosition = path[0];
+            transform.localPosition = path[0] + Vector3.up;
             transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
             distance = Vector3.Distance(path[1], path[0]);
             curr = 1;
@@ -55,7 +53,7 @@ namespace TowerDefense
             if (curr >= path.Count) return false;
 
             progress += Time.deltaTime * data.speed;
-            transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance);
+            transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + Vector3.up;
 
             if (progress >= distance)
             {

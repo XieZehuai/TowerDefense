@@ -78,10 +78,9 @@ MonoBehaviour:
   data:
     id: 0
     name: EnemyGauss
-    hp: 100
-    speed: 8
+    hp: 150
+    speed: 6
     armorType: 0
-    model: {fileID: 731834149938668465}
 --- !u!1 &731834149938668465
 GameObject:
   m_ObjectHideFlags: 0
