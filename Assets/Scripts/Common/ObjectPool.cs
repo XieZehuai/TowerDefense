@@ -141,6 +141,41 @@ namespace TowerDefense
         }
 
         /// <summary>
+        /// 回收目标池子的所有对象
+        /// </summary>
+        /// <param name="tag">目标池子的标签</param>
+        public void UnspawnAll(string tag)
+        {
+            if (!ContainsPool(tag))
+            {
+                Debug.LogError("没有目标池子");
+                return;
+            }
+
+            pools[tag].UnspawnAll();
+        }
+
+        /// <summary>
+        /// 延迟一段时间回收目标池子的所有对象
+        /// </summary>
+        /// <param name="tag">目标池子的标签</param>
+        /// <param name="delay">延迟时间</param>
+        public void DelayUnspawnAll(string tag, float delay)
+        {
+            this.Invoke(() => UnspawnAll(tag), delay);
+        }
+
+        /// <summary>
+        /// 延迟一定条件后回收目标池子的所有对象
+        /// </summary>
+        /// <param name="tag">目标池子的标签</param>
+        /// <param name="condition">延迟条件</param>
+        public void DelayUnspawnAll(string tag, YieldInstruction condition)
+        {
+            this.Invoke(() => UnspawnAll(tag), condition);
+        }
+
+        /// <summary>
         /// 清空目标池子
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
@@ -236,12 +271,23 @@ namespace TowerDefense
             }
         }
 
+        public void UnspawnAll()
+        {
+            foreach (var obj in activeList)
+            {
+                obj.SetActive(false);
+                activeList.Remove(obj);
+                inactiveList.Add(obj);
+            }
+        }
+
         public void Clear()
         {
             foreach (var item in activeList)
             {
                 GameObject.Destroy(item);
             }
+
             foreach (var item in inactiveList)
             {
                 GameObject.Destroy(item);

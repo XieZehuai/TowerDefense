@@ -53,7 +53,7 @@ namespace TowerDefense
 
         public bool IsWalkable()
         {
-            return type != MapObjectType.Wall && type != MapObjectType.Empty && type != MapObjectType.None;
+            return type == MapObjectType.Road || type == MapObjectType.Destination || type == MapObjectType.SpawnPoint;
         }
 
         public override int GetHashCode()
