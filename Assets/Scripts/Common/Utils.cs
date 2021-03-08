@@ -10,6 +10,10 @@ namespace TowerDefense
     /// </summary>
     public static class Utils
     {
+        #region 常量
+        public const int ENEMY_LAYER_MASK = 1 << 8;
+        #endregion
+
         #region 各种常用方法
         private static Camera mainCamera = Camera.main;
 

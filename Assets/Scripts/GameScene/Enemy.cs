@@ -31,13 +31,16 @@ namespace TowerDefense
         private int curr;
         private float distance;
         private float progress;
+        private Vector3 height = new Vector3(0f, 0.5f, 0f);
+
+        public Vector3 Position => transform.localPosition;
 
         public void SetPath(List<Vector3> path)
         {
             if (path.Count <= 1) Debug.LogError("路径长度太短");
 
             this.path = path;
-            transform.localPosition = path[0] + Vector3.up;
+            transform.localPosition = path[0] + height;
             transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
             distance = Vector3.Distance(path[1], path[0]);
             curr = 1;
@@ -53,7 +56,7 @@ namespace TowerDefense
             if (curr >= path.Count) return false;
 
             progress += Time.deltaTime * data.speed;
-            transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + Vector3.up;
+            transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + height;
 
             if (progress >= distance)
             {

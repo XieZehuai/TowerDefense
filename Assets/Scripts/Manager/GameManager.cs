@@ -45,6 +45,8 @@ namespace TowerDefense
             }
 
             if (spawn) EnemyManager.Instance.OnUpdate();
+            Physics.SyncTransforms();
+            TowerManager.Instance.OnUpdate();
         }
 
         private void ChangeMap()
@@ -79,6 +81,11 @@ namespace TowerDefense
             if (Input.GetMouseButtonDown(1))
             {
                 TowerManager.Instance.CreateTower(Utils.GetMousePosition());
+            }
+
+            if (Input.GetMouseButtonDown(2))
+            {
+                TowerManager.Instance.RemoveTower(Utils.GetMousePosition());
             }
         }
     }

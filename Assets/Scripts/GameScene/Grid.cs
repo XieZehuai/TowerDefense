@@ -48,7 +48,7 @@ namespace TowerDefense
             this.originPos = originPos;
             gridArray = new T[width, height];
 
-            DrawGrid(Color.cyan);
+            //DrawGrid(Color.cyan);
         }
 
         public Grid(T[,] gridArray, int cellSize, Vector3 originPos)

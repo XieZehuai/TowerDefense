@@ -23,6 +23,7 @@ namespace TowerDefense
             paths = new Dictionary<MapObject, List<Vector3>>();
         }
 
+        #region 炮塔相关功能
         public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
         {
             return map.GetGridPosition(worldPosition, out x, out y);
@@ -52,6 +53,29 @@ namespace TowerDefense
         {
             return map.GetGridType(x, y) == MapObjectType.Road;
         }
+
+        public bool PlaceTower(int x, int y)
+        {
+            if (map.GetGridType(x, y) != MapObjectType.Road) return false;
+
+            map.SetGridType(x, y, MapObjectType.RoadWithTower);
+            if (!FindAllPath(destination))
+            {
+                map.SetGridType(x, y, MapObjectType.Road);
+                return false;
+            }
+
+            return true;
+        }
+
+        public void RemoveTower(int x, int y)
+        {
+            if (map.GetGridType(x, y) != MapObjectType.RoadWithTower) return;
+
+            map.SetGridType(x, y, MapObjectType.Road);
+            FindAllPath(destination);
+        }
+        #endregion
 
         #region 创建以及加载地图
         public void CreateMap(int width, int height, int cellSize)
@@ -120,7 +144,10 @@ namespace TowerDefense
         public void ChangeGridType(int x, int y, MapObjectType type)
         {
             // 如果要替换的格子类型与当前格子类型相同或者当前格子是终点，直接返回
-            if (map.GetGridType(x, y) == type || map.GetValue(x, y) == destination) return;
+            if (map.GetGridType(x, y) == type || map.GetGridType(x, y) == MapObjectType.RoadWithTower)
+                return;
+            if (map.GetValue(x, y) == destination)
+                return;
 
             switch (type)
             {
@@ -144,20 +171,6 @@ namespace TowerDefense
                     Debug.LogError("无法摆放" + x + " " + y + " " + type);
                     break;
             }
-        }
-
-        public bool PlaceTower(int x, int y)
-        {
-            if (map.GetGridType(x, y) != MapObjectType.Road) return false;
-
-            map.SetGridType(x, y, MapObjectType.RoadWithTower);
-            if (!FindAllPath(destination))
-            {
-                map.SetGridType(x, y, MapObjectType.Road);
-                return false;
-            }
-
-            return true;
         }
 
         private void PlaceEmptyGrid(int x, int y)
