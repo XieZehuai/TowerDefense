@@ -111,7 +111,7 @@ namespace TowerDefense
         {
             if (!ContainsPool(tag))
             {
-                Debug.LogError("没有目标池子");
+                Debug.LogError("没有目标池子" + tag);
                 return;
             }
 

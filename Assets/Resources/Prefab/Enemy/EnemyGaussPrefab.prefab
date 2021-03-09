@@ -89,12 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99e6540d6a26e3149ae4155da30087a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data:
-    id: 0
-    name: EnemyGauss
-    hp: 150
-    speed: 1.5
-    armorType: 0
+  name: EnemyGauss
+  hp: 150
+  speed: 1.5
+  armorType: 1
 --- !u!1 &731834149938668465
 GameObject:
   m_ObjectHideFlags: 0

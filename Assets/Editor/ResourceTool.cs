@@ -13,7 +13,7 @@ namespace TowerDefense
         [MenuItem("Tool/Resource/Generate Resource Config")]
         public static void GenerateResourceConfig()
         {
-            string[] resFiles = AssetDatabase.FindAssets("t:prefab", new string[] { "Assets/Resources" });
+            string[] resFiles = AssetDatabase.FindAssets("t:object", new string[] { "Assets/Resources" });
 
             for (int i = 0; i < resFiles.Length; i++)
             {

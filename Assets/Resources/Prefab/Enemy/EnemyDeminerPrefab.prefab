@@ -415,12 +415,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99e6540d6a26e3149ae4155da30087a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data:
-    id: 1
-    name: EnemyDeminer
-    hp: 100
-    speed: 2
-    armorType: 1
+  name: EnemyDeminer
+  hp: 100
+  speed: 2
+  armorType: 0
 --- !u!135 &446382551882885465
 SphereCollider:
   m_ObjectHideFlags: 0

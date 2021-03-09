@@ -22,6 +22,8 @@ namespace TowerDefense
 
         [SerializeField] private float spawnInterval = 5f;
 
+        [SerializeField] private DamageConfig damageConfig;
+
         private bool spawn;
         private GameState state = GameState.Init;
 
@@ -34,7 +36,7 @@ namespace TowerDefense
             //EnemyManager.Instance.SetPath(MapManager.Instance.GetPaths());
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             ChangeMap();
 
@@ -47,6 +49,11 @@ namespace TowerDefense
             if (spawn) EnemyManager.Instance.OnUpdate();
             Physics.SyncTransforms();
             TowerManager.Instance.OnUpdate();
+        }
+
+        public float GetDamage(float damage, AttackType attackType, ArmorType armorType)
+        {
+            return damageConfig.GetDamage(damage, attackType, armorType);
         }
 
         private void ChangeMap()

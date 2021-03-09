@@ -61,7 +61,7 @@ namespace TowerDefense
             {
                 if (!enemys[i].OnUpdate())
                 {
-                    ObjectPool.Instance.Unspawn(enemys[i].data.name, enemys[i].gameObject);
+                    ObjectPool.Instance.Unspawn(enemys[i].name, enemys[i].gameObject);
                     enemys.QuickRemove(i--);
                 }
             }

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea1a3cae694da4bb4eb406b24fc4c1, type: 3}
+  m_Name: DamageConfig
+  m_EditorClassIdentifier: 
+  damageConfig:
+  - attackType: 0
+    armorDamageConfigs:
+    - armorType: 0
+      damageRate: 100
+    - armorType: 1
+      damageRate: 80
+    - armorType: 2
+      damageRate: 50
+  - attackType: 1
+    armorDamageConfigs:
+    - armorType: 0
+      damageRate: 80
+    - armorType: 1
+      damageRate: 100
+    - armorType: 2
+      damageRate: 60
+  - attackType: 2
+    armorDamageConfigs:
+    - armorType: 0
+      damageRate: 75
+    - armorType: 1
+      damageRate: 75
+    - armorType: 2
+      damageRate: 100

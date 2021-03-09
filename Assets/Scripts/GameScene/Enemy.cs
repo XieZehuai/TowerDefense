@@ -17,7 +17,7 @@ namespace TowerDefense
     {
         public int id;
         public string name;
-        public int hp;
+        public float hp;
         public float speed;
         public ArmorType armorType;
     }
@@ -25,7 +25,10 @@ namespace TowerDefense
     
     public class Enemy : MonoBehaviour
     {
-        public EnemyData data;
+        public new string name;
+        public float hp;
+        public float speed;
+        public ArmorType armorType;
 
         private List<Vector3> path;
         private int curr;
@@ -48,14 +51,25 @@ namespace TowerDefense
 
         public bool OnUpdate()
         {
+            if (hp <= 0)
+            {
+                return false;
+            }
+
             return Move();
+        }
+
+        public void GetDamage(float damage, AttackType attackType)
+        {
+            float actualDamage = GameManager.Instance.GetDamage(damage, attackType, armorType);
+            hp -= actualDamage;
         }
 
         private bool Move()
         {
             if (curr >= path.Count) return false;
 
-            progress += Time.deltaTime * data.speed;
+            progress += Time.deltaTime * speed;
             transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + height;
 
             if (progress >= distance)

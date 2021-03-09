@@ -6,8 +6,9 @@ namespace TowerDefense
     #region 炮塔的攻击类型
     public enum AttackType
     {
+        Normal, // 普通机枪
         Laser, // 激光
-        Trebuchet, // 投石
+        Cannon, // 加农炮
     }
     #endregion
 
@@ -64,7 +65,7 @@ namespace TowerDefense
         /// <returns>存在返回true，失去目标返回false</returns>
         protected virtual bool TrackTarget(ref Enemy target)
         {
-            if (target == null) return false;
+            if (target == null || !target.gameObject.activeSelf) return false;
 
             Vector3 a = Position;
             Vector3 b = target.Position;

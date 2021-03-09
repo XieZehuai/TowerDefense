@@ -1,9 +1,16 @@
+Config=Config
+DamageConfig=Config/DamageConfig.asset
+MapData=MapData
+Prefab=Prefab
+Enemy=Prefab/Enemy
 EnemyDeminerPrefab=Prefab/Enemy/EnemyDeminerPrefab
 EnemyGaussPrefab=Prefab/Enemy/EnemyGaussPrefab
+GameScene=Prefab/GameScene
 DestinationPrefab=Prefab/GameScene/DestinationPrefab
 EmptyPrefab=Prefab/GameScene/EmptyPrefab
 RoadPrefab=Prefab/GameScene/RoadPrefab
 SpawnPointPrefab=Prefab/GameScene/SpawnPointPrefab
 WallPrefab=Prefab/GameScene/WallPrefab
 WayPointPrefab=Prefab/GameScene/WayPointPrefab
+Tower=Prefab/Tower
 LaserTowerPrefab=Prefab/Tower/LaserTowerPrefab

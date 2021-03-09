@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 170151598195385922}
   - component: {fileID: 447611909204677895}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -690,8 +690,10 @@ MonoBehaviour:
   y: 0
   attackRange: 2
   damagePerSecond: 30
+  turretBase: {fileID: 6315177641616408631}
   turret: {fileID: 6315177641616407679}
-  gun: {fileID: 170151598195385922}
+  upGun: {fileID: 6315177641616430693}
+  laser: {fileID: 170151598195385922}
 --- !u!1 &6315177642590840663
 GameObject:
   m_ObjectHideFlags: 0
