@@ -4,22 +4,26 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class TowerManager : MonoSingleton<TowerManager>
+    public class TowerManager : SubStageManager
     {
         private List<Tower> towers = new List<Tower>();
 
-        public void OnUpdate()
+        public TowerManager(StageManager stageManager) : base(stageManager)
+        {
+        }
+
+        public override void OnUpdate()
         {
             UpdateTower();
         }
 
         public bool CreateTower(Vector3 position)
         {
-            if (MapManager.Instance.CanPlaceTower(position, out int x, out int y))
+            if (manager.MapManager.CanPlaceTower(position, out int x, out int y))
             {
-                if (MapManager.Instance.PlaceTower(x, y))
+                if (manager.MapManager.PlaceTower(x, y))
                 {
-                    Vector3 pos = MapManager.Instance.GetCenterPosition(x, y);
+                    Vector3 pos = manager.MapManager.GetCenterPosition(x, y);
                     GameObject obj = ObjectPool.Instance.Spawn("LaserTower", pos);
                     Tower tower = obj.GetComponent<Tower>();
                     tower.SetCoordinate(x, y);
@@ -33,9 +37,9 @@ namespace TowerDefense
 
         public void RemoveTower(Vector3 position)
         {
-            if (MapManager.Instance.GetGridPosition(position, out int x, out int y))
+            if (manager.MapManager.GetGridPosition(position, out int x, out int y))
             {
-                MapManager.Instance.RemoveTower(x, y);
+                manager.MapManager.RemoveTower(x, y);
             }
         }
 

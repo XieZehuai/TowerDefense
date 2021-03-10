@@ -36,7 +36,7 @@ namespace TowerDefense
             instance = this as T;
             DontDestroyOnLoad(gameObject);
 
-            OnInit();
+            this.Invoke(OnInit, null);
         }
 
         /// <summary>

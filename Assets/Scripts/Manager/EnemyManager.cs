@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class EnemyManager : Singleton<EnemyManager>
+    public class EnemyManager : SubStageManager
     {
         private float spawnInterval = 3f;
 
@@ -17,12 +17,12 @@ namespace TowerDefense
             "EnemyDeminer",
         };
 
-        protected override void OnInit()
+        public EnemyManager(StageManager stageManager) : base(stageManager)
         {
             TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
         }
 
-        public void OnUpdate()
+        public override void OnUpdate()
         {
             createTimer += Time.deltaTime;
             if (createTimer >= spawnInterval)

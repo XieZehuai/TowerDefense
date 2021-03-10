@@ -61,7 +61,7 @@ namespace TowerDefense
 
         public void GetDamage(float damage, AttackType attackType)
         {
-            float actualDamage = GameManager.Instance.GetDamage(damage, attackType, armorType);
+            float actualDamage = Config.Instance.GetDamage(damage, attackType, armorType);
             hp -= actualDamage;
         }
 

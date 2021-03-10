@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class MapManager : MonoSingleton<MapManager>
+    public class MapManager : SubStageManager
     {
         public HashSet<MapObject> spawnPoints;
         public Dictionary<MapObject, List<Vector3>> paths;
@@ -17,7 +17,7 @@ namespace TowerDefense
         private MapObject destination;
         private Map map;
 
-        protected override void OnInit()
+        public MapManager(StageManager stageManager) : base(stageManager)
         {
             spawnPoints = new HashSet<MapObject>();
             paths = new Dictionary<MapObject, List<Vector3>>();

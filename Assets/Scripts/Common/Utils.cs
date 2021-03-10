@@ -15,15 +15,13 @@ namespace TowerDefense
         #endregion
 
         #region 各种常用方法
-        private static Camera mainCamera = Camera.main;
-
         /// <summary>
         /// 获取世界坐标内鼠标点击的位置
         /// </summary>
         /// <returns>鼠标点击位置的世界坐标</returns>
         public static Vector3 GetMousePosition()
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {

@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TowerDefense
 {
     public enum GameState
     {
-        Init,
+        Idle,
         Playing,
         Paused,
         Over,
@@ -14,86 +15,32 @@ namespace TowerDefense
 
     public class GameManager : MonoSingleton<GameManager>
     {
-        public MapObjectType type = MapObjectType.Empty;
-
-        [Header("地图大小")] 
-        [SerializeField] private Vector2Int mapSize = Vector2Int.one * 10;
-        [SerializeField] private int cellSize = 4;
-
-        [SerializeField] private float spawnInterval = 5f;
-
-        [SerializeField] private DamageConfig damageConfig;
-
-        private bool spawn;
-        private GameState state = GameState.Init;
-
+        private GameState state;
         public GameState State => state;
+
+        public bool IsIdle => State == GameState.Idle;
+        public bool IsPlaying => State == GameState.Playing;
+        public bool IsPaused => State == GameState.Paused;
+        public bool IsOver => State == GameState.Over;
 
         protected override void OnInit()
         {
-            EnemyManager.Instance.SetLevelData(spawnInterval);
-            MapManager.Instance.CreateMap(mapSize.x, mapSize.y, cellSize);
-            //EnemyManager.Instance.SetPath(MapManager.Instance.GetPaths());
+            state = GameState.Idle;
+            UIManager.Instance.Open<UIMainScene>();
         }
 
-        private void FixedUpdate()
+        public void LoadGameScene()
         {
-            ChangeMap();
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                spawn = true;
-                EnemyManager.Instance.SetLevelData(spawnInterval);
-            }
-
-            if (spawn) EnemyManager.Instance.OnUpdate();
-            Physics.SyncTransforms();
-            TowerManager.Instance.OnUpdate();
+            state = GameState.Playing;
+            UIManager.Instance.Close<UIMainScene>();
+            SceneManager.LoadScene("GameScene");
         }
 
-        public float GetDamage(float damage, AttackType attackType, ArmorType armorType)
+        public void LoadMainScene()
         {
-            return damageConfig.GetDamage(damage, attackType, armorType);
-        }
-
-        private void ChangeMap()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                type = MapObjectType.Empty;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                type = MapObjectType.Road;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                type = MapObjectType.Wall;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                type = MapObjectType.SpawnPoint;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                type = MapObjectType.Destination;
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 pos = Utils.GetMousePosition();
-                MapManager.Instance.ChangeGridType(pos, type);
-            }
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                TowerManager.Instance.CreateTower(Utils.GetMousePosition());
-            }
-
-            if (Input.GetMouseButtonDown(2))
-            {
-                TowerManager.Instance.RemoveTower(Utils.GetMousePosition());
-            }
+            state = GameState.Idle;
+            UIManager.Instance.Open<UIMainScene>();
+            SceneManager.LoadScene("MainScene");
         }
     }
 }
