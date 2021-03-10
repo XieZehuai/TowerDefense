@@ -5,15 +5,13 @@ namespace TowerDefense
 {
     public class StageManager : MonoBehaviour
     {
-        [SerializeField] private Vector2Int mapSize = default;
-        [SerializeField] private int cellSize = 1;
-        [SerializeField] private float spawnInterval = 2f;
-
-        private bool spawn;
+        private LevelData levelData;
         private MapObjectType selectedType = MapObjectType.Empty;
 
         public MapManager MapManager { get; private set; }
+
         public EnemyManager EnemyManager { get; private set; }
+
         public TowerManager TowerManager { get; private set; }
 
         private void Awake()
@@ -25,20 +23,18 @@ namespace TowerDefense
 
         private void Start()
         {
-            EnemyManager.SetLevelData(spawnInterval);
-            MapManager.CreateMap(mapSize.x, mapSize.y, cellSize);
+            levelData = LevelData.CreateDefaultData();
+
+            EnemyManager.SetLevelData(levelData.waveInterval, levelData.spawnInterval, levelData.waveData);
+            //MapManager.CreateMap(mapSize.x, mapSize.y, cellSize);
+            MapManager.CreateMap(levelData.mapWidth, levelData.mapHeight, levelData.mapData, 1);
         }
 
         private void Update()
         {
             ChangeMap();
 
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                spawn = true;
-            }
-
-            if (spawn) EnemyManager.OnUpdate();
+            EnemyManager.OnUpdate();
 
             Physics.SyncTransforms();
 

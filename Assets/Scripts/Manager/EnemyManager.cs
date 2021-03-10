@@ -5,8 +5,18 @@ namespace TowerDefense
 {
     public class EnemyManager : SubStageManager
     {
-        private float spawnInterval = 3f;
-        private float createTimer = 0f;
+        // 关卡敌人数据
+        private float waveInterval;
+        private float spawnInterval;
+        private Dictionary<int, int>[] waveData;
+
+        private float timer = 0f;
+        private int currentWave;
+        private int enemyCounter;
+        private bool spawn;
+        private bool nextWave;
+        private Dictionary<int, int>.Enumerator enumerator;
+
         private List<Vector3>[] paths;
         private List<Enemy> enemys = new List<Enemy>();
 
@@ -15,26 +25,99 @@ namespace TowerDefense
             TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
         }
 
+        public void SetLevelData(float waveInterval, float spawnInterval, Dictionary<int, int>[] waveData)
+        {
+            this.waveInterval = waveInterval;
+            this.spawnInterval = spawnInterval;
+            this.waveData = waveData;
+
+            nextWave = true;
+        }
+
         public override void OnUpdate()
         {
-            createTimer += Time.deltaTime;
-            if (createTimer >= spawnInterval)
+            if (spawn || nextWave)
             {
-                createTimer = 0f;
-                CreateEnemy();
+                timer += Time.deltaTime;
+
+                if (spawn && timer >= spawnInterval)
+                {
+                    timer = 0f;
+                    Spawn();
+                }
+                else if (nextWave && timer >= waveInterval)
+                {
+                    timer = 0f;
+                    NextWave();
+                }
             }
 
             UpdateEnemys();
+
+            //if (currentWave < waveData.Length)
+            //{
+            //    timer += Time.deltaTime;
+
+            //    if (timer >= interval)
+            //    {
+            //        timer = 0f;
+            //        interval = spawnInterval;
+
+            //        if (enemyCounter < enumerator.Current.Value)
+            //        {
+            //            enemyCounter++;
+            //            CreateEnemy(enumerator.Current.Key);
+            //        }
+            //        else if (enumerator.MoveNext())
+            //        {
+            //            enemyCounter = 1;
+            //            CreateEnemy(enumerator.Current.Key);
+            //        }
+            //        else
+            //        {
+            //            currentWave++;
+            //            if (currentWave < waveData.Length)
+            //            {
+            //                enumerator = waveData[currentWave].GetEnumerator();
+            //                interval = waveInterval;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
-        public void SetLevelData(float spawnInterval)
+        private void Spawn()
         {
-            this.spawnInterval = spawnInterval;
+            if (enemyCounter < enumerator.Current.Value)
+            {
+                enemyCounter++;
+                CreateEnemy(enumerator.Current.Key);
+            }
+            else if (enumerator.MoveNext())
+            {
+                enemyCounter = 1;
+                CreateEnemy(enumerator.Current.Key);
+            }
+            else
+            {
+                spawn = false;
+                enemyCounter = 0;
+            }
         }
 
-        private void CreateEnemy()
+        private void NextWave()
         {
-            EnemyData enemyData = ConfigManager.Instance.EnemyConfig.RandomData(); // 随机获取敌人数据
+            nextWave = false;
+            currentWave++;
+            if (currentWave >= waveData.Length) return;
+
+            enumerator = waveData[currentWave].GetEnumerator();
+            spawn = true;
+        }
+
+        private void CreateEnemy(int id)
+        {
+            EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
             GameObject enemyObj = ObjectPool.Instance.Spawn(enemyData.name); // 生成对象
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             int random = Random.Range(0, paths.Length); // 随机设置路径
@@ -44,7 +127,11 @@ namespace TowerDefense
 
         private void UpdateEnemys()
         {
-            if (enemys.Count == 0) return;
+            if (enemys.Count == 0)
+            {
+                nextWave = !spawn && currentWave < waveData.Length;
+                return;
+            }
 
             for (int i = 0; i < enemys.Count; i++)
             {

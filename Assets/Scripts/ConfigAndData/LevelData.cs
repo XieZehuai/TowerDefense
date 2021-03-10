@@ -13,7 +13,7 @@ namespace TowerDefense
         // 地图数据
         public int mapWidth;
         public int mapHeight;
-        public MapObjectType[,] mapData;
+        public MapObjectType[] mapData;
 
         // 敌人数据
         public float waveInterval; // 每波的间隔
@@ -29,28 +29,24 @@ namespace TowerDefense
 
             data.mapWidth = 10;
             data.mapHeight = 10;
-            data.mapData = new MapObjectType[data.mapWidth, data.mapHeight];
+            data.mapData = new MapObjectType[data.mapWidth * data.mapHeight];
 
-            for (int i = 0; i < data.mapWidth; i++)
+            for (int i = 0; i < data.mapData.Length; i++)
             {
-                for (int j = 0; j < data.mapHeight; j++)
-                {
-                    data.mapData[i, j] = MapObjectType.Road;
-                }
+                data.mapData[i] = MapObjectType.Road;
             }
-
-            data.mapData[0, 0] = MapObjectType.SpawnPoint;
-            data.mapData[data.mapWidth - 1, data.mapHeight - 1] = MapObjectType.Destination;
+            data.mapData[5] = MapObjectType.SpawnPoint;
+            data.mapData[data.mapData.Length - 1] = MapObjectType.Destination;
 
             data.waveInterval = 5f;
             data.spawnInterval = 1f;
             data.waveData = new Dictionary<int, int>[5];
 
             data.waveData[0] = new Dictionary<int, int> { { 0, 6 }, { 3, 4 }, { 6, 2 }, };
-            data.waveData[0] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 5 }, { 6, 2 }, };
-            data.waveData[0] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 2 }, { 4, 2 }, { 6, 1 }, { 7, 1 } };
-            data.waveData[0] = new Dictionary<int, int> { { 1, 4 }, { 2, 4 }, { 4, 2 }, { 5, 2 }, { 7, 1 }, { 8, 1 } };
-            data.waveData[0] = new Dictionary<int, int> { { 2, 8 }, { 1, 4 }, { 5, 4 }, { 8, 2 } };
+            data.waveData[1] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 5 }, { 6, 2 }, };
+            data.waveData[2] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 2 }, { 4, 2 }, { 6, 1 }, { 7, 1 } };
+            data.waveData[3] = new Dictionary<int, int> { { 1, 4 }, { 2, 4 }, { 4, 2 }, { 5, 2 }, { 7, 1 }, { 8, 1 } };
+            data.waveData[4] = new Dictionary<int, int> { { 2, 8 }, { 1, 4 }, { 5, 4 }, { 8, 2 } };
 
             return data;
         }

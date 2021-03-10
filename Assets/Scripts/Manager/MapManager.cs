@@ -23,6 +23,81 @@ namespace TowerDefense
             paths = new Dictionary<MapObject, List<Vector3>>();
         }
 
+        #region 创建以及加载地图
+        public void CreateMap(int width, int height, int cellSize)
+        {
+            this.width = width;
+            this.height = height;
+            this.cellSize = cellSize;
+
+            objs = new GameObject[width, height];
+            map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
+            LoadMap();
+        }
+
+        public void CreateMap(int width, int height, MapObjectType[] datas, int cellSize)
+        {
+            CreateMap(ToMapObjectData(width, height, datas), cellSize);
+        }
+
+        public void CreateMap(MapObject[,] data, int cellSize)
+        {
+            width = data.GetLength(0);
+            height = data.GetLength(1);
+            this.cellSize = cellSize;
+
+            objs = new GameObject[width, height];
+            map = new Map(data, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
+            LoadMap();
+        }
+
+        private MapObject[,] ToMapObjectData(int width, int height, MapObjectType[] datas)
+        {
+            MapObject[,] mapData = new MapObject[width, height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    mapData[x, y] = new MapObject(datas[x * height + y], x, y);
+                }
+            }
+
+            return mapData;
+        }
+
+        private void LoadMap()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    MapObjectType type = map.GetGridType(x, y);
+                    LoadModel(x, y, type);
+
+                    if (type == MapObjectType.Destination)
+                    {
+                        if (destination == null)
+                            destination = map.GetValue(x, y);
+                        else
+                            Debug.LogError("有多个目标点");
+                    }
+                }
+            }
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (map.GetGridType(x, y) == MapObjectType.SpawnPoint)
+                    {
+                        PlaceSpawnPoint(x, y);
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region 格子相关功能
         public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
         {
@@ -40,6 +115,7 @@ namespace TowerDefense
         }
         #endregion
 
+        #region 摆放炮塔相关功能
         public bool TryPlaceTower(Vector3 worldPosition, out int x, out int y, out Vector3 towerPosition)
         {
             if (CanPlaceTower(worldPosition, out x, out y))
@@ -74,60 +150,6 @@ namespace TowerDefense
             x = 0;
             y = 0;
             return false;
-        }
-
-        #region 创建以及加载地图
-        public void CreateMap(int width, int height, int cellSize)
-        {
-            this.width = width;
-            this.height = height;
-            this.cellSize = cellSize;
-
-            objs = new GameObject[width, height];
-            map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
-            LoadMap();
-        }
-
-        public void CreateMap(MapObject[,] data, int cellSize)
-        {
-            width = data.GetLength(0);
-            height = data.GetLength(1);
-            this.cellSize = cellSize;
-
-            objs = new GameObject[width, height];
-            map = new Map(data, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
-            LoadMap();
-        }
-
-        private void LoadMap()
-        {
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    MapObjectType type = map.GetGridType(x, y);
-                    LoadModel(x, y, type);
-
-                    if (type == MapObjectType.Destination)
-                    {
-                        if (destination == null)
-                            destination = map.GetValue(x, y);
-                        else
-                            Debug.LogError("有多个目标点");
-                    }
-                }
-            }
-
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    if (map.GetGridType(x, y) == MapObjectType.SpawnPoint)
-                    {
-                        PlaceSpawnPoint(x, y);
-                    }
-                }
-            }
         }
         #endregion
 
