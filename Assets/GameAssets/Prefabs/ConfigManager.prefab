@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7055827092743434972}
   - component: {fileID: 7055827092743434973}
   m_Layer: 0
-  m_Name: Config
+  m_Name: ConfigManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageConfig: {fileID: 11400000, guid: 02fa883da5d6d2a40a045344c67d4123, type: 2}
+  enemyConfig: {fileID: 11400000, guid: ef2b36c5a86ad1e4d8fc3337ab412356, type: 2}

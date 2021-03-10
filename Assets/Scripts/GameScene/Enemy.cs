@@ -4,41 +4,32 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public enum ArmorType
-    {
-        Light, // 轻甲
-        Medium, // 中甲
-        Heavy, // 重甲
-    }
-
-
-    [Serializable]
-    public class EnemyData
-    {
-        public int id;
-        public string name;
-        public float hp;
-        public float speed;
-        public ArmorType armorType;
-    }
-    
-    
     public class Enemy : MonoBehaviour
     {
-        public new string name;
-        public float hp;
-        public float speed;
-        public ArmorType armorType;
+        private EnemyData data;
+        private float currentHp;
+        private float currentSpeed;
 
-        private List<Vector3> path;
-        private int curr;
+        private List<Vector3> path; // 路径点
+        private int curr; // 当前目标路径点的索引
         private float distance;
         private float progress;
-        private Vector3 height = new Vector3(0f, 0.5f, 0f);
+        private Vector3 height = new Vector3(0f, 0.5f, 0f); // 飞行的高度
 
         public Vector3 Position => transform.localPosition;
 
-        public void SetPath(List<Vector3> path)
+        public string Name => data.name;
+
+        public Enemy SetData(EnemyData data)
+        {
+            this.data = data;
+            currentHp = data.hp;
+            currentSpeed = data.speed;
+
+            return this;
+        }
+
+        public Enemy SetPath(List<Vector3> path)
         {
             if (path.Count <= 1) Debug.LogError("路径长度太短");
 
@@ -47,11 +38,13 @@ namespace TowerDefense
             transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
             distance = Vector3.Distance(path[1], path[0]);
             curr = 1;
+
+            return this;
         }
 
         public bool OnUpdate()
         {
-            if (hp <= 0)
+            if (currentHp <= 0)
             {
                 return false;
             }
@@ -61,15 +54,15 @@ namespace TowerDefense
 
         public void GetDamage(float damage, AttackType attackType)
         {
-            float actualDamage = Config.Instance.GetDamage(damage, attackType, armorType);
-            hp -= actualDamage;
+            float actualDamage = ConfigManager.Instance.DamageConfig.GetDamage(damage, attackType, data.armorType);
+            currentHp -= actualDamage;
         }
 
         private bool Move()
         {
             if (curr >= path.Count) return false;
 
-            progress += Time.deltaTime * speed;
+            progress += Time.deltaTime * currentSpeed;
             transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + height;
 
             if (progress >= distance)

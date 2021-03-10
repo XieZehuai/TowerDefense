@@ -23,7 +23,7 @@ namespace TowerDefense
     [CreateAssetMenu(menuName = "TowerDefense/DamageConfig", fileName = "DamageConfig")]
     public class DamageConfig : ScriptableObject
     {
-        public AttackDamageConfig[] damageConfig;
+        [SerializeField] private AttackDamageConfig[] damageConfig;
 
         private Dictionary<AttackType, Dictionary<ArmorType, float>> config;
 

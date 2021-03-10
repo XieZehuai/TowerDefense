@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e8ac4ccb42f71b4ab1fbf4d5f8a3fe6, type: 3}
+  m_Name: EnemyConfig
+  m_EditorClassIdentifier: 
+  enemyDatas:
+  - id: 0
+    name: EnemyBomb
+    level: 1
+    reward: 15
+    hp: 100
+    speed: 2
+    armorType: 0
+  - id: 1
+    name: EnemyScout
+    level: 2
+    reward: 20
+    hp: 110
+    speed: 2.2
+    armorType: 0
+  - id: 2
+    name: EnemyTeslaGun
+    level: 3
+    reward: 23
+    hp: 100
+    speed: 2.5
+    armorType: 0
+  - id: 3
+    name: EnemyDeminer
+    level: 1
+    reward: 19
+    hp: 160
+    speed: 1.4
+    armorType: 1
+  - id: 4
+    name: EnemyFlak
+    level: 2
+    reward: 21
+    hp: 200
+    speed: 1.3
+    armorType: 1
+  - id: 5
+    name: EnemyShotgun
+    level: 3
+    reward: 26
+    hp: 180
+    speed: 1.5
+    armorType: 2
+  - id: 6
+    name: EnemyFlamer
+    level: 1
+    reward: 30
+    hp: 300
+    speed: 1
+    armorType: 2
+  - id: 7
+    name: EnemyGauss
+    level: 2
+    reward: 42
+    hp: 440
+    speed: 0.8
+    armorType: 2
+  - id: 8
+    name: EnemyGatling
+    level: 3
+    reward: 70
+    hp: 1000
+    speed: 0.5
+    armorType: 2

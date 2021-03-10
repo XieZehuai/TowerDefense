@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
 using UnityEngine;
+using LitJson;
 
 namespace TowerDefense.Test
 {
@@ -7,21 +8,11 @@ namespace TowerDefense.Test
     {
         private void Awake()
         {
-            List<int> t = new List<int>();
-            for (int i = 0; i < 10; i++)
-            {
-                t.Add(i);
-            }
+            string path = "Assets/StreamingAssets/LevelData/DefaultLevel.json";
+            LevelData data = LevelData.CreateDefaultData();
 
-            for (int i = 0; i < t.Count; i++)
-            {
-                t.QuickRemove(i--);
-            }
-
-            for (int i = 0; i < t.Count; i++)
-            {
-                Debug.Log(t[i]);
-            }
+            string str = JsonMapper.ToJson(data);
+            File.WriteAllText(path, str);
         }
     }
 }

@@ -6,16 +6,9 @@ namespace TowerDefense
     public class EnemyManager : SubStageManager
     {
         private float spawnInterval = 3f;
-
         private float createTimer = 0f;
         private List<Vector3>[] paths;
         private List<Enemy> enemys = new List<Enemy>();
-
-        private string[] enemyName =
-        {
-            "EnemyGauss",
-            "EnemyDeminer",
-        };
 
         public EnemyManager(StageManager stageManager) : base(stageManager)
         {
@@ -39,17 +32,13 @@ namespace TowerDefense
             this.spawnInterval = spawnInterval;
         }
 
-        public void OnChangePaths(OnChangePaths context)
-        {
-            paths = context.paths;
-        }
-
         private void CreateEnemy()
         {
-            GameObject gauss = ObjectPool.Instance.Spawn(enemyName[Random.Range(0, enemyName.Length)]);
-            Enemy enemy = gauss.GetComponent<Enemy>();
-            int random = Random.Range(0, paths.Length);
-            enemy.SetPath(paths[random]);
+            EnemyData enemyData = ConfigManager.Instance.EnemyConfig.RandomData(); // 随机获取敌人数据
+            GameObject enemyObj = ObjectPool.Instance.Spawn(enemyData.name); // 生成对象
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            int random = Random.Range(0, paths.Length); // 随机设置路径
+            enemy.SetData(enemyData).SetPath(paths[random]);
             enemys.Add(enemy);
         }
 
@@ -61,10 +50,15 @@ namespace TowerDefense
             {
                 if (!enemys[i].OnUpdate())
                 {
-                    ObjectPool.Instance.Unspawn(enemys[i].name, enemys[i].gameObject);
+                    ObjectPool.Instance.Unspawn(enemys[i].Name, enemys[i].gameObject);
                     enemys.QuickRemove(i--);
                 }
             }
+        }
+
+        private void OnChangePaths(OnChangePaths context)
+        {
+            paths = context.paths;
         }
     }
 }
