@@ -12,8 +12,8 @@ namespace TowerDefense
     {
         Empty, // 空格子
         Road, // 敌人行走的道路
-        RoadWithTower, // 放置了炮塔的路径
-        Wall, // 不能放置炮塔以及通过的墙壁
+        Wall, // 可以摆放炮塔且敌人不能通过的墙壁
+        WallWithTower, // 摆放了炮塔的墙壁
         SpawnPoint, // 敌人的出生点
         Destination, // 敌人的目标点
 

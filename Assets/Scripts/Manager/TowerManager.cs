@@ -19,17 +19,13 @@ namespace TowerDefense
 
         public bool CreateTower(Vector3 position)
         {
-            if (manager.MapManager.CanPlaceTower(position, out int x, out int y))
+            if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
             {
-                if (manager.MapManager.PlaceTower(x, y))
-                {
-                    Vector3 pos = manager.MapManager.GetCenterPosition(x, y);
-                    GameObject obj = ObjectPool.Instance.Spawn("LaserTower", pos);
-                    Tower tower = obj.GetComponent<Tower>();
-                    tower.SetCoordinate(x, y);
-                    towers.Add(tower);
-                    return true;
-                }
+                GameObject obj = ObjectPool.Instance.Spawn("LaserTower", towerPos);
+                Tower tower = obj.GetComponent<Tower>();
+                tower.SetCoordinate(x, y);
+                towers.Add(tower);
+                return true;
             }
 
             return false;
