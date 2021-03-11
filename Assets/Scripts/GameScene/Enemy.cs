@@ -14,7 +14,7 @@ namespace TowerDefense
         private int curr; // 当前目标路径点的索引
         private float distance;
         private float progress;
-        private Vector3 height = new Vector3(0f, 0.5f, 0f); // 飞行的高度
+        private Vector3 height = new Vector3(0f, 0.3f, 0f); // 飞行的高度
 
         public Vector3 Position => transform.localPosition;
 
