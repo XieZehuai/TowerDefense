@@ -17,9 +17,12 @@ namespace TowerDefense
 
         // 敌人数据
         public float waveInterval; // 每波的间隔
-        public float spawnInterval; // 每个敌人生成的间隔
         public Dictionary<int, int>[] waveData; // 每波敌人的配置
 
+        /// <summary>
+        /// 生成默认关卡数据
+        /// </summary>
+        /// <returns>默认关卡数据</returns>
         public static LevelData CreateDefaultData()
         {
             LevelData data = new LevelData();
@@ -39,7 +42,6 @@ namespace TowerDefense
             data.mapData[data.mapData.Length - 1] = MapObjectType.Destination;
 
             data.waveInterval = 5f;
-            data.spawnInterval = 2f;
             data.waveData = new Dictionary<int, int>[5];
 
             data.waveData[0] = new Dictionary<int, int> { { 0, 6 }, { 3, 4 }, { 6, 2 }, };

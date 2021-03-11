@@ -42,5 +42,10 @@ namespace TowerDefense
             UIManager.Instance.Open<UIMainScene>();
             SceneManager.LoadScene("MainScene");
         }
+
+        public void GameOver()
+        {
+            state = GameState.Over;
+        }
     }
 }

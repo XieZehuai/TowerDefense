@@ -6,7 +6,8 @@ namespace TowerDefense
     public class StageManager : MonoBehaviour
     {
         private LevelData levelData;
-        private MapObjectType selectedType = MapObjectType.Empty;
+
+        public InputManager InputManager { get; private set; }
 
         public MapManager MapManager { get; private set; }
 
@@ -16,69 +17,31 @@ namespace TowerDefense
 
         private void Awake()
         {
+            levelData = LevelData.CreateDefaultData(); // 生成关卡默认数据
+
+            InputManager = new InputManager(this);
             MapManager = new MapManager(this);
-            EnemyManager = new EnemyManager(this);
+            EnemyManager = new EnemyManager(this, levelData.waveInterval, levelData.waveData);
             TowerManager = new TowerManager(this);
         }
 
         private void Start()
         {
-            levelData = LevelData.CreateDefaultData();
 
-            EnemyManager.SetLevelData(levelData.waveInterval, levelData.spawnInterval, levelData.waveData);
+            //EnemyManager.SetLevelData(levelData.waveInterval, levelData.spawnInterval, levelData.waveData);
             //MapManager.CreateMap(mapSize.x, mapSize.y, cellSize);
             MapManager.CreateMap(levelData.mapWidth, levelData.mapHeight, levelData.mapData, 1);
         }
 
         private void Update()
         {
-            ChangeMap();
+            InputManager.OnUpdate();
 
             EnemyManager.OnUpdate();
 
-            Physics.SyncTransforms();
+            Physics.SyncTransforms(); // 敌人移动后把Transform信息同步到物理引擎
 
             TowerManager.OnUpdate();
-        }
-
-        private void ChangeMap()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                selectedType = MapObjectType.Empty;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                selectedType = MapObjectType.Road;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                selectedType = MapObjectType.Wall;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                selectedType = MapObjectType.SpawnPoint;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                selectedType = MapObjectType.Destination;
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 pos = Utils.GetMousePosition();
-                MapManager.ChangeGridType(pos, selectedType);
-            }
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                TowerManager.CreateTower(Utils.GetMousePosition());
-            }
-
-            if (Input.GetMouseButtonDown(2))
-            {
-                TowerManager.RemoveTower(Utils.GetMousePosition());
-            }
         }
     }
 }

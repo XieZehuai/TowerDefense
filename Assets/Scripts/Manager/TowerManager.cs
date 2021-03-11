@@ -6,7 +6,7 @@ namespace TowerDefense
 {
     public class TowerManager : SubStageManager
     {
-        private List<Tower> towers = new List<Tower>();
+        private readonly List<Tower> towers = new List<Tower>();
 
         public TowerManager(StageManager stageManager) : base(stageManager)
         {

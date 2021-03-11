@@ -6,32 +6,27 @@ namespace TowerDefense
     public class EnemyManager : SubStageManager
     {
         // 关卡敌人数据
-        private float waveInterval;
-        private float spawnInterval;
-        private Dictionary<int, int>[] waveData;
+        private float waveInterval; // 每一波的间隔
+        private float spawnInterval; // 下一个敌人的生成间隔
+        private Dictionary<int, int>[] waveData; // 每一波及每波包含敌人的数据
 
-        private float timer = 0f;
-        private int currentWave;
-        private int enemyCounter;
-        private bool spawn;
-        private bool nextWave;
-        private Dictionary<int, int>.Enumerator enumerator;
+        private float timer = 0f; // 敌人生成计时器
+        private int currentWave; // 当前是第几波敌人
+        private int enemyCounter; // 当前生成到第几个敌人
+        private bool spawn; // 是否正在生成敌人
+        private bool nextWave; // 是否开始生成下一波敌人
+        private Dictionary<int, int>.Enumerator enumerator; // 当前波敌人的枚举器
 
-        private List<Vector3>[] paths;
-        private List<Enemy> enemys = new List<Enemy>();
+        private List<Vector3>[] paths; // 从生成点到终点的所有路径
+        private readonly List<Enemy> enemys = new List<Enemy>(); // 保存所有敌人的引用
 
-        public EnemyManager(StageManager stageManager) : base(stageManager)
-        {
-            TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
-        }
-
-        public void SetLevelData(float waveInterval, float spawnInterval, Dictionary<int, int>[] waveData)
+        public EnemyManager(StageManager stageManager, float waveInterval, Dictionary<int, int>[] waveData) : base(stageManager)
         {
             this.waveInterval = waveInterval;
-            //this.spawnInterval = spawnInterval;
             this.waveData = waveData;
-
             nextWave = true;
+
+            TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
         }
 
         public override void OnUpdate()
@@ -53,37 +48,6 @@ namespace TowerDefense
             }
 
             UpdateEnemys();
-
-            //if (currentWave < waveData.Length)
-            //{
-            //    timer += Time.deltaTime;
-
-            //    if (timer >= interval)
-            //    {
-            //        timer = 0f;
-            //        interval = spawnInterval;
-
-            //        if (enemyCounter < enumerator.Current.Value)
-            //        {
-            //            enemyCounter++;
-            //            CreateEnemy(enumerator.Current.Key);
-            //        }
-            //        else if (enumerator.MoveNext())
-            //        {
-            //            enemyCounter = 1;
-            //            CreateEnemy(enumerator.Current.Key);
-            //        }
-            //        else
-            //        {
-            //            currentWave++;
-            //            if (currentWave < waveData.Length)
-            //            {
-            //                enumerator = waveData[currentWave].GetEnumerator();
-            //                interval = waveInterval;
-            //            }
-            //        }
-            //    }
-            //}
         }
 
         private void Spawn()
@@ -95,10 +59,10 @@ namespace TowerDefense
             }
             else if (enumerator.MoveNext())
             {
-                enemyCounter = 0;
+                enemyCounter = 1;
                 int id = enumerator.Current.Key;
                 spawnInterval = ConfigManager.Instance.EnemyConfig.GetEnemyData(id).spawnInterval;
-                //CreateEnemy(id);
+                CreateEnemy(id);
             }
             else
             {
