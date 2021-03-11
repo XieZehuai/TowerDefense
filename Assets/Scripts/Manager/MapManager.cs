@@ -13,7 +13,7 @@ namespace TowerDefense
         private int width;
         private int height;
         private int cellSize;
-        private GameObject[,] objs;
+        private Transform[,] objs;
         private MapObject destination;
         private Map map;
 
@@ -30,7 +30,7 @@ namespace TowerDefense
             this.height = height;
             this.cellSize = cellSize;
 
-            objs = new GameObject[width, height];
+            objs = new Transform[width, height];
             map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
             LoadMap();
         }
@@ -46,7 +46,7 @@ namespace TowerDefense
             height = data.GetLength(1);
             this.cellSize = cellSize;
 
-            objs = new GameObject[width, height];
+            objs = new Transform[width, height];
             map = new Map(data, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
             LoadMap();
         }
@@ -304,8 +304,8 @@ namespace TowerDefense
         private void LoadModel(int x, int y, MapObjectType type)
         {
             Vector3 pos = map.GetWorldPosition(x, y);
-            GameObject obj = ObjectPool.Instance.Spawn(type.ToString(), pos);
-            obj.transform.localScale = Vector3.one * cellSize;
+            //GameObject obj = ObjectPool.Instance.Spawn(type.ToString(), pos);
+            Transform obj = ObjectPool<Transform>.Spawn(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
             objs[x, y] = obj;
         }
 
@@ -316,7 +316,7 @@ namespace TowerDefense
 
         private void UnloadModel(int x, int y, MapObjectType type)
         {
-            ObjectPool.Instance.Unspawn(type.ToString(), objs[x, y]);
+            ObjectPool<Transform>.Unspawn(type.ToString(), objs[x, y]);
         }
         #endregion
 

@@ -4,25 +4,27 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    #region 泛型对象池，管理所有继承自Component的对象
+    /*
+     * GameObject不继承自Component，所以只能用单独的对象池保存，目前弃用
+     */
     /// <summary>
-    /// 泛型对象池
+    /// GameObject对象池
     /// </summary>
-    public static class ObjectPool<T> where T : Component
+    public class GameObjectPool : MonoSingleton<GameObjectPool>
     {
-        private static readonly Dictionary<string, Pool<T>> pools = new Dictionary<string, Pool<T>>(); // 储存所有类型的池子
-
+        private readonly Dictionary<string, Pool> pools = new Dictionary<string, Pool>(); // 储存所有类型的池子
+       
         /// <summary>
         /// 创建对象池
         /// </summary>
         /// <param name="tag">池子的标签</param>
         /// <param name="prefab">目标物体的预设</param>
         /// <param name="capacity">最大容量，默认1000</param>
-        public static void CreatePool(string tag, GameObject prefab, int capacity = 1000)
+        public void CreatePool(string tag, GameObject prefab, int capacity = 1000)
         {
             if (pools.ContainsKey(tag)) return;
 
-            Pool<T> pool = new Pool<T>(tag, prefab, capacity);
+            Pool pool = new Pool(tag, prefab, capacity);
             pools.Add(tag, pool);
         }
 
@@ -30,7 +32,7 @@ namespace TowerDefense
         /// 判断是否创建了带有目标标签的池子
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
-        public static bool ContainsPool(string tag)
+        public bool ContainsPool(string tag)
         {
             return pools.ContainsKey(tag);
         }
@@ -40,7 +42,7 @@ namespace TowerDefense
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
         /// <returns>目标池子的引用</returns>
-        public static Pool<T> GetOrCreatePool(string tag)
+        public Pool GetOrCreatePool(string tag)
         {
             if (!ContainsPool(tag))
             {
@@ -56,9 +58,9 @@ namespace TowerDefense
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
         /// <returns>目标池子里可用的对象，没有可用对象会返回null</returns>
-        public static T Spawn(string tag)
+        public GameObject Spawn(string tag)
         {
-            return Spawn(tag, Vector3.zero, Quaternion.identity, Vector3.one, null);
+            return Spawn(tag, Vector3.zero, Quaternion.identity, null);
         }
 
         /// <summary>
@@ -67,9 +69,9 @@ namespace TowerDefense
         /// <param name="tag">目标池子的标签</param>
         /// <param name="pos">对象的位置</param>
         /// <returns>目标池子里可用的对象，没有可用对象会返回null</returns>
-        public static T Spawn(string tag, Vector3 pos)
+        public GameObject Spawn(string tag, Vector3 pos)
         {
-            return Spawn(tag, pos, Quaternion.identity, Vector3.one, null);
+            return Spawn(tag, pos, Quaternion.identity, null);
         }
 
         /// <summary>
@@ -79,28 +81,20 @@ namespace TowerDefense
         /// <param name="pos">对象的位置</param>
         /// <param name="rot">对象的旋转</param>
         /// <returns>目标池子里可用的对象，没有可用对象会返回null</returns>
-        public static T Spawn(string tag, Vector3 pos, Quaternion rot)
+        public GameObject Spawn(string tag, Vector3 pos, Quaternion rot)
         {
-            return Spawn(tag, pos, rot, Vector3.one, null);
+            return Spawn(tag, pos, rot, null);
         }
 
         /// <summary>
-        /// 根据池子的标签获取对象，并设置对象的位置、旋转以及缩放
+        /// 根据池子的标签获取对象，并设置对象的位置以及旋转以及父物体
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
         /// <param name="pos">对象的位置</param>
         /// <param name="rot">对象的旋转</param>
-        /// <param name="scale">对象的父物体</param>
+        /// <param name="parent">对象的父物体</param>
         /// <returns>目标池子里可用的对象，没有可用对象会返回null</returns>
-        public static T Spawn(string tag, Vector3 pos, Quaternion rot, Vector3 scale)
-        {
-            return Spawn(tag, pos, rot, scale, null);
-        }
-
-        /// <summary>
-        /// 根据标签获取对应对象，并设置对象的位置、旋转、缩放和父物体
-        /// </summary>
-        public static T Spawn(string tag, Vector3 pos, Quaternion rot, Vector3 scale, Transform parent)
+        public GameObject Spawn(string tag, Vector3 pos, Quaternion rot, Transform parent)
         {
             if (!ContainsPool(tag))
             {
@@ -108,7 +102,7 @@ namespace TowerDefense
                 CreatePool(tag, prefab);
             }
 
-            return pools[tag].Spawn(pos, rot, scale, parent);
+            return pools[tag].Spawn(pos, rot, parent);
         }
 
         /// <summary>
@@ -116,7 +110,7 @@ namespace TowerDefense
         /// </summary>
         /// <param name="tag">对象所在池子的标签</param>
         /// <param name="obj">要回收的对象</param>
-        public static void Unspawn(string tag, T obj)
+        public void Unspawn(string tag, GameObject obj)
         {
             if (!ContainsPool(tag))
             {
@@ -128,10 +122,32 @@ namespace TowerDefense
         }
 
         /// <summary>
+        /// 延迟一段时间回收对象
+        /// </summary>
+        /// <param name="tag">对象所在池子的标签</param>
+        /// <param name="obj">要回收的对象</param>
+        /// <param name="delay">延迟时间</param>
+        public void DelayUnspawn(string tag, GameObject obj, float delay)
+        {
+            this.Invoke(() => Unspawn(tag, obj), delay);
+        }
+
+        /// <summary>
+        /// 根据条件延迟回收对象
+        /// </summary>
+        /// <param name="tag">对象所在池子的标签</param>
+        /// <param name="obj">要回收的对象</param>
+        /// <param name="condition">延迟条件</param>
+        public void DelayUnspawn(string tag, GameObject obj, YieldInstruction condition)
+        {
+            this.Invoke(() => Unspawn(tag, obj), condition);
+        }
+
+        /// <summary>
         /// 回收目标池子的所有对象
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
-        public static void UnspawnAll(string tag)
+        public void UnspawnAll(string tag)
         {
             if (!ContainsPool(tag))
             {
@@ -143,10 +159,30 @@ namespace TowerDefense
         }
 
         /// <summary>
+        /// 延迟一段时间回收目标池子的所有对象
+        /// </summary>
+        /// <param name="tag">目标池子的标签</param>
+        /// <param name="delay">延迟时间</param>
+        public void DelayUnspawnAll(string tag, float delay)
+        {
+            this.Invoke(() => UnspawnAll(tag), delay);
+        }
+
+        /// <summary>
+        /// 延迟一定条件后回收目标池子的所有对象
+        /// </summary>
+        /// <param name="tag">目标池子的标签</param>
+        /// <param name="condition">延迟条件</param>
+        public void DelayUnspawnAll(string tag, YieldInstruction condition)
+        {
+            this.Invoke(() => UnspawnAll(tag), condition);
+        }
+
+        /// <summary>
         /// 清空目标池子
         /// </summary>
         /// <param name="tag">目标池子的标签</param>
-        public static void ClearPool(string tag)
+        public void ClearPool(string tag)
         {
             if (!ContainsPool(tag)) return;
 
@@ -156,7 +192,7 @@ namespace TowerDefense
         /// <summary>
         /// 清空所有池子
         /// </summary>
-        public static void ClearAllPool()
+        public void ClearAllPool()
         {
             foreach (var pool in pools.Values)
             {
@@ -164,21 +200,18 @@ namespace TowerDefense
             }
         }
     }
-    #endregion
 
 
-    #region 泛型池
     /// <summary>
-    /// 泛型池，用于保存及管理某一类型的对象
+    /// 池子，管理某一类对象
     /// </summary>
-    /// <typeparam name="T">存储对象的数据类型，必须继承自Component</typeparam>
-    public class Pool<T> where T : Component
+    public class Pool
     {
         public string tag; // 池子的标签
         public GameObject prefab; // 物体的预设
         public readonly int capacity; // 最大容量
-        public HashSet<T> activeList = new HashSet<T>(); // 保存所有激活状态的对象（不可用）
-        public HashSet<T> inactiveList = new HashSet<T>(); // 保存所有非激活状态的对象（可用）
+        public HashSet<GameObject> activeList = new HashSet<GameObject>(); // 保存所有激活状态的对象（不可用）
+        public HashSet<GameObject> inactiveList = new HashSet<GameObject>(); // 保存所有非激活状态的对象（可用）
 
         public Pool(string tag, GameObject prefab, int capacity)
         {
@@ -187,42 +220,36 @@ namespace TowerDefense
             this.capacity = capacity;
         }
 
-        public T Spawn()
+        public GameObject Spawn()
         {
-            return Spawn(Vector3.zero, Quaternion.identity, Vector3.one, null);
+            return Spawn(Vector3.zero, Quaternion.identity, null);
         }
 
-        public T Spawn(Vector3 pos)
+        public GameObject Spawn(Vector3 pos)
         {
-            return Spawn(pos, Quaternion.identity, Vector3.one, null);
+            return Spawn(pos, Quaternion.identity, null);
         }
 
-        public T Spawn(Vector3 pos, Quaternion rot)
+        public GameObject Spawn(Vector3 pos, Quaternion rot)
         {
-            return Spawn(pos, rot, Vector3.one, null);
+            return Spawn(pos, rot, null);
         }
 
-        public T Spawn(Vector3 pos, Quaternion rot, Vector3 scale)
+        public GameObject Spawn(Vector3 pos, Quaternion rot, Transform parent)
         {
-            return Spawn(pos, rot, scale, null);
-        }
-
-        public T Spawn(Vector3 pos, Quaternion rot, Vector3 scale, Transform parent)
-        {
-            T obj = null;
+            GameObject obj = null;
 
             if (inactiveList.Count == 0 && activeList.Count < capacity)
             {
-                obj = Object.Instantiate(prefab, pos, rot, parent).GetComponent<T>();
+                obj = GameObject.Instantiate(prefab, pos, rot, parent);
             }
             else if (inactiveList.Count > 0)
             {
-                obj = inactiveList.First(); // 从可用列表中取出第一个
-                obj.gameObject.SetActive(true);
+                obj = inactiveList.First();
+                obj.SetActive(true);
                 obj.transform.SetParent(parent);
                 obj.transform.localPosition = pos;
                 obj.transform.localRotation = rot;
-                obj.transform.localScale = scale;
                 inactiveList.Remove(obj);
             }
 
@@ -231,13 +258,13 @@ namespace TowerDefense
             return obj;
         }
 
-        public void Unspawn(T obj)
+        public void Unspawn(GameObject obj)
         {
             if (inactiveList.Contains(obj)) return;
 
             if (activeList.Contains(obj))
             {
-                obj.gameObject.SetActive(false);
+                obj.SetActive(false);
                 activeList.Remove(obj);
                 inactiveList.Add(obj);
             }
@@ -251,7 +278,7 @@ namespace TowerDefense
         {
             foreach (var obj in activeList)
             {
-                obj.gameObject.SetActive(false);
+                obj.SetActive(false);
                 activeList.Remove(obj);
                 inactiveList.Add(obj);
             }
@@ -261,17 +288,16 @@ namespace TowerDefense
         {
             foreach (var item in activeList)
             {
-                Object.Destroy(item.gameObject);
+                Object.Destroy(item);
             }
 
             foreach (var item in inactiveList)
             {
-                Object.Destroy(item.gameObject);
+                Object.Destroy(item);
             }
 
             activeList.Clear();
             inactiveList.Clear();
         }
     }
-    #endregion
 }
