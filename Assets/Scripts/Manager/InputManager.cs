@@ -21,6 +21,7 @@ namespace TowerDefense
         {
             ChangeSelectedType();
             ChangeMap();
+            Replay();
         }
 
         private void ChangeSelectedType()
@@ -63,6 +64,14 @@ namespace TowerDefense
             if (Input.GetMouseButtonDown(2))
             {
                 manager.TowerManager.RemoveTower(Utils.GetMousePosition());
+            }
+        }
+
+        private void Replay()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                manager.Replay();
             }
         }
     }

@@ -6,11 +6,11 @@ namespace TowerDefense
     public class EnemyManager : SubStageManager
     {
         // 关卡敌人数据
-        private float waveInterval; // 每一波的间隔
-        private float spawnInterval; // 下一个敌人的生成间隔
-        private Dictionary<int, int>[] waveData; // 每一波及每波包含敌人的数据
+        private readonly float waveInterval; // 每一波的间隔
+        private readonly Dictionary<int, int>[] waveData; // 每一波及每波包含敌人的数据
 
         private float timer = 0f; // 敌人生成计时器
+        private float spawnInterval; // 下一个敌人的生成间隔
         private int currentWave; // 当前是第几波敌人
         private int enemyCounter; // 当前生成到第几个敌人
         private bool spawn; // 是否正在生成敌人
@@ -24,7 +24,8 @@ namespace TowerDefense
         {
             this.waveInterval = waveInterval;
             this.waveData = waveData;
-            nextWave = true;
+
+            Replay();
 
             TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
         }
@@ -50,6 +51,26 @@ namespace TowerDefense
             UpdateEnemys();
         }
 
+        public void Replay()
+        {
+            if (enemys.Count > 0)
+            {
+                for (int i = 0; i < enemys.Count; i++)
+                {
+                    ObjectPool.Instance.Unspawn(enemys[i].Name, enemys[i].gameObject);
+                }
+                enemys.Clear();
+            }
+
+            nextWave = true;
+            spawn = false;
+            timer = 0f;
+            currentWave = -1;
+            spawnInterval = 0f;
+            enemyCounter = 0;
+        }
+
+        // 生成敌人
         private void Spawn()
         {
             if (enemyCounter < enumerator.Current.Value)
@@ -71,6 +92,7 @@ namespace TowerDefense
             }
         }
 
+        // 生成下一波
         private void NextWave()
         {
             nextWave = false;
@@ -81,6 +103,7 @@ namespace TowerDefense
             spawn = true;
         }
 
+        // 加载敌人
         private void CreateEnemy(int id)
         {
             EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
@@ -91,6 +114,7 @@ namespace TowerDefense
             enemys.Add(enemy);
         }
 
+        // 执行所有敌人的更新逻辑
         private void UpdateEnemys()
         {
             if (enemys.Count == 0)

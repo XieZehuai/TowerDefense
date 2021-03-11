@@ -43,5 +43,10 @@ namespace TowerDefense
 
             TowerManager.OnUpdate();
         }
+
+        public void Replay()
+        {
+            EnemyManager.Replay();
+        }
     }
 }
