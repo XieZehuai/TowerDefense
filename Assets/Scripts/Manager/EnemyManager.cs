@@ -28,7 +28,7 @@ namespace TowerDefense
         public void SetLevelData(float waveInterval, float spawnInterval, Dictionary<int, int>[] waveData)
         {
             this.waveInterval = waveInterval;
-            this.spawnInterval = spawnInterval;
+            //this.spawnInterval = spawnInterval;
             this.waveData = waveData;
 
             nextWave = true;
@@ -95,8 +95,10 @@ namespace TowerDefense
             }
             else if (enumerator.MoveNext())
             {
-                enemyCounter = 1;
-                CreateEnemy(enumerator.Current.Key);
+                enemyCounter = 0;
+                int id = enumerator.Current.Key;
+                spawnInterval = ConfigManager.Instance.EnemyConfig.GetEnemyData(id).spawnInterval;
+                //CreateEnemy(id);
             }
             else
             {

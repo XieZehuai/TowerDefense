@@ -23,6 +23,7 @@ namespace TowerDefense
         public float hp; // 生命值
         public float speed; // 移动速度
         public ArmorType armorType; // 护甲类型
+        public float spawnInterval; // 生成延迟
     }
 
 

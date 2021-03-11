@@ -6,7 +6,7 @@ namespace TowerDefense
     [SelectionBase]
     public class LaserTower : Tower
     {
-        public float damagePerSecond = 30f; // 每秒钟造成的伤害
+        public float damagePerSecond = 100f; // 每秒钟造成的伤害
 
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
@@ -16,7 +16,6 @@ namespace TowerDefense
         private Enemy target; // 要攻击的目标敌人
         private LineRenderer lineRenderer;
         private static readonly Vector3 laserOriginPos = new Vector3(0f, 0f, -0.5f); // 激光的发射点
-        private Vector3 laserOffset = laserOriginPos; // 激光目标点的偏移量
 
         public override AttackType AttackType => AttackType.Laser;
 
@@ -27,7 +26,7 @@ namespace TowerDefense
 
         public override void OnUpdate()
         {
-            if (TrackTarget(ref target) || FindTarget())
+            if (TrackTarget(ref target) || FindTarget(out target))
             {
                 Shoot();
             }
@@ -37,17 +36,15 @@ namespace TowerDefense
             }
         }
 
-        private bool FindTarget()
-        {
-            if (FindTarget(out target))
-            {
-                laserOffset = new Vector3(0f, 0.1f, 0f);
-                return true;
-            }
+        //private bool FindTarget()
+        //{
+        //    if (FindTarget(out target))
+        //    {
+        //        return true;
+        //    }
 
-            laserOffset = laserOriginPos;
-            return false;
-        }
+        //    return false;
+        //}
 
         private void Idle()
         {
