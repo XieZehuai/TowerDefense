@@ -57,7 +57,6 @@ namespace TowerDefense
             {
                 for (int i = 0; i < enemys.Count; i++)
                 {
-                    //ObjectPool.Instance.Unspawn(enemys[i].Name, enemys[i].gameObject);
                     ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
                 }
 

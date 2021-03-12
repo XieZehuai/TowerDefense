@@ -36,8 +36,28 @@ namespace TowerDefense
         {
             if (manager.MapManager.GetGridPosition(position, out int x, out int y))
             {
-                manager.MapManager.RemoveTower(x, y);
+                for (int i = 0; i < towers.Count; i++)
+                {
+                    if (towers[i].x == x && towers[i].y == y)
+                    {
+                        manager.MapManager.RemoveTower(x, y);
+                        ObjectPool<Tower>.Unspawn("LaserTower", towers[i]);
+                        towers.QuickRemove(i);
+                        break;
+                    }
+                }
             }
+        }
+
+        public void Replay()
+        {
+            for (int i = 0; i < towers.Count; i++)
+            {
+                manager.MapManager.RemoveTower(towers[i].x, towers[i].y);
+                ObjectPool<Tower>.Unspawn("LaserTower", towers[i]);
+            }
+
+            towers.Clear();
         }
 
         private void UpdateTower()
