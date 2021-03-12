@@ -10,6 +10,11 @@ namespace TowerDefense
 
     public struct OnEnemyReach { }
 
+    public struct OnEnemyDestroy
+    {
+        public int reward;
+    }
+
     public struct StartGame { }
 
     public struct PauseGame { }
@@ -22,22 +27,22 @@ namespace TowerDefense
 
     public struct OnReplay { }
 
-    public struct NextWaveCountdown
+    public struct UpdateNextWaveCountdown
     {
         public float countdown;
     }
 
-    public struct OnUpdateHp
+    public struct UpdateHp
     {
         public int hp;
     }
 
-    public struct OnUpdateCoins
+    public struct UpdateCoins
     {
         public int coins;
     }
 
-    public struct OnUpdateWave
+    public struct UpdateWaveCount
     {
         public int waveCount;
     }

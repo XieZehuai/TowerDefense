@@ -48,6 +48,7 @@ namespace TowerDefense
             TowerManager = new TowerManager(this);
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
+            TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
             TypeEventSystem.Register<StartGame>(StartGame);
             TypeEventSystem.Register<PauseGame>(Pause);
             TypeEventSystem.Register<ContinueGame>(Continue);
@@ -77,13 +78,19 @@ namespace TowerDefense
         private void OnEnemyReach(OnEnemyReach context)
         {
             hp--;
-            TypeEventSystem.Send(new OnUpdateHp { hp = hp });
+            TypeEventSystem.Send(new UpdateHp { hp = hp });
 
             if (hp <= 0)
             {
                 Debug.Log("游戏结束");
                 state = State.GameOver;
             }
+        }
+
+        private void OnEnemyDestroy(OnEnemyDestroy context)
+        {
+            coins += context.reward;
+            TypeEventSystem.Send(new UpdateCoins { coins = coins });
         }
 
         public void StartGame(StartGame context = default)
@@ -139,6 +146,7 @@ namespace TowerDefense
         private void OnDestroy()
         {
             TypeEventSystem.UnRegister<OnEnemyReach>(OnEnemyReach);
+            TypeEventSystem.UnRegister<OnEnemyDestroy>(OnEnemyDestroy);
             TypeEventSystem.UnRegister<StartGame>(StartGame);
             TypeEventSystem.UnRegister<PauseGame>(Pause);
             TypeEventSystem.UnRegister<ContinueGame>(Continue);

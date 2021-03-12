@@ -50,7 +50,7 @@ namespace TowerDefense
                     }
                     else
                     {
-                        TypeEventSystem.Send(new NextWaveCountdown { countdown = waveInterval - timer });
+                        TypeEventSystem.Send(new UpdateNextWaveCountdown { countdown = waveInterval - timer });
                     }
                 }
             }
@@ -113,7 +113,7 @@ namespace TowerDefense
 
             enumerator = waveData[currentWave].GetEnumerator();
             spawn = true;
-            TypeEventSystem.Send(new OnUpdateWave { waveCount = currentWave + 1 });
+            TypeEventSystem.Send(new UpdateWaveCount { waveCount = currentWave + 1 });
         }
 
         // 加载敌人

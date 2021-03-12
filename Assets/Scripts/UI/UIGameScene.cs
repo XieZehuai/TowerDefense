@@ -24,10 +24,10 @@ namespace TowerDefense
 
             spawnBtn.onClick.AddListener(OnSpawnBtnClick);
             pauseBtn.onClick.AddListener(OnPauseBtnClick);
-            TypeEventSystem.Register<OnUpdateHp>(UpdateHp);
-            TypeEventSystem.Register<OnUpdateCoins>(UpdateCoins);
-            TypeEventSystem.Register<OnUpdateWave>(UpdateWave);
-            TypeEventSystem.Register<NextWaveCountdown>(UpdateNextWaveCountdown);
+            TypeEventSystem.Register<UpdateHp>(UpdateHp);
+            TypeEventSystem.Register<UpdateCoins>(UpdateCoins);
+            TypeEventSystem.Register<UpdateWaveCount>(UpdateWave);
+            TypeEventSystem.Register<UpdateNextWaveCountdown>(UpdateNextWaveCountdown);
             TypeEventSystem.Register<OnReplay>(OnReplay);
         }
 
@@ -35,10 +35,10 @@ namespace TowerDefense
         {
             spawnBtn.onClick.RemoveAllListeners();
             pauseBtn.onClick.RemoveAllListeners();
-            TypeEventSystem.UnRegister<OnUpdateHp>(UpdateHp);
-            TypeEventSystem.UnRegister<OnUpdateCoins>(UpdateCoins);
-            TypeEventSystem.UnRegister<OnUpdateWave>(UpdateWave);
-            TypeEventSystem.UnRegister<NextWaveCountdown>(UpdateNextWaveCountdown);
+            TypeEventSystem.UnRegister<UpdateHp>(UpdateHp);
+            TypeEventSystem.UnRegister<UpdateCoins>(UpdateCoins);
+            TypeEventSystem.UnRegister<UpdateWaveCount>(UpdateWave);
+            TypeEventSystem.UnRegister<UpdateNextWaveCountdown>(UpdateNextWaveCountdown);
             TypeEventSystem.UnRegister<OnReplay>(OnReplay);
         }
 
@@ -63,24 +63,24 @@ namespace TowerDefense
             UIManager.Instance.Open<UIPausePanel>(layer: UILayer.Foreground);
         }
 
-        private void UpdateHp(OnUpdateHp context)
+        private void UpdateHp(UpdateHp context)
         {
             hpSlider.value = context.hp;
             hpText.text = context.hp + "/" + data.maxHp;
         }
 
-        private void UpdateCoins(OnUpdateCoins context)
+        private void UpdateCoins(UpdateCoins context)
         {
             coinsText.text = context.coins.ToString();
         }
 
-        private void UpdateWave(OnUpdateWave context)
+        private void UpdateWave(UpdateWaveCount context)
         {
             spawnBtn.gameObject.SetActive(false);
             waveText.text = context.waveCount + "/" + data.maxWaveCount;
         }
 
-        private void UpdateNextWaveCountdown(NextWaveCountdown context)
+        private void UpdateNextWaveCountdown(UpdateNextWaveCountdown context)
         {
             if (!spawnBtn.gameObject.activeSelf)
             {

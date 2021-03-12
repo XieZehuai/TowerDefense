@@ -46,6 +46,7 @@ namespace TowerDefense
         {
             if (currentHp <= 0)
             {
+                TypeEventSystem.Send(new OnEnemyDestroy { reward = data.reward });
                 return false;
             }
 
