@@ -19,9 +19,50 @@ namespace TowerDefense
 
         public override void OnUpdate()
         {
-            ChangeSelectedType();
-            ChangeMap();
-            Replay();
+            if (manager.IsPreparing || manager.IsPlaying)
+            {
+                if (manager.IsPreparing)
+                {
+                    StartGame();
+                }
+
+                ChangeSelectedType();
+                ChangeMap();
+
+                if (manager.IsPlaying)
+                {
+                    Pause();
+                    Replay();
+                }
+            }
+            else if (manager.IsPaused)
+            {
+                Continue();
+            }
+        }
+
+        private void StartGame()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                manager.StartGame();
+            }
+        }
+
+        private void Pause()
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                manager.Pause();
+            }
+        }
+
+        private void Continue()
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                manager.Continue();
+            }
         }
 
         private void ChangeSelectedType()
