@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public abstract class SubStageManager
+    public abstract class SubStageManager : IDisposable
     {
         protected StageManager manager;
 
@@ -14,6 +14,11 @@ namespace TowerDefense
 
         public virtual void OnUpdate()
         {
+        }
+
+        public virtual void Dispose()
+        {
+            manager = null;
         }
     }
 }

@@ -25,4 +25,6 @@ WayPointPrefab=Prefab/GameScene/WayPointPrefab
 Tower=Prefab/Tower
 LaserTowerPrefab=Prefab/Tower/LaserTowerPrefab
 UI=Prefab/UI
+UIGameScene=Prefab/UI/UIGameScene
 UIMainScene=Prefab/UI/UIMainScene
+UIPausePanel=Prefab/UI/UIPausePanel

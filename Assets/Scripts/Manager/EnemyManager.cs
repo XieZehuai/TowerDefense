@@ -28,6 +28,7 @@ namespace TowerDefense
             Replay();
 
             TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
+            TypeEventSystem.Register<NextWave>(NextWave);
         }
 
         public override void OnUpdate()
@@ -41,10 +42,16 @@ namespace TowerDefense
                     timer = 0f;
                     Spawn();
                 }
-                else if (nextWave && timer >= waveInterval)
+                else if (nextWave)
                 {
-                    timer = 0f;
-                    NextWave();
+                    if (currentWave == -1 || timer >= waveInterval)
+                    {
+                        NextWave();
+                    }
+                    else
+                    {
+                        TypeEventSystem.Send(new NextWaveCountdown { countdown = waveInterval - timer });
+                    }
                 }
             }
 
@@ -90,29 +97,30 @@ namespace TowerDefense
             {
                 spawn = false;
                 enemyCounter = 0;
+                spawnInterval = 0f;
             }
         }
 
         // 生成下一波
-        private void NextWave()
+        private void NextWave(NextWave context = default)
         {
+            if (!nextWave) return;
+
+            timer = 0f;
             nextWave = false;
             currentWave++;
             if (currentWave >= waveData.Length) return;
 
             enumerator = waveData[currentWave].GetEnumerator();
             spawn = true;
+            TypeEventSystem.Send(new OnUpdateWave { waveCount = currentWave + 1 });
         }
 
         // 加载敌人
         private void CreateEnemy(int id)
         {
             EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
-
-            //GameObject enemyObj = ObjectPool.Instance.Spawn(enemyData.name); // 生成对象
-            //Enemy enemy = enemyObj.GetComponent<Enemy>();
             Enemy enemy = ObjectPool<Enemy>.Spawn(enemyData.name);
-
             int random = Random.Range(0, paths.Length); // 随机设置路径
             enemy.SetData(enemyData).SetPath(paths[random]);
             enemys.Add(enemy);
@@ -131,7 +139,6 @@ namespace TowerDefense
             {
                 if (!enemys[i].OnUpdate())
                 {
-                    //ObjectPool.Instance.Unspawn(enemys[i].Name, enemys[i].gameObject);
                     ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
                     enemys.QuickRemove(i--);
                 }
@@ -141,6 +148,13 @@ namespace TowerDefense
         private void OnChangePaths(OnChangePaths context)
         {
             paths = context.paths;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            TypeEventSystem.UnRegister<OnChangePaths>(OnChangePaths);
+            TypeEventSystem.UnRegister<NextWave>(NextWave);
         }
     }
 }

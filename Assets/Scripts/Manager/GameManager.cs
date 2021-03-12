@@ -15,37 +15,21 @@ namespace TowerDefense
 
     public class GameManager : MonoSingleton<GameManager>
     {
-        //private GameState state;
-        //public GameState State => state;
-
-        //public bool IsIdle => State == GameState.Idle;
-        //public bool IsPlaying => State == GameState.Playing;
-        //public bool IsPaused => State == GameState.Paused;
-        //public bool IsOver => State == GameState.Over;
-
         protected override void OnInit()
         {
-            //state = GameState.Idle;
             UIManager.Instance.Open<UIMainScene>();
         }
 
         public void LoadGameScene()
         {
-            //state = GameState.Playing;
-            UIManager.Instance.Close<UIMainScene>();
             SceneManager.LoadScene("GameScene");
+            UIManager.Instance.Close<UIMainScene>();
         }
 
         public void LoadMainScene()
         {
-            //state = GameState.Idle;
-            UIManager.Instance.Open<UIMainScene>();
             SceneManager.LoadScene("MainScene");
-        }
-
-        public void GameOver()
-        {
-            //state = GameState.Over;
+            UIManager.Instance.Open<UIMainScene>();
         }
     }
 }

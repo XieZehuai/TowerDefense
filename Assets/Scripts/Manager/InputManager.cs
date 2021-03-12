@@ -39,6 +39,10 @@ namespace TowerDefense
             {
                 Continue();
             }
+            else if (manager.IsGameOver)
+            {
+                Replay();
+            }
         }
 
         private void StartGame()

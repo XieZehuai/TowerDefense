@@ -68,7 +68,7 @@ namespace TowerDefense
 
             if (!actions.ContainsKey(type))
             {
-                Debug.LogWarning("没有注册该类型的事件");
+                Debug.LogWarning("没有注册该类型的事件" + type);
                 return;
             }
 

@@ -41,7 +41,7 @@ namespace TowerDefense
             data.mapData[5] = MapObjectType.SpawnPoint;
             data.mapData[data.mapData.Length - 1] = MapObjectType.Destination;
 
-            data.waveInterval = 5f;
+            data.waveInterval = 10f;
             data.waveData = new Dictionary<int, int>[5];
 
             data.waveData[0] = new Dictionary<int, int> { { 0, 6 }, { 3, 4 }, { 6, 2 }, };

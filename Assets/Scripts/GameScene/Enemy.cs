@@ -60,7 +60,11 @@ namespace TowerDefense
 
         private bool Move()
         {
-            if (curr >= path.Count) return false;
+            if (curr >= path.Count)
+            {
+                TypeEventSystem.Send(new OnEnemyReach());
+                return false;
+            }
 
             progress += Time.deltaTime * currentSpeed;
             transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + height;

@@ -51,7 +51,7 @@ namespace TowerDefense
 
             switch (layer)
             {
-                case UILayer.Background: parent = backgroundLayer; return;
+                case UILayer.Background: parent = backgroundLayer; break;
                 case UILayer.Common: parent = commonLayer; break;
                 case UILayer.Foreground: parent = foregroundLayer; break;
             }
