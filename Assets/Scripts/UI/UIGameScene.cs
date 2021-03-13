@@ -24,6 +24,13 @@ namespace TowerDefense
 
             spawnBtn.onClick.AddListener(OnSpawnBtnClick);
             pauseBtn.onClick.AddListener(OnPauseBtnClick);
+
+            emptyBtn.OnClick.AddListener(OnGridTypeBtnClick);
+            roadBtn.OnClick.AddListener(OnGridTypeBtnClick);
+            wallBtn.OnClick.AddListener(OnGridTypeBtnClick);
+            spawnPointBtn.OnClick.AddListener(OnGridTypeBtnClick);
+            destinationBtn.OnClick.AddListener(OnGridTypeBtnClick);
+
             TypeEventSystem.Register<UpdateHp>(UpdateHp);
             TypeEventSystem.Register<UpdateCoins>(UpdateCoins);
             TypeEventSystem.Register<UpdateWaveCount>(UpdateWave);
@@ -35,6 +42,13 @@ namespace TowerDefense
         {
             spawnBtn.onClick.RemoveAllListeners();
             pauseBtn.onClick.RemoveAllListeners();
+
+            emptyBtn.OnClick.RemoveAllListeners();
+            roadBtn.OnClick.RemoveAllListeners();
+            wallBtn.OnClick.RemoveAllListeners();
+            spawnPointBtn.OnClick.RemoveAllListeners();
+            destinationBtn.OnClick.RemoveAllListeners();
+
             TypeEventSystem.UnRegister<UpdateHp>(UpdateHp);
             TypeEventSystem.UnRegister<UpdateCoins>(UpdateCoins);
             TypeEventSystem.UnRegister<UpdateWaveCount>(UpdateWave);
@@ -42,6 +56,7 @@ namespace TowerDefense
             TypeEventSystem.UnRegister<OnReplay>(OnReplay);
         }
 
+        #region Button点击事件
         private void OnSpawnBtnClick()
         {
             if (firstWave)
@@ -63,6 +78,14 @@ namespace TowerDefense
             UIManager.Instance.Open<UIPausePanel>(layer: UILayer.Foreground);
         }
 
+        private void OnGridTypeBtnClick(MapObjectType type)
+        {
+            Debug.Log("选择格子类型" + type);
+            TypeEventSystem.Send(new ChangeGridType { type = type });
+        }
+        #endregion
+
+        #region UI更新事件
         private void UpdateHp(UpdateHp context)
         {
             hpSlider.value = context.hp;
@@ -101,19 +124,29 @@ namespace TowerDefense
             coinsText.text = data.coins.ToString();
             waveText.text = "1/" + data.maxWaveCount;
         }
+        #endregion
     }
 
     public partial class UIGameScene
     {
         private UIGameSceneData data;
 
+        [Header("左上角")]
         [SerializeField] private Slider hpSlider = default;
         [SerializeField] private Text hpText = default;
         [SerializeField] private Text coinsText = default;
 
+        [Header("右上角")]
         [SerializeField] private Button pauseBtn = default;
         [SerializeField] private Text waveText = default;
         [SerializeField] private Button spawnBtn = default;
         [SerializeField] private Text spawnText = default;
+
+        [Header("格子类型选择按钮")]
+        [SerializeField] private CustomButton emptyBtn = default;
+        [SerializeField] private CustomButton roadBtn = default;
+        [SerializeField] private CustomButton wallBtn = default;
+        [SerializeField] private CustomButton spawnPointBtn = default;
+        [SerializeField] private CustomButton destinationBtn = default;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace TowerDefense
@@ -10,14 +11,14 @@ namespace TowerDefense
     /// </summary>
     public enum MapObjectType
     {
-        Empty, // 空格子
-        Road, // 敌人行走的道路
-        Wall, // 可以摆放炮塔且敌人不能通过的墙壁
-        WallWithTower, // 摆放了炮塔的墙壁
-        SpawnPoint, // 敌人的出生点
-        Destination, // 敌人的目标点
+        Empty = 1, // 空格子
+        Road = 2, // 敌人行走的道路
+        Wall = 3, // 可以摆放炮塔且敌人不能通过的墙壁
+        SpawnPoint = 4, // 敌人的出生点
+        Destination = 5, // 敌人的目标点
+        WallWithTower = 6, // 摆放了炮塔的墙壁
 
-        None, // 非格子的其他地方
+        None = 0, // 非格子的其他地方
     }
     #endregion
 
@@ -144,6 +145,31 @@ namespace TowerDefense
             }
 
             return MapObjectType.None;
+        }
+
+        public void Save(string path)
+        {
+            using (var writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                writer.Write(width);
+                writer.Write(height);
+                writer.Write(cellSize);
+
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        if (gridArray[x, y].type == MapObjectType.WallWithTower)
+                        {
+                            writer.Write((int)MapObjectType.Wall);
+                        }
+                        else
+                        {
+                            writer.Write((int)gridArray[x, y].type);
+                        }
+                    }
+                }
+            }
         }
     }
 }

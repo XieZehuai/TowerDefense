@@ -7,92 +7,27 @@ namespace TowerDefense
     {
         private MapObjectType selectedType = MapObjectType.Wall;
 
-        private readonly KeyCode emptyKey = KeyCode.Alpha1;
-        private readonly KeyCode roadKey = KeyCode.Alpha2;
-        private readonly KeyCode wallKey = KeyCode.Alpha3;
-        private readonly KeyCode spawnPointKey = KeyCode.Alpha4;
-        private readonly KeyCode destinationKey = KeyCode.Alpha5;
-
         public InputManager(StageManager stageManager) : base(stageManager)
         {
+            TypeEventSystem.Register<StartGame>(StartGame);
+            TypeEventSystem.Register<PauseGame>(Pause);
+            TypeEventSystem.Register<ContinueGame>(Continue);
+            TypeEventSystem.Register<ReplayGame>(Replay);
+            TypeEventSystem.Register<SaveMap>(SaveMap);
+            TypeEventSystem.Register<ChangeGridType>(ChangeGridType);
         }
 
         public override void OnUpdate()
         {
             if (manager.IsPreparing || manager.IsPlaying)
             {
-                if (manager.IsPreparing)
-                {
-                    StartGame();
-                }
-
-                ChangeSelectedType();
                 ChangeMap();
-
-                if (manager.IsPlaying)
-                {
-                    Pause();
-                    Replay();
-                }
-            }
-            else if (manager.IsPaused)
-            {
-                Continue();
-            }
-            else if (manager.IsGameOver)
-            {
-                Replay();
+                PlaceTower();
+                RemoveTower();
             }
         }
 
-        private void StartGame()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                manager.StartGame();
-            }
-        }
-
-        private void Pause()
-        {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                manager.Pause();
-            }
-        }
-
-        private void Continue()
-        {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                manager.Continue();
-            }
-        }
-
-        private void ChangeSelectedType()
-        {
-            if (Input.GetKeyDown(emptyKey))
-            {
-                selectedType = MapObjectType.Empty;
-            }
-            else if (Input.GetKeyDown(roadKey))
-            {
-                selectedType = MapObjectType.Road;
-            }
-            else if (Input.GetKeyDown(wallKey))
-            {
-                selectedType = MapObjectType.Wall;
-            }
-            else if (Input.GetKeyDown(spawnPointKey))
-            {
-                selectedType = MapObjectType.SpawnPoint;
-            }
-            else if (Input.GetKeyDown(destinationKey))
-            {
-                selectedType = MapObjectType.Destination;
-            }
-        }
-
+        #region 玩家点击事件，通过鼠标点击地图触发
         private void ChangeMap()
         {
             if (Input.GetMouseButtonDown(0))
@@ -100,24 +35,67 @@ namespace TowerDefense
                 Vector3 pos = Utils.GetMousePosition();
                 manager.MapManager.ChangeGridType(pos, selectedType);
             }
+        }
 
+        private void PlaceTower()
+        {
             if (Input.GetMouseButtonDown(1))
             {
                 manager.TowerManager.CreateTower(Utils.GetMousePosition());
             }
+        }
 
+        private void RemoveTower()
+        {
             if (Input.GetMouseButtonDown(2))
             {
                 manager.TowerManager.RemoveTower(Utils.GetMousePosition());
             }
         }
+        #endregion
 
-        private void Replay()
+        #region UI输入事件，全部通过发送消息触发
+        private void StartGame(StartGame context)
         {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                manager.Replay();
-            }
+            manager.StartGame();
+        }
+
+        private void Pause(PauseGame context)
+        {
+            manager.Pause();
+        }
+
+        private void Continue(ContinueGame context)
+        {
+            manager.Continue();
+        }
+
+        private void Replay(ReplayGame context)
+        {
+            manager.Replay();
+        }
+
+        private void SaveMap(SaveMap context)
+        {
+            manager.SaveMapData();
+        }
+
+        private void ChangeGridType(ChangeGridType context)
+        {
+            selectedType = context.type;
+        }
+        #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            TypeEventSystem.UnRegister<StartGame>(StartGame);
+            TypeEventSystem.UnRegister<PauseGame>(Pause);
+            TypeEventSystem.UnRegister<ContinueGame>(Continue);
+            TypeEventSystem.UnRegister<ReplayGame>(Replay);
+            TypeEventSystem.UnRegister<SaveMap>(SaveMap);
+            TypeEventSystem.UnRegister<ChangeGridType>(ChangeGridType);
         }
     }
 }

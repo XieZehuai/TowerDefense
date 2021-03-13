@@ -153,6 +153,7 @@ namespace TowerDefense
         public override void Dispose()
         {
             base.Dispose();
+
             TypeEventSystem.UnRegister<OnChangePaths>(OnChangePaths);
             TypeEventSystem.UnRegister<NextWave>(NextWave);
         }

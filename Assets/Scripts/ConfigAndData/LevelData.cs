@@ -10,14 +10,14 @@ namespace TowerDefense
         public int playerHp;
         public int coins;
 
+        // 敌人数据
+        public float waveInterval; // 每波的间隔
+        public Dictionary<int, int>[] waveData; // 每波敌人的配置
+
         // 地图数据
         public int mapWidth;
         public int mapHeight;
         public MapObjectType[] mapData;
-
-        // 敌人数据
-        public float waveInterval; // 每波的间隔
-        public Dictionary<int, int>[] waveData; // 每波敌人的配置
 
         /// <summary>
         /// 生成默认关卡数据

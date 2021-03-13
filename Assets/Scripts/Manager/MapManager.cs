@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace TowerDefense
 {
@@ -94,6 +95,39 @@ namespace TowerDefense
                         PlaceSpawnPoint(x, y);
                     }
                 }
+            }
+        }
+
+        public void SaveMapData(string fileName)
+        {
+            string path = Application.streamingAssetsPath;
+            path = Path.Combine(path, fileName);
+
+            map.Save(path);
+        }
+
+        public void LoadMapData(string fileName)
+        {
+            string path = Application.streamingAssetsPath;
+            path = Path.Combine(path, fileName);
+
+            using (var reader = new BinaryReader(File.Open(path, FileMode.Open)))
+            {
+                int width = reader.ReadInt32();
+                int height = reader.ReadInt32();
+                int cellSize = reader.ReadInt32();
+                MapObject[,] grids = new MapObject[width, height];
+
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        MapObjectType type = (MapObjectType)reader.ReadInt32();
+                        grids[x, y] = new MapObject(type, x, y);
+                    }
+                }
+
+                CreateMap(grids, cellSize);
             }
         }
         #endregion

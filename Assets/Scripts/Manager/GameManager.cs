@@ -1,20 +1,12 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 namespace TowerDefense
 {
-    //public enum GameState
-    //{
-    //    Idle,
-    //    Playing,
-    //    Paused,
-    //    Over,
-    //}
-
-
     public class GameManager : MonoSingleton<GameManager>
     {
+        public bool load = false;
+        public string fileName = "MapData";
+
         protected override void OnInit()
         {
             UIManager.Instance.Open<UIMainScene>();

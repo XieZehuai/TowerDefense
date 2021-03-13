@@ -15,6 +15,9 @@ namespace TowerDefense
         public int reward;
     }
 
+    public struct OnReplay { }
+
+    #region UI点击事件
     public struct StartGame { }
 
     public struct PauseGame { }
@@ -25,8 +28,15 @@ namespace TowerDefense
 
     public struct NextWave { }
 
-    public struct OnReplay { }
+    public struct ChangeGridType
+    {
+        public MapObjectType type;
+    }
 
+    public struct SaveMap { }
+    #endregion
+
+    #region 数据更新事件
     public struct UpdateNextWaveCountdown
     {
         public float countdown;
@@ -46,4 +56,5 @@ namespace TowerDefense
     {
         public int waveCount;
     }
+    #endregion
 }

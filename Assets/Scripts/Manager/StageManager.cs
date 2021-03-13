@@ -49,16 +49,19 @@ namespace TowerDefense
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
-            TypeEventSystem.Register<StartGame>(StartGame);
-            TypeEventSystem.Register<PauseGame>(Pause);
-            TypeEventSystem.Register<ContinueGame>(Continue);
-            TypeEventSystem.Register<ReplayGame>(Replay);
         }
 
         private void Start()
         {
             // 生成地图
-            MapManager.CreateMap(levelData.mapWidth, levelData.mapHeight, levelData.mapData, Utils.MAP_CELL_SIZE);
+            if (GameManager.Instance.load)
+            {
+                LoadMapData();
+            }
+            else
+            {
+                MapManager.CreateMap(levelData.mapWidth, levelData.mapHeight, levelData.mapData, Utils.MAP_CELL_SIZE);
+            }
 
             UIManager.Instance.Open<UIGameScene>(new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = levelData.waveData.Length }, UILayer.Background);
         }
@@ -73,6 +76,64 @@ namespace TowerDefense
                 Physics.SyncTransforms(); // 敌人移动后把Transform信息同步到物理引擎
                 TowerManager.OnUpdate();
             }
+        }
+
+        public void StartGame()
+        {
+            if (state != State.Preparing)
+            {
+                Debug.LogError("当前不处于准备状态" + state);
+                return;
+            }
+
+            state = State.Playing;
+        }
+
+        public void Pause()
+        {
+            if (state == State.Paused)
+            {
+                Debug.LogError("已经处于暂停状态");
+                return;
+            }
+
+            stateTemp = state; // 保存原状态
+            state = State.Paused;
+        }
+
+        public void Continue()
+        {
+            if (state != State.Paused)
+            {
+                Debug.LogError("当前不处于暂停状态" + state);
+                return;
+            }
+
+            state = stateTemp; // 恢复原状态
+        }
+
+        public void Replay()
+        {
+            state = State.Preparing;
+            hp = levelData.playerHp;
+            coins = levelData.coins;
+
+            EnemyManager.Replay();
+            TowerManager.Replay();
+
+            TypeEventSystem.Send(new OnReplay());
+        }
+
+        public void SaveMapData()
+        {
+            Debug.Log("保存地图数据");
+            MapManager.SaveMapData(GameManager.Instance.fileName);
+        }
+
+        public void LoadMapData()
+        {
+            Debug.Log("加载地图数据");
+            MapManager.LoadMapData(GameManager.Instance.fileName);
         }
 
         private void OnEnemyReach(OnEnemyReach context)
@@ -93,64 +154,10 @@ namespace TowerDefense
             TypeEventSystem.Send(new UpdateCoins { coins = coins });
         }
 
-        public void StartGame(StartGame context = default)
-        {
-            if (state != State.Preparing)
-            {
-                Debug.LogError("当前不处于准备状态" + state);
-                return;
-            }
-
-            Debug.Log("开始游戏");
-            state = State.Playing;
-        }
-
-        public void Pause(PauseGame context = default)
-        {
-            if (state != State.Playing && state != State.Preparing)
-            {
-                Debug.LogError("当前不处于游戏状态" + state);
-                return;
-            }
-
-            Debug.Log("暂停");
-            stateTemp = state; // 保存原状态
-            state = State.Paused;
-        }
-
-        public void Continue(ContinueGame context = default)
-        {
-            if (state != State.Paused)
-            {
-                Debug.LogError("当前不处于暂停状态" + state);
-                return;
-            }
-
-            Debug.Log("继续");
-            state = stateTemp; // 恢复原状态
-        }
-
-        public void Replay(ReplayGame context = default)
-        {
-            Debug.Log("重玩");
-            state = State.Preparing;
-            hp = levelData.playerHp;
-            coins = levelData.coins;
-
-            EnemyManager.Replay();
-            TowerManager.Replay();
-
-            TypeEventSystem.Send(new OnReplay());
-        }
-
         private void OnDestroy()
         {
             TypeEventSystem.UnRegister<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.UnRegister<OnEnemyDestroy>(OnEnemyDestroy);
-            TypeEventSystem.UnRegister<StartGame>(StartGame);
-            TypeEventSystem.UnRegister<PauseGame>(Pause);
-            TypeEventSystem.UnRegister<ContinueGame>(Continue);
-            TypeEventSystem.UnRegister<ReplayGame>(Replay);
 
             InputManager.Dispose();
             MapManager.Dispose();
