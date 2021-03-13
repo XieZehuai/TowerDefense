@@ -13,6 +13,7 @@ namespace TowerDefense
             GameOver,
         }
 
+        [SerializeField] private CameraController cameraController;
 
         private LevelData levelData;
         private int hp; // 当前生命
@@ -27,6 +28,8 @@ namespace TowerDefense
         public EnemyManager EnemyManager { get; private set; }
 
         public TowerManager TowerManager { get; private set; }
+
+        public CameraController CameraController => cameraController;
 
         public bool IsPreparing => state == State.Preparing;
         public bool IsPlaying => state == State.Playing;

@@ -19,6 +19,8 @@ namespace TowerDefense
 
         public override void OnUpdate()
         {
+            ControlCamera();
+
             if (manager.IsPreparing || manager.IsPlaying)
             {
                 ChangeMap();
@@ -27,7 +29,7 @@ namespace TowerDefense
             }
         }
 
-        #region 玩家点击事件，通过鼠标点击地图触发
+        #region 玩家鼠标控制事件，通过鼠标点击地图触发
         private void ChangeMap()
         {
             if (Input.GetMouseButtonDown(0))
@@ -50,6 +52,18 @@ namespace TowerDefense
             if (Input.GetMouseButtonDown(2))
             {
                 manager.TowerManager.RemoveTower(Utils.GetMousePosition());
+            }
+        }
+
+        private void ControlCamera()
+        {
+            manager.CameraController.Zoom(Input.GetAxis("Mouse ScrollWheel"));
+
+            if (Input.GetMouseButton(2))
+            {
+                float x = Input.GetAxis("Mouse X");
+                float y = Input.GetAxis("Mouse Y");
+                manager.CameraController.Rotate(x, y);
             }
         }
         #endregion

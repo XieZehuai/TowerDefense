@@ -80,7 +80,6 @@ namespace TowerDefense
 
         private void OnGridTypeBtnClick(MapObjectType type)
         {
-            Debug.Log("选择格子类型" + type);
             TypeEventSystem.Send(new ChangeGridType { type = type });
         }
         #endregion
