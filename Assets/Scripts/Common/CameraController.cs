@@ -18,6 +18,8 @@ namespace TowerDefense
         [SerializeField] private float maxAngle = 70f;
         [SerializeField] private float minAngle = -20f;
 
+        [SerializeField] private float moveSpeed = 2f;
+
         [SerializeField] private Transform cameraContainer = default;
 
         private float distance = 15f;
@@ -27,6 +29,19 @@ namespace TowerDefense
         {
             cameraContainer.localPosition = Vector3.back * distance;
             rotation = transform.localEulerAngles;
+        }
+
+        public void Move(Vector2 movement)
+        {
+            movement *= moveSpeed * Time.deltaTime;
+            Vector3 forward = transform.forward;
+            forward.y = 0f;
+            forward.Normalize();
+            Vector3 right = transform.right;
+            right.y = 0f;
+            right.Normalize();
+
+            transform.localPosition += right * movement.x + forward * movement.y;
         }
 
         public void Rotate(float x, float y)

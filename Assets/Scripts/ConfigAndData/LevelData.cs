@@ -30,15 +30,15 @@ namespace TowerDefense
             data.playerHp = 10;
             data.coins = 200;
 
-            data.mapWidth = 10;
-            data.mapHeight = 10;
+            data.mapWidth = 20;
+            data.mapHeight = 20;
             data.mapData = new MapObjectType[data.mapWidth * data.mapHeight];
 
             for (int i = 0; i < data.mapData.Length; i++)
             {
                 data.mapData[i] = MapObjectType.Road;
             }
-            data.mapData[5] = MapObjectType.SpawnPoint;
+            data.mapData[0] = MapObjectType.SpawnPoint;
             data.mapData[data.mapData.Length - 1] = MapObjectType.Destination;
 
             data.waveInterval = 10f;

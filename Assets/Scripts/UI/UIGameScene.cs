@@ -30,6 +30,7 @@ namespace TowerDefense
             wallBtn.OnClick.AddListener(OnGridTypeBtnClick);
             spawnPointBtn.OnClick.AddListener(OnGridTypeBtnClick);
             destinationBtn.OnClick.AddListener(OnGridTypeBtnClick);
+            saveBtn.onClick.AddListener(OnSaveBtnClick);
 
             TypeEventSystem.Register<UpdateHp>(UpdateHp);
             TypeEventSystem.Register<UpdateCoins>(UpdateCoins);
@@ -48,6 +49,7 @@ namespace TowerDefense
             wallBtn.OnClick.RemoveAllListeners();
             spawnPointBtn.OnClick.RemoveAllListeners();
             destinationBtn.OnClick.RemoveAllListeners();
+            saveBtn.onClick.RemoveAllListeners();
 
             TypeEventSystem.UnRegister<UpdateHp>(UpdateHp);
             TypeEventSystem.UnRegister<UpdateCoins>(UpdateCoins);
@@ -81,6 +83,11 @@ namespace TowerDefense
         private void OnGridTypeBtnClick(MapObjectType type)
         {
             TypeEventSystem.Send(new ChangeGridType { type = type });
+        }
+
+        private void OnSaveBtnClick()
+        {
+            TypeEventSystem.Send(new SaveMap());
         }
         #endregion
 
@@ -147,5 +154,6 @@ namespace TowerDefense
         [SerializeField] private CustomButton wallBtn = default;
         [SerializeField] private CustomButton spawnPointBtn = default;
         [SerializeField] private CustomButton destinationBtn = default;
+        [SerializeField] private Button saveBtn = default;
     }
 }

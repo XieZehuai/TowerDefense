@@ -65,6 +65,11 @@ namespace TowerDefense
                 float y = Input.GetAxis("Mouse Y");
                 manager.CameraController.Rotate(x, y);
             }
+
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
+            Vector2 movement = new Vector2(h, v).normalized;
+            manager.CameraController.Move(movement);
         }
         #endregion
 
