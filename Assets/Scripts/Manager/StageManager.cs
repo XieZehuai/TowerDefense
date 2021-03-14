@@ -20,6 +20,7 @@ namespace TowerDefense
         private int coins; // 当前金币
         private State state = State.Preparing; // 当前游戏的状态
         private State stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
+        private PathIndicator pathIndicator = new PathIndicator();
 
         public InputManager InputManager { get; private set; }
 
@@ -166,6 +167,7 @@ namespace TowerDefense
             MapManager.Dispose();
             EnemyManager.Dispose();
             TowerManager.Dispose();
+            pathIndicator.Dispose();
         }
     }
 }

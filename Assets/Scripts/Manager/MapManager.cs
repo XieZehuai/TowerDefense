@@ -132,23 +132,6 @@ namespace TowerDefense
         }
         #endregion
 
-        #region 格子相关功能
-        public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
-        {
-            return map.GetGridPosition(worldPosition, out x, out y);
-        }
-
-        public Vector3 GetCenterPosition(int x, int y)
-        {
-            return map.GetCenterPosition(x, y);
-        }
-
-        public Vector3 GetWorldPosition(int x, int y)
-        {
-            return map.GetWorldPosition(x, y);
-        }
-        #endregion
-
         #region 摆放炮塔相关功能
         public bool TryPlaceTower(Vector3 worldPosition, out int x, out int y, out Vector3 towerPosition)
         {
@@ -188,6 +171,21 @@ namespace TowerDefense
         #endregion
 
         #region 格子相关功能
+        public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
+        {
+            return map.GetGridPosition(worldPosition, out x, out y);
+        }
+
+        public Vector3 GetCenterPosition(int x, int y)
+        {
+            return map.GetCenterPosition(x, y);
+        }
+
+        public Vector3 GetWorldPosition(int x, int y)
+        {
+            return map.GetWorldPosition(x, y);
+        }
+
         public void ChangeGridType(Vector3 worldPosition, MapObjectType type)
         {
             if (map.GetGridPosition(worldPosition, out int x, out int y))

@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace TowerDefense
+{
+    public class PathIndicator : IDisposable
+    {
+        private List<Vector3>[] paths;
+        private readonly List<Transform> arrows = new List<Transform>();
+        private readonly Vector3 height = new Vector3(0f, 0.01f, 0f);
+
+        public PathIndicator()
+        {
+            TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
+        }
+
+        public void ShowPath()
+        {
+            for (int i = 0; i < paths.Length; i++)
+            {
+                // 在路径点上加载箭头，跳过出生点和目标点
+                for (int j = 1; j < paths[i].Count - 1; j++)
+                {
+                    Vector3 pos = paths[i][j] + height;
+                    float dir = GetDirection(paths[i][j], paths[i][j + 1]);
+                    Quaternion rot = Quaternion.Euler(new Vector3(90f, dir, 0f));
+                    Transform arrow = ObjectPool<Transform>.Spawn("Arrow", pos, rot);
+                    arrows.Add(arrow);
+                }
+            }
+        }
+
+        public void HidePath()
+        {
+            for (int i = 0; i < arrows.Count; i++)
+            {
+                ObjectPool<Transform>.Unspawn("Arrow", arrows[i]);
+            }
+
+            arrows.Clear();
+        }
+
+        public float GetDirection(Vector3 from, Vector3 to)
+        {
+            float x = to.x - from.x;
+            float z = to.z - from.z;
+
+            if (x == 0f && z > 0f) return 0f;
+            if (x > 0f && z > 0f) return 45f;
+            if (x > 0f && z == 0f) return 90f;
+            if (x > 0f && z < 0f) return 135f;
+            if (x == 0f && z < 0f) return 180f;
+            if (x < 0f && z < 0f) return 225f;
+            if (x < 0f && z == 0f) return 270f;
+            return 315f;
+        }
+
+        private void OnChangePaths(OnChangePaths context)
+        {
+            paths = context.paths;
+
+            HidePath();
+            ShowPath();
+        }
+
+        public void Dispose()
+        {
+            TypeEventSystem.UnRegister<OnChangePaths>(OnChangePaths);
+        }
+    }
+}

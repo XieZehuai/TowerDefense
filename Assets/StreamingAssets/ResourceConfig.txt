@@ -16,6 +16,7 @@ EnemyDeminerPrefab=Prefab/Enemy/Medium/EnemyDeminerPrefab
 EnemyFlakPrefab=Prefab/Enemy/Medium/EnemyFlakPrefab
 EnemyShotgunPrefab=Prefab/Enemy/Medium/EnemyShotgunPrefab
 GameScene=Prefab/GameScene
+ArrowPrefab=Prefab/GameScene/ArrowPrefab
 DestinationPrefab=Prefab/GameScene/DestinationPrefab
 EmptyPrefab=Prefab/GameScene/EmptyPrefab
 RoadPrefab=Prefab/GameScene/RoadPrefab
