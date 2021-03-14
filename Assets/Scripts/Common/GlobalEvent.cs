@@ -34,6 +34,8 @@ namespace TowerDefense
     }
 
     public struct SaveMap { }
+
+    public struct TogglePathIndicator { }
     #endregion
 
     #region 数据更新事件

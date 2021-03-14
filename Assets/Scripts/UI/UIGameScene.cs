@@ -31,6 +31,7 @@ namespace TowerDefense
             spawnPointBtn.OnClick.AddListener(OnGridTypeBtnClick);
             destinationBtn.OnClick.AddListener(OnGridTypeBtnClick);
             saveBtn.onClick.AddListener(OnSaveBtnClick);
+            pathToggleBtn.onClick.AddListener(OnPathToggleBtnClick);
 
             TypeEventSystem.Register<UpdateHp>(UpdateHp);
             TypeEventSystem.Register<UpdateCoins>(UpdateCoins);
@@ -50,6 +51,7 @@ namespace TowerDefense
             spawnPointBtn.OnClick.RemoveAllListeners();
             destinationBtn.OnClick.RemoveAllListeners();
             saveBtn.onClick.RemoveAllListeners();
+            pathToggleBtn.onClick.RemoveAllListeners();
 
             TypeEventSystem.UnRegister<UpdateHp>(UpdateHp);
             TypeEventSystem.UnRegister<UpdateCoins>(UpdateCoins);
@@ -88,6 +90,11 @@ namespace TowerDefense
         private void OnSaveBtnClick()
         {
             TypeEventSystem.Send(new SaveMap());
+        }
+
+        private void OnPathToggleBtnClick()
+        {
+            TypeEventSystem.Send(new TogglePathIndicator());
         }
         #endregion
 
@@ -155,5 +162,6 @@ namespace TowerDefense
         [SerializeField] private CustomButton spawnPointBtn = default;
         [SerializeField] private CustomButton destinationBtn = default;
         [SerializeField] private Button saveBtn = default;
+        [SerializeField] private Button pathToggleBtn = default;
     }
 }

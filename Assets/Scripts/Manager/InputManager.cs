@@ -15,6 +15,7 @@ namespace TowerDefense
             TypeEventSystem.Register<ReplayGame>(Replay);
             TypeEventSystem.Register<SaveMap>(SaveMap);
             TypeEventSystem.Register<ChangeGridType>(ChangeGridType);
+            TypeEventSystem.Register<TogglePathIndicator>(TogglePathIndicator);
         }
 
         public override void OnUpdate()
@@ -103,6 +104,11 @@ namespace TowerDefense
         {
             selectedType = context.type;
         }
+
+        private void TogglePathIndicator(TogglePathIndicator context)
+        {
+            manager.PathIndicator.TogglePathIndicator();
+        }
         #endregion
 
         public override void Dispose()
@@ -115,6 +121,7 @@ namespace TowerDefense
             TypeEventSystem.UnRegister<ReplayGame>(Replay);
             TypeEventSystem.UnRegister<SaveMap>(SaveMap);
             TypeEventSystem.UnRegister<ChangeGridType>(ChangeGridType);
+            TypeEventSystem.UnRegister<TogglePathIndicator>(TogglePathIndicator);
         }
     }
 }

@@ -9,13 +9,25 @@ namespace TowerDefense
         private List<Vector3>[] paths;
         private readonly List<Transform> arrows = new List<Transform>();
         private readonly Vector3 height = new Vector3(0f, 0.01f, 0f);
+        private bool showPath = true;
 
         public PathIndicator()
         {
             TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
         }
 
-        public void ShowPath()
+        public void TogglePathIndicator()
+        {
+            showPath = !showPath;
+            HidePath();
+            
+            if (showPath)
+            {
+                ShowPath();
+            }
+        }
+
+        private void ShowPath()
         {
             for (int i = 0; i < paths.Length; i++)
             {
@@ -31,7 +43,7 @@ namespace TowerDefense
             }
         }
 
-        public void HidePath()
+        private void HidePath()
         {
             for (int i = 0; i < arrows.Count; i++)
             {
@@ -39,6 +51,17 @@ namespace TowerDefense
             }
 
             arrows.Clear();
+        }
+
+        private void OnChangePaths(OnChangePaths context)
+        {
+            paths = context.paths;
+
+            if (showPath)
+            {
+                HidePath();
+                ShowPath();
+            }
         }
 
         public float GetDirection(Vector3 from, Vector3 to)
@@ -54,14 +77,6 @@ namespace TowerDefense
             if (x < 0f && z < 0f) return 225f;
             if (x < 0f && z == 0f) return 270f;
             return 315f;
-        }
-
-        private void OnChangePaths(OnChangePaths context)
-        {
-            paths = context.paths;
-
-            HidePath();
-            ShowPath();
         }
 
         public void Dispose()

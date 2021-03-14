@@ -13,24 +13,20 @@ namespace TowerDefense
             GameOver,
         }
 
-        [SerializeField] private CameraController cameraController;
+        [SerializeField] private CameraController cameraController = default;
 
         private LevelData levelData;
         private int hp; // 当前生命
         private int coins; // 当前金币
         private State state = State.Preparing; // 当前游戏的状态
         private State stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
-        private PathIndicator pathIndicator = new PathIndicator();
 
         public InputManager InputManager { get; private set; }
-
         public MapManager MapManager { get; private set; }
-
         public EnemyManager EnemyManager { get; private set; }
-
         public TowerManager TowerManager { get; private set; }
-
         public CameraController CameraController => cameraController;
+        public PathIndicator PathIndicator { get; } = new PathIndicator();
 
         public bool IsPreparing => state == State.Preparing;
         public bool IsPlaying => state == State.Playing;
@@ -167,7 +163,7 @@ namespace TowerDefense
             MapManager.Dispose();
             EnemyManager.Dispose();
             TowerManager.Dispose();
-            pathIndicator.Dispose();
+            PathIndicator.Dispose();
         }
     }
 }
