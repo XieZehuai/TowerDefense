@@ -7,7 +7,7 @@ namespace TowerDefense
     public class PathIndicator : IDisposable
     {
         private List<Vector3>[] paths;
-        private readonly List<Transform> arrows = new List<Transform>();
+        private readonly List<PoolObject> arrows = new List<PoolObject>();
         private readonly Vector3 height = new Vector3(0f, 0.01f, 0f);
         private bool showPath = true;
 
@@ -20,7 +20,7 @@ namespace TowerDefense
         {
             showPath = !showPath;
             HidePath();
-            
+
             if (showPath)
             {
                 ShowPath();
@@ -37,7 +37,8 @@ namespace TowerDefense
                     Vector3 pos = paths[i][j] + height;
                     float dir = GetDirection(paths[i][j], paths[i][j + 1]);
                     Quaternion rot = Quaternion.Euler(new Vector3(90f, dir, 0f));
-                    Transform arrow = ObjectPool<Transform>.Spawn("Arrow", pos, rot);
+                    //Transform arrow = GenericObjectPool<Transform>.Spawn("Arrow", pos, rot);
+                    PoolObject arrow = ObjectPool.Spawn<PoolObject>("Arrow", pos, rot);
                     arrows.Add(arrow);
                 }
             }
@@ -45,11 +46,11 @@ namespace TowerDefense
 
         private void HidePath()
         {
-            for (int i = 0; i < arrows.Count; i++)
-            {
-                ObjectPool<Transform>.Unspawn("Arrow", arrows[i]);
-            }
-
+            //for (int i = 0; i < arrows.Count; i++)
+            //{
+            //    GenericObjectPool<Transform>.Unspawn("Arrow", arrows[i]);
+            //}
+            ObjectPool.UnspawnAll("Arrow");
             arrows.Clear();
         }
 

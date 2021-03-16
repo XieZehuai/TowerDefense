@@ -1,6 +1,4 @@
-﻿using System.IO;
-using UnityEngine;
-using LitJson;
+﻿using UnityEngine;
 
 namespace TowerDefense.Test
 {
@@ -8,11 +6,6 @@ namespace TowerDefense.Test
     {
         private void Awake()
         {
-            string path = "Assets/StreamingAssets/LevelData/DefaultLevel.json";
-            LevelData data = LevelData.CreateDefaultData();
-
-            string str = JsonMapper.ToJson(data);
-            File.WriteAllText(path, str);
         }
     }
 }

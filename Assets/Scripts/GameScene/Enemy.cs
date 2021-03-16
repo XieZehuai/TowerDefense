@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : PoolObject
     {
         private EnemyData data;
         private float currentHp;

@@ -64,7 +64,8 @@ namespace TowerDefense
             {
                 for (int i = 0; i < enemys.Count; i++)
                 {
-                    ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
+                    //ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
+                    ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
                 }
 
                 enemys.Clear();
@@ -120,7 +121,8 @@ namespace TowerDefense
         private void CreateEnemy(int id)
         {
             EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
-            Enemy enemy = ObjectPool<Enemy>.Spawn(enemyData.name);
+            //Enemy enemy = ObjectPool<Enemy>.Spawn(enemyData.name);
+            Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name);
             int random = Random.Range(0, paths.Length); // 随机设置路径
             enemy.SetData(enemyData).SetPath(paths[random]);
             enemys.Add(enemy);
@@ -139,7 +141,8 @@ namespace TowerDefense
             {
                 if (!enemys[i].OnUpdate())
                 {
-                    ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
+                    //ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
+                    ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
                     enemys.QuickRemove(i--);
                 }
             }

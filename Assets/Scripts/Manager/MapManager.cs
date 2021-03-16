@@ -14,7 +14,7 @@ namespace TowerDefense
         private int width;
         private int height;
         private int cellSize;
-        private Transform[,] objs;
+        private PoolObject[,] models;
         private MapObject destination;
         private Map map;
 
@@ -31,7 +31,7 @@ namespace TowerDefense
             this.height = height;
             this.cellSize = cellSize;
 
-            objs = new Transform[width, height];
+            models = new PoolObject[width, height];
             map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
             LoadMap();
         }
@@ -47,7 +47,7 @@ namespace TowerDefense
             height = data.GetLength(1);
             this.cellSize = cellSize;
 
-            objs = new Transform[width, height];
+            models = new PoolObject[width, height];
             map = new Map(data, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
             LoadMap();
         }
@@ -146,14 +146,6 @@ namespace TowerDefense
             return false;
         }
 
-        public bool RemoveTower(int x, int y)
-        {
-            if (map.GetGridType(x, y) != MapObjectType.WallWithTower) return false;
-
-            map.SetGridType(x, y, MapObjectType.Wall);
-            return true;
-        }
-
         public bool CanPlaceTower(Vector3 worldPosition, out int x, out int y)
         {
             if (GetGridPosition(worldPosition, out x, out y))
@@ -167,6 +159,28 @@ namespace TowerDefense
             x = 0;
             y = 0;
             return false;
+        }
+
+        public bool RemoveTower(int x, int y)
+        {
+            if (map.GetGridType(x, y) != MapObjectType.WallWithTower) return false;
+
+            map.SetGridType(x, y, MapObjectType.Wall);
+            return true;
+        }
+
+        public void RemoveAllTower()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (map.GetGridType(x, y) == MapObjectType.WallWithTower)
+                    {
+                        map.SetGridType(x, y, MapObjectType.Wall);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -336,9 +350,9 @@ namespace TowerDefense
         private void LoadModel(int x, int y, MapObjectType type)
         {
             Vector3 pos = map.GetWorldPosition(x, y);
-            //GameObject obj = ObjectPool.Instance.Spawn(type.ToString(), pos);
-            Transform obj = ObjectPool<Transform>.Spawn(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
-            objs[x, y] = obj;
+            PoolObject obj = ObjectPool.Spawn<PoolObject>(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
+            //Transform obj = GenericObjectPool<Transform>.Spawn(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
+            models[x, y] = obj;
         }
 
         private void UnloadModel(int x, int y)
@@ -348,7 +362,8 @@ namespace TowerDefense
 
         private void UnloadModel(int x, int y, MapObjectType type)
         {
-            ObjectPool<Transform>.Unspawn(type.ToString(), objs[x, y]);
+            //GenericObjectPool<Transform>.Unspawn(type.ToString(), models[x, y]);
+            ObjectPool.Unspawn(type.ToString(), models[x, y]);
         }
         #endregion
 
@@ -396,8 +411,8 @@ namespace TowerDefense
             PriorityQueue<MapObject> openList = new PriorityQueue<MapObject>(8); // 保存所有待寻路的节点（可用优先队列保存）
             HashSet<MapObject> closeList = new HashSet<MapObject>(); // 保存所有已经寻路过的节点
             MapObject[,] parents = new MapObject[width, height]; // 每个节点的父节点，构成一棵树，形成路径
-            //int[,] costG = new int[width, height]; // 保存起点到每个点的距离
-            //int[,] costH = new int[width, height]; // 保存每个点到终点的距离
+                                                                 //int[,] costG = new int[width, height]; // 保存起点到每个点的距离
+                                                                 //int[,] costH = new int[width, height]; // 保存每个点到终点的距离
 
             //int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
             //int CostG(MapObject obj) => costG[obj.x, obj.y];

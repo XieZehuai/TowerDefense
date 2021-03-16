@@ -13,7 +13,7 @@ namespace TowerDefense
     #endregion
 
 
-    public abstract class Tower : MonoBehaviour
+    public abstract class Tower : PoolObject
     {
         public int x;
         public int y;

@@ -36,16 +36,6 @@ namespace TowerDefense
             }
         }
 
-        //private bool FindTarget()
-        //{
-        //    if (FindTarget(out target))
-        //    {
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
         private void Idle()
         {
             lineRenderer.SetPosition(1, laserOriginPos);
