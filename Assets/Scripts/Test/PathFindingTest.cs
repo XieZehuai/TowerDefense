@@ -45,9 +45,6 @@ namespace TowerDefense.Test
         private NativeArray<Node> nodes;
         private List<CNode> cnodes;
 
-        private bool[] results;
-        private NativeList<int2>[] paths;
-
         public void Init(int width, int height, MapObject[,] datas, int2 endPos)
         {
             this.width = width;
@@ -102,23 +99,11 @@ namespace TowerDefense.Test
             return arr;
         }
 
-        private void OnFindPathFinish(OnFindPathFinish context)
-        {
-            Debug.Log("receive message " + context.path.Length);
-            results[context.index] = context.isSuccess;
-            paths[context.index] = context.path;
-        }
-
         public bool FindPaths(NativeArray<int2> startPosArray, ref NativeList<int2>[] paths)
         {
             float startTime = Time.realtimeSinceStartup;
 
             int startPosCount = startPosArray.Length;
-
-            this.results = new bool[startPosCount];
-            this.paths = new NativeList<int2>[startPosCount];
-            TypeEventSystem.Register<OnFindPathFinish>(OnFindPathFinish);
-
             NativeArray<JobHandle> jobHandles = new NativeArray<JobHandle>(startPosCount, Allocator.TempJob);
             FindPathJob[] jobs = new FindPathJob[startPosCount];
 
@@ -142,37 +127,33 @@ namespace TowerDefense.Test
             jobHandles.Dispose();
 
             bool success = true;
-
             for (int i = 0; i < startPosCount; i++)
             {
-                if (success && !results[i]) success = false;
-                paths[i] = this.paths[i];
                 jobs[i].Dispose();
             }
 
-            //startTime = Time.realtimeSinceStartup;
+            startTime = Time.realtimeSinceStartup;
 
-            //for (int i = 0; i < starts.Length; i++)
-            //{
-            //    NativeList<int2> path = new NativeList<int2>(Allocator.Temp);
-            //    if (!FindPath(starts[i], false, ref path))
-            //    {
-            //        return false;
-            //    }
+            for (int i = 0; i < startPosArray.Length; i++)
+            {
+                NativeList<int2> path = new NativeList<int2>(Allocator.Temp);
+                if (!FindPath(startPosArray[i], false, ref path))
+                {
+                    return false;
+                }
 
-            //    paths[i] = path;
-            //}
+                paths[i] = path;
+            }
 
-            //Debug.Log((Time.realtimeSinceStartup - startTime) * 1000f);
+            Debug.Log((Time.realtimeSinceStartup - startTime) * 1000f);
 
-            //startTime = Time.realtimeSinceStartup;
-            //for (int i = 0; i < starts.Length; i++)
-            //{
-            //    CFindPath(new Vector2Int(starts[i].x, starts[i].y));
-            //}
-            //Debug.Log((Time.realtimeSinceStartup - startTime) * 1000f);
+            startTime = Time.realtimeSinceStartup;
+            for (int i = 0; i < startPosArray.Length; i++)
+            {
+                CFindPath(new Vector2Int(startPosArray[i].x, startPosArray[i].y));
+            }
+            Debug.Log((Time.realtimeSinceStartup - startTime) * 1000f);
 
-            TypeEventSystem.UnRegister<OnFindPathFinish>(OnFindPathFinish);
             nodes.Dispose();
             return success;
         }
@@ -250,17 +231,6 @@ namespace TowerDefense.Test
 
                     neighbours.Dispose();
                 }
-
-                Node endNode = nodes[endIndex];
-                bool isSuccess = endNode.parentIndex != -1;
-                NativeList<int2> path = GetPath(endNode);
-
-                TypeEventSystem.Send(new OnFindPathFinish
-                {
-                    index = index,
-                    isSuccess = isSuccess,
-                    path = path,
-                });
             }
 
             public void Dispose()
