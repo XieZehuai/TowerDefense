@@ -313,7 +313,11 @@ namespace TowerDefense
                 int xTemp = destination.x;
                 int yTemp = destination.y;
                 destination = map.GetValue(x, y);
-                ChangeGridType(xTemp, yTemp, MapObjectType.Road);
+
+                UnloadModel(xTemp, yTemp);
+                map.SetGridType(xTemp, yTemp, MapObjectType.Road);
+                LoadModel(xTemp, yTemp, MapObjectType.Road);
+
                 LoadModel(x, y, MapObjectType.Destination);
             }
             else
@@ -330,7 +334,7 @@ namespace TowerDefense
 
             spawnPoints.Add(obj);
             //if (Dijkstra(obj, destination, true, path))
-            if (manager.FindPaths(endPos))
+            if (manager.FindPaths(endPos, false))
             {
                 UnloadModel(x, y);
                 map.SetGridType(x, y, MapObjectType.SpawnPoint);
@@ -353,7 +357,7 @@ namespace TowerDefense
 
             spawnPoints.Remove(obj);
             //paths.Remove(obj);
-            manager.FindPaths(new Vector2Int(destination.x, destination.y));
+            manager.FindPaths(new Vector2Int(destination.x, destination.y), false);
             //TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
 
             return true;
@@ -387,7 +391,7 @@ namespace TowerDefense
 
         private bool FindAllPath(MapObject target)
         {
-            return manager.FindPaths(new Vector2Int(target.x, target.y));
+            return manager.FindPaths(new Vector2Int(target.x, target.y), true);
 
             //if (spawnPoints.Count == 0) return false;
 

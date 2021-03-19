@@ -5,7 +5,7 @@ namespace TowerDefense
     /// <summary>
     /// 摄像机控制器
     /// </summary>
-    public class CameraController : MonoBehaviour
+    public class CameraController : MonoSingleton<CameraController>
     {
         [Header("缩放控制参数")]
         [SerializeField] private float maxDistance = 20f;
@@ -25,7 +25,7 @@ namespace TowerDefense
         private float distance = 15f;
         private Vector3 rotation;
 
-        private void Awake()
+        protected override void OnInit()
         {
             cameraContainer.localPosition = Vector3.back * distance;
             rotation = transform.localEulerAngles;

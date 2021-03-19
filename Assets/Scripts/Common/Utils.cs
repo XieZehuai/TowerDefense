@@ -62,7 +62,7 @@ namespace TowerDefense
         }
         #endregion
 
-        #region List<T>扩展方法
+        #region 集合扩展方法
         /// <summary>
         /// 快速从List中删除一个元素，删除后会打乱原有顺序
         /// </summary>
@@ -82,6 +82,18 @@ namespace TowerDefense
             {
                 list.RemoveAt(index);
             }
+        }
+
+        public static T[] SubArray<T>(this T[] arr, int start, int length)
+        {
+            T[] subArr = new T[length];
+
+            for (int i = start; i < start + length; i++)
+            {
+                subArr[i - start] = arr[i];
+            }
+
+            return subArr;
         }
         #endregion
     }

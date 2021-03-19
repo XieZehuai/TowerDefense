@@ -17,8 +17,8 @@ namespace TowerDefense
         private bool nextWave; // 是否开始生成下一波敌人
         private Dictionary<int, int>.Enumerator enumerator; // 当前波敌人的枚举器
 
-        private List<Vector3>[] paths; // 从生成点到终点的所有路径
-        private readonly List<Enemy> enemys = new List<Enemy>(); // 保存所有敌人的引用
+        private List<Vector3>[] spawnPointPaths; // 从生成点到终点的所有路径
+        public readonly List<Enemy> enemys = new List<Enemy>(); // 保存所有敌人的引用
 
         public EnemyManager(StageManager stageManager, float waveInterval, Dictionary<int, int>[] waveData) : base(stageManager)
         {
@@ -31,18 +31,40 @@ namespace TowerDefense
             TypeEventSystem.Register<NextWave>(NextWave);
         }
 
-        public void SetPath(List<Vector2Int>[] paths)
+        public void SetSpawnPointPaths(List<Vector2Int>[] paths)
         {
-            this.paths = new List<Vector3>[paths.Length];
+            this.spawnPointPaths = new List<Vector3>[paths.Length];
 
             for (int i = 0; i < paths.Length; i++)
             {
-                this.paths[i] = new List<Vector3>();
+                this.spawnPointPaths[i] = new List<Vector3>();
 
                 for (int j = 0; j < paths[i].Count; j++)
                 {
-                    this.paths[i].Add(manager.MapManager.GetCenterPosition(paths[i][j]));
+                    this.spawnPointPaths[i].Add(manager.MapManager.GetCenterPosition(paths[i][j]));
                 }
+            }
+        }
+
+        public void SetEnemyPaths(List<Vector2Int>[] paths)
+        {
+            if (paths.Length != enemys.Count)
+            {
+                Debug.LogError("敌人数量与路径数量不相等");
+                return;
+            }
+
+            for (int i = 0; i < paths.Length; i++)
+            {
+                Debug.Log(i);
+                List<Vector3> path = new List<Vector3>();
+
+                for (int j = 0; j < paths[i].Count; j++)
+                {
+                    path.Add(manager.MapManager.GetCenterPosition(paths[i][j]));
+                }
+
+                enemys[i].SetPath(path, false);
             }
         }
 
@@ -138,8 +160,8 @@ namespace TowerDefense
             EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
             //Enemy enemy = ObjectPool<Enemy>.Spawn(enemyData.name);
             Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name);
-            int random = Random.Range(0, paths.Length); // 随机设置路径
-            enemy.SetData(enemyData).SetPath(paths[random]);
+            int random = Random.Range(0, spawnPointPaths.Length); // 随机设置路径
+            enemy.SetData(enemyData).SetPath(spawnPointPaths[random], true);
             enemys.Add(enemy);
         }
 
@@ -165,7 +187,7 @@ namespace TowerDefense
 
         private void OnChangePaths(OnChangePaths context)
         {
-            paths = context.paths;
+            spawnPointPaths = context.paths;
         }
 
         public override void Dispose()

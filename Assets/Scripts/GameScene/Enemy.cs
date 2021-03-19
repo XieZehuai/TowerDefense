@@ -12,11 +12,14 @@ namespace TowerDefense
 
         private List<Vector3> path; // 路径点
         private int curr; // 当前目标路径点的索引
-        private float distance;
+        private Vector3 originPos;
+        private float distance; // 当前物体距离目标点的距离
         private float progress;
         private Vector3 height = new Vector3(0f, 0.3f, 0f); // 飞行的高度
 
         public Vector3 Position => transform.localPosition;
+
+        public Vector3 NextWayPoint => path[curr];
 
         public string Name => data.name;
 
@@ -29,15 +32,27 @@ namespace TowerDefense
             return this;
         }
 
-        public Enemy SetPath(List<Vector3> path)
+        public Enemy SetPath(List<Vector3> path, bool moveToFirstWayPoint)
         {
             if (path.Count <= 1) Debug.LogError("路径长度太短");
 
             this.path = path;
-            transform.localPosition = path[0] + height;
-            transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
-            distance = Vector3.Distance(path[1], path[0]);
-            curr = 1;
+
+            if (moveToFirstWayPoint)
+            {
+                originPos = path[0];
+                transform.localPosition = path[0] + height;
+                transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
+                distance = Vector3.Distance(path[1], path[0]);
+                curr = 1;
+            }
+            else
+            {
+                originPos = transform.localPosition;
+                distance = Vector3.Distance(transform.localPosition, path[0]);
+                transform.localPosition += height;
+                curr = 0;
+            }
 
             return this;
         }
@@ -73,10 +88,11 @@ namespace TowerDefense
             }
 
             progress += Time.deltaTime * currentSpeed;
-            transform.localPosition = Vector3.Lerp(path[curr - 1], path[curr], progress / distance) + height;
+            transform.localPosition = Vector3.Lerp(originPos, path[curr], progress / distance) + height;
 
             if (progress >= distance)
             {
+                originPos = path[curr];
                 curr++;
                 progress = 0f;
 

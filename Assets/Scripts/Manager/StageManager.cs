@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -139,25 +140,48 @@ namespace TowerDefense
             MapManager.LoadMapData(GameManager.Instance.fileName);
         }
 
-        public bool FindPaths(Vector2Int endPos)
+        public bool FindPaths(Vector2Int endPos, bool includeEnemy)
         {
-            int count = MapManager.spawnPoints.Count;
-            Vector2Int[] startPosArray = new Vector2Int[count];
-            List<Vector2Int>[] paths = new List<Vector2Int>[count];
+            List<MapObject> spawnPoints = MapManager.spawnPoints.ToList();
 
-            int i = 0;
-            foreach (var item in MapManager.spawnPoints)
+            int spawnPointCount = spawnPoints.Count;
+            int enemyCount = includeEnemy ? EnemyManager.enemys.Count : 0;
+            int totalCount = spawnPointCount + enemyCount;
+
+            Vector2Int[] startPosArray = new Vector2Int[totalCount];
+            List<Vector2Int>[] paths = new List<Vector2Int>[totalCount];
+
+            for (int i = 0; i < totalCount; i++)
             {
-                startPosArray[i] = new Vector2Int(item.x, item.y);
+                if (i < spawnPointCount)
+                {
+                    startPosArray[i] = new Vector2Int(spawnPoints[i].x, spawnPoints[i].y);
+                }
+                else
+                {
+                    if (MapManager.GetGridPosition(EnemyManager.enemys[i - spawnPointCount].NextWayPoint, out int x, out int y))
+                    {
+                        startPosArray[i] = new Vector2Int(x, y);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
                 paths[i] = new List<Vector2Int>();
-                i++;
             }
 
             PathFinder.SetMapData(MapManager.width, MapManager.height, MapManager.map.GridArray, endPos);
+
             if (PathFinder.FindPaths(startPosArray, true, ref paths))
             {
-                EnemyManager.SetPath(paths);
-                PathIndicator.SetPath(paths);
+                List<Vector2Int>[] spawnPointPaths = paths.SubArray(0, spawnPointCount);
+                EnemyManager.SetSpawnPointPaths(spawnPointPaths);
+                PathIndicator.SetPath(spawnPointPaths);
+
+                List<Vector2Int>[] enemyPaths = paths.SubArray(spawnPointCount, enemyCount);
+                EnemyManager.SetEnemyPaths(enemyPaths);
                 return true;
             }
 

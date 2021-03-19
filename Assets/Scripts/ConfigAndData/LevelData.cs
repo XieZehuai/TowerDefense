@@ -44,7 +44,8 @@ namespace TowerDefense
             data.waveInterval = 10f;
             data.waveData = new Dictionary<int, int>[5];
 
-            data.waveData[0] = new Dictionary<int, int> { { 0, 6 }, { 3, 4 }, { 6, 2 }, };
+            //data.waveData[0] = new Dictionary<int, int> { { 0, 6 }, { 3, 4 }, { 6, 2 }, };
+            data.waveData[0] = new Dictionary<int, int> { { 6, 2 } };
             data.waveData[1] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 5 }, { 6, 2 }, };
             data.waveData[2] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 2 }, { 4, 2 }, { 6, 1 }, { 7, 1 } };
             data.waveData[3] = new Dictionary<int, int> { { 1, 4 }, { 2, 4 }, { 4, 2 }, { 5, 2 }, { 7, 1 }, { 8, 1 } };
