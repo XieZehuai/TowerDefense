@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense
@@ -25,8 +26,9 @@ namespace TowerDefense
         public MapManager MapManager { get; private set; }
         public EnemyManager EnemyManager { get; private set; }
         public TowerManager TowerManager { get; private set; }
+        public PathIndicator PathIndicator { get; private set; }
         public CameraController CameraController => cameraController;
-        public PathIndicator PathIndicator { get; } = new PathIndicator();
+        public PathFinder PathFinder { get; } = new PathFinder();
 
         public bool IsPreparing => state == State.Preparing;
         public bool IsPlaying => state == State.Playing;
@@ -46,6 +48,7 @@ namespace TowerDefense
             MapManager = new MapManager(this);
             EnemyManager = new EnemyManager(this, levelData.waveInterval, levelData.waveData);
             TowerManager = new TowerManager(this);
+            PathIndicator = new PathIndicator(this);
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
@@ -134,6 +137,37 @@ namespace TowerDefense
         {
             Debug.Log("加载地图数据");
             MapManager.LoadMapData(GameManager.Instance.fileName);
+        }
+
+        public bool FindPaths(Vector2Int endPos)
+        {
+            int count = MapManager.spawnPoints.Count;
+            Vector2Int[] startPosArray = new Vector2Int[count];
+            List<Vector2Int>[] paths = new List<Vector2Int>[count];
+
+            int i = 0;
+            foreach (var item in MapManager.spawnPoints)
+            {
+                startPosArray[i] = new Vector2Int(item.x, item.y);
+                paths[i] = new List<Vector2Int>();
+                i++;
+            }
+
+            PathFinder.SetMapData(MapManager.width, MapManager.height, MapManager.map.GridArray, endPos);
+            if (PathFinder.FindPaths(startPosArray, true, ref paths))
+            {
+                EnemyManager.SetPath(paths);
+                PathIndicator.SetPath(paths);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool FindPaths(Vector2Int[] startPosArray, Vector2Int endPos, bool getPath, ref List<Vector2Int>[] paths)
+        {
+            PathFinder.SetMapData(MapManager.width, MapManager.height, MapManager.map.GridArray, endPos);
+            return PathFinder.FindPaths(startPosArray, getPath, ref paths);
         }
 
         private void OnEnemyReach(OnEnemyReach context)

@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
-using Unity.Mathematics;
-using Unity.Collections;
+using System.Collections.Generic;
 
 namespace TowerDefense.Test
 {
     public class Testing : MonoBehaviour
     {
         private PathFinder finder;
-        private NativeArray<int2> starts;
-        private NativeList<int2>[] paths;
-        private float timer = 0f;
         private int width;
         private int height;
         private MapObject[,] datas;
-        private int2 end;
+        private Vector2Int end;
+        private Vector2Int[] startPosArray;
+        private List<Vector2Int>[] paths;
+
+        private float timer = 0f;
 
         private void Start()
         {
             finder = new PathFinder();
-            width = 100;
-            height = 100;
-            end = new int2(width - 1, height - 1);
+            width = 5;
+            height = 5;
+            end = new Vector2Int(width - 1, height - 1);
 
             datas = new MapObject[width, height];
             for (int i = 0; i < width; i++)
@@ -30,25 +30,50 @@ namespace TowerDefense.Test
                     datas[i, j] = new MapObject(MapObjectType.Road, i, j);
                 }
             }
+            datas[1, 1].type = MapObjectType.Wall;
+            datas[1, 2].type = MapObjectType.Wall;
+            datas[1, 3].type = MapObjectType.Wall;
+            datas[1, 4].type = MapObjectType.Wall;
+            datas[1, 0].type = MapObjectType.Wall;
 
-            starts = new NativeArray<int2>(50, Allocator.Persistent);
-            for (int i = 0; i < starts.Length; i++)
+            int count = 5;
+            startPosArray = new Vector2Int[count];
+            paths = new List<Vector2Int>[count];
+
+            for (int i = 0; i < count; i++)
             {
-                starts[i] = new int2(0, 0);
+                startPosArray[i] = new Vector2Int(0, i);
+                paths[i] = new List<Vector2Int>();
             }
 
-            paths = new NativeList<int2>[starts.Length];
+            finder.SetMapData(width, height, datas, end);
+            if (finder.FindPaths(startPosArray, true, ref paths))
+            {
+                for (int i = 0; i < paths.Length; i++)
+                {
+                    Debug.Log("");
+                    foreach (var item in paths[i])
+                    {
+                        Debug.Log(item);
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("寻路失败");
+            }
         }
 
         private void Update()
         {
+            return;
+
             timer += Time.deltaTime;
             if (timer >= 1f)
             {
-                Debug.Log("");
                 timer = 0f;
-                finder.Init(width, height, datas, end);
-                finder.FindPaths(starts, ref paths);
+                finder.SetMapData(width, height, datas, end);
+                finder.FindPaths(startPosArray, true, ref paths);
             }
         }
     }

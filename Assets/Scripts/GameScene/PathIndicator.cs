@@ -4,16 +4,37 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class PathIndicator : IDisposable
+    public class PathIndicator : SubStageManager
     {
         private List<Vector3>[] paths;
         private readonly List<PoolObject> arrows = new List<PoolObject>();
         private readonly Vector3 height = new Vector3(0f, 0.01f, 0f);
         private bool showPath = true;
 
-        public PathIndicator()
+        public PathIndicator(StageManager stageManager) : base(stageManager)
         {
             TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
+        }
+
+        public void SetPath(List<Vector2Int>[] paths)
+        {
+            this.paths = new List<Vector3>[paths.Length];
+
+            for (int i = 0; i < paths.Length; i++)
+            {
+                this.paths[i] = new List<Vector3>();
+
+                for (int j = 0; j < paths[i].Count; j++)
+                {
+                    this.paths[i].Add(manager.MapManager.GetCenterPosition(paths[i][j]));
+                }
+            }
+
+            if (showPath)
+            {
+                HidePath();
+                ShowPath();
+            }
         }
 
         public void TogglePathIndicator()
@@ -80,7 +101,7 @@ namespace TowerDefense
             return 315f;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             TypeEventSystem.UnRegister<OnChangePaths>(OnChangePaths);
         }

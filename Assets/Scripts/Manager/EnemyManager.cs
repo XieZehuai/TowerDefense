@@ -31,6 +31,21 @@ namespace TowerDefense
             TypeEventSystem.Register<NextWave>(NextWave);
         }
 
+        public void SetPath(List<Vector2Int>[] paths)
+        {
+            this.paths = new List<Vector3>[paths.Length];
+
+            for (int i = 0; i < paths.Length; i++)
+            {
+                this.paths[i] = new List<Vector3>();
+
+                for (int j = 0; j < paths[i].Count; j++)
+                {
+                    this.paths[i].Add(manager.MapManager.GetCenterPosition(paths[i][j]));
+                }
+            }
+        }
+
         public override void OnUpdate()
         {
             if (spawn || nextWave)

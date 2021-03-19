@@ -9,19 +9,19 @@ namespace TowerDefense
     public class MapManager : SubStageManager
     {
         public HashSet<MapObject> spawnPoints;
-        public Dictionary<MapObject, List<Vector3>> paths;
+        //public Dictionary<MapObject, List<Vector3>> paths;
 
-        private int width;
-        private int height;
+        public int width;
+        public int height;
+        public Map map;
         private int cellSize;
         private PoolObject[,] models;
         private MapObject destination;
-        private Map map;
 
         public MapManager(StageManager stageManager) : base(stageManager)
         {
             spawnPoints = new HashSet<MapObject>();
-            paths = new Dictionary<MapObject, List<Vector3>>();
+            //paths = new Dictionary<MapObject, List<Vector3>>();
         }
 
         #region 创建以及加载地图
@@ -190,6 +190,11 @@ namespace TowerDefense
             return map.GetGridPosition(worldPosition, out x, out y);
         }
 
+        public Vector3 GetCenterPosition(Vector2Int pos)
+        {
+            return GetCenterPosition(pos.x, pos.y);
+        }
+
         public Vector3 GetCenterPosition(int x, int y)
         {
             return map.GetCenterPosition(x, y);
@@ -319,18 +324,23 @@ namespace TowerDefense
 
         private void PlaceSpawnPoint(int x, int y)
         {
-            List<Vector3> path = new List<Vector3>();
+            //List<Vector3> path = new List<Vector3>();
             MapObject obj = map.GetValue(x, y);
+            Vector2Int endPos = new Vector2Int(destination.x, destination.y);
 
-            if (Dijkstra(obj, destination, true, path))
-            //if (AStar(obj, destination, true, path))
+            spawnPoints.Add(obj);
+            //if (Dijkstra(obj, destination, true, path))
+            if (manager.FindPaths(endPos))
             {
                 UnloadModel(x, y);
                 map.SetGridType(x, y, MapObjectType.SpawnPoint);
                 LoadModel(x, y, MapObjectType.SpawnPoint);
-                spawnPoints.Add(obj);
-                paths.Add(obj, path);
-                TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
+                //this.paths.Add(obj, path);
+                //TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
+            }
+            else
+            {
+                spawnPoints.Remove(obj);
             }
         }
 
@@ -342,8 +352,9 @@ namespace TowerDefense
             if (obj == null) return false;
 
             spawnPoints.Remove(obj);
-            paths.Remove(obj);
-            TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
+            //paths.Remove(obj);
+            manager.FindPaths(new Vector2Int(destination.x, destination.y));
+            //TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
 
             return true;
         }
@@ -369,32 +380,34 @@ namespace TowerDefense
         #endregion
 
         #region 路径相关功能
-        public List<Vector3>[] GetPaths()
-        {
-            return paths.Values.ToArray();
-        }
+        //public List<Vector3>[] GetPaths()
+        //{
+        //    return paths.Values.ToArray();
+        //}
 
         private bool FindAllPath(MapObject target)
         {
-            if (spawnPoints.Count == 0) return false;
+            return manager.FindPaths(new Vector2Int(target.x, target.y));
 
-            Dictionary<MapObject, List<Vector3>> tempPaths = new Dictionary<MapObject, List<Vector3>>();
+            //if (spawnPoints.Count == 0) return false;
 
-            foreach (var point in spawnPoints)
-            {
-                List<Vector3> path = new List<Vector3>();
-                if (!Dijkstra(point, target, true, path))
-                //if (!AStar(point, target, true, path))
-                {
-                    return false;
-                }
+            //Dictionary<MapObject, List<Vector3>> tempPaths = new Dictionary<MapObject, List<Vector3>>();
 
-                tempPaths.Add(point, path);
-            }
+            //foreach (var point in spawnPoints)
+            //{
+            //    List<Vector3> path = new List<Vector3>();
+            //    if (!Dijkstra(point, target, true, path))
+            //    //if (!AStar(point, target, true, path))
+            //    {
+            //        return false;
+            //    }
 
-            paths = tempPaths;
-            TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
-            return true;
+            //    tempPaths.Add(point, path);
+            //}
+
+            //paths = tempPaths;
+            //TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
+            //return true;
         }
         #endregion
 
