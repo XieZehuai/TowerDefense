@@ -59,6 +59,11 @@ namespace TowerDefense
             currentHp -= actualDamage;
         }
 
+        public Vector3 GetNextWayPoint()
+        {
+            return path[curr];
+        }
+
         private bool Move()
         {
             if (curr >= path.Count)

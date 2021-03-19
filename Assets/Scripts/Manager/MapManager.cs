@@ -322,7 +322,8 @@ namespace TowerDefense
             List<Vector3> path = new List<Vector3>();
             MapObject obj = map.GetValue(x, y);
 
-            if (FindPath(obj, destination, true, path))
+            if (Dijkstra(obj, destination, true, path))
+            //if (AStar(obj, destination, true, path))
             {
                 UnloadModel(x, y);
                 map.SetGridType(x, y, MapObjectType.SpawnPoint);
@@ -382,7 +383,8 @@ namespace TowerDefense
             foreach (var point in spawnPoints)
             {
                 List<Vector3> path = new List<Vector3>();
-                if (!FindPath(point, target, true, path))
+                if (!Dijkstra(point, target, true, path))
+                //if (!AStar(point, target, true, path))
                 {
                     return false;
                 }
@@ -396,44 +398,36 @@ namespace TowerDefense
         }
         #endregion
 
-        #region A*寻路算法
-        /// <summary>
-        /// A*寻路算法，寻路成功返回true并把路径保存到传入的path变量里
-        /// 寻路失败返回false，不改变path变量
-        /// </summary>
-        /// <param name="start">起点</param>
-        /// <param name="end">终点</param>
-        /// <param name="getPath">寻路成功时是否加载路径</param>
-        /// <param name="path">用于寻路成功时保存路径</param>
-        /// <returns>成功返回true，失败返回false</returns>
-        private bool FindPath(MapObject start, MapObject end, bool getPath, List<Vector3> path = null)
+        #region 寻路算法
+        // A*寻路算法
+        private bool AStar(MapObject start, MapObject end, bool getPath, List<Vector3> path = null)
         {
-            PriorityQueue<MapObject> openList = new PriorityQueue<MapObject>(8); // 保存所有待寻路的节点（可用优先队列保存）
-            HashSet<MapObject> closeList = new HashSet<MapObject>(); // 保存所有已经寻路过的节点
-            MapObject[,] parents = new MapObject[width, height]; // 每个节点的父节点，构成一棵树，形成路径
-                                                                 //int[,] costG = new int[width, height]; // 保存起点到每个点的距离
-                                                                 //int[,] costH = new int[width, height]; // 保存每个点到终点的距离
+            List<MapObject> openList = new List<MapObject>();
+            HashSet<MapObject> closeList = new HashSet<MapObject>();
+            MapObject[,] parents = new MapObject[width, height];
 
-            //int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
-            //int CostG(MapObject obj) => costG[obj.x, obj.y];
-            //int CostH(MapObject obj) => costH[obj.x, obj.y];
+            int[,] costG = new int[width, height]; // 保存起点到每个点的距离
+            int[,] costH = new int[width, height]; // 保存每个点到终点的距离
+
+            int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
+            int CostG(MapObject obj) => costG[obj.x, obj.y];
+            int CostH(MapObject obj) => costH[obj.x, obj.y];
 
             openList.Add(start);
-            while (!openList.IsEmpty)
+            while (openList.Count > 0)
             {
                 // 找出最优节点，每次都从最优节点开始查找路径，最优节点为总距离及到终点距离最小的节点
-                //MapObject curr = openList[0];
-                //for (int i = 1; i < openList.Count; i++)
-                //{
-                //    if (CostF(openList[i]) < CostF(curr) && CostH(openList[i]) < CostH(curr))
-                //    {
-                //        curr = openList[i];
-                //    }
-                //}
-                MapObject curr = openList.DeleteMax();
-
+                MapObject curr = openList[0];
+                for (int i = 1; i < openList.Count; i++)
+                {
+                    //if (CostF(openList[i]) < CostF(curr) && CostH(openList[i]) < CostH(curr))
+                    if (CostF(openList[i]) < CostF(curr))
+                    {
+                        curr = openList[i];
+                    }
+                }
                 // 找到最优节点后，移动到closeList然后开始寻路
-                //openList.Remove(curr);
+                openList.Remove(curr);
                 closeList.Add(curr);
 
                 // 如果已经找到了终点，就获取路径并返回true
@@ -453,24 +447,73 @@ namespace TowerDefense
                     // 跳过已经搜索过的节点
                     if (closeList.Contains(node)) continue;
 
-                    //int g = CostG(curr) + GetDistance(curr, node); // 计算从起点到curr再到node的距离
-                    int g = curr.CostG + GetDistance(curr, node);
+                    int g = CostG(curr) + GetDistance(curr, node); // 计算从起点到curr再到node的距离
                     bool hasSearch = openList.Contains(node); // 判断node有没有被搜索过
 
                     // 如果从起点到curr再到node的距离小于从起点到node的距离，
                     // 或者node没有被搜索过，就更新node的路径，指向curr
-                    //if (g <= CostG(node) || !hasSearch)
-                    if (g <= node.CostG || !hasSearch)
+                    if (g <= CostG(node) || !hasSearch)
                     {
-                        //costG[node.x, node.y] = g;
-                        //costH[node.x, node.y] = GetDistance(node, end);
-                        node.CostG = g;
+                        costG[node.x, node.y] = g;
+                        costH[node.x, node.y] = GetDistance(node, end);
                         parents[node.x, node.y] = curr;
 
                         // 没搜索过就加入openList，等待搜索
                         if (!hasSearch)
                         {
-                            node.CostH = GetDistance(node, end);
+                            openList.Add(node);
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        // Dijkstra寻路算法
+        private bool Dijkstra(MapObject start, MapObject end, bool getPath, List<Vector3> path = null)
+        {
+            PriorityQueue<MapObject> openList = new PriorityQueue<MapObject>(8); // 保存所有待寻路的节点（可用优先队列保存）
+            HashSet<MapObject> closeList = new HashSet<MapObject>(); // 保存所有已经寻路过的节点
+            MapObject[,] parents = new MapObject[width, height]; // 每个节点的父节点，构成一棵树，形成路径
+
+            openList.Add(start);
+            while (!openList.IsEmpty)
+            {
+                MapObject curr = openList.DeleteMax();
+                closeList.Add(curr);
+
+                // 如果已经找到了终点，就获取路径并返回true
+                if (curr == end)
+                {
+                    if (getPath && path != null)
+                    {
+                        GetPathWithPos(parents, start, end, path);
+                    }
+
+                    return true;
+                }
+
+                // 遍历当前节点所有相邻并且可行走的节点
+                foreach (MapObject node in GetAroundGrid(curr))
+                {
+                    // 跳过已经搜索过的节点
+                    if (closeList.Contains(node)) continue;
+
+                    int g = curr.costG + GetDistance(curr, node);
+                    bool hasSearch = openList.Contains(node); // 判断node有没有被搜索过
+
+                    // 如果从起点到curr再到node的距离小于从起点到node的距离，
+                    // 或者node没有被搜索过，就更新node的路径，指向curr
+                    if (g <= node.costG || !hasSearch)
+                    {
+                        node.costG = g;
+                        parents[node.x, node.y] = curr;
+
+                        // 没搜索过就加入openList，等待搜索
+                        if (!hasSearch)
+                        {
+                            node.costH = GetDistance(node, end);
                             openList.Add(node);
                         }
                     }

@@ -33,11 +33,9 @@ namespace TowerDefense
         public int x;
         public int y;
 
-        public int CostG { get; set; } // 从起点到当前节点的距离
-
-        public int CostH { get; set; } // 从当前节点到终点的距离
-
-        public int CostF => CostG + CostH; // 从起点经过当前节点到终点的距离
+        public int costG = int.MaxValue;
+        public int costH;
+        public int costF => costG + costH; // 从起点经过当前节点到终点的距离
 
         public MapObject()
         {
@@ -65,7 +63,7 @@ namespace TowerDefense
 
         public int CompareTo(MapObject other)
         {
-            return other.CostG - CostG;
+            return other.costG - costG;
         }
     }
     #endregion
