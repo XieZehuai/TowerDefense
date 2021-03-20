@@ -28,8 +28,8 @@ namespace TowerDefense
         public EnemyManager EnemyManager { get; private set; }
         public TowerManager TowerManager { get; private set; }
         public PathIndicator PathIndicator { get; private set; }
+        public PathFinder PathFinder { get; private set; }
         public CameraController CameraController => cameraController;
-        public PathFinder PathFinder { get; } = new PathFinder();
 
         public bool IsPreparing => state == State.Preparing;
         public bool IsPlaying => state == State.Playing;
@@ -50,6 +50,11 @@ namespace TowerDefense
             EnemyManager = new EnemyManager(this, levelData.waveInterval, levelData.waveData);
             TowerManager = new TowerManager(this);
             PathIndicator = new PathIndicator(this);
+
+            if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.Dijkstra)
+                PathFinder = new PathFinder(new DijkstraPathFinding());
+            else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.ReverseDijkstra)
+                PathFinder = new PathFinder(new ReverseDijkstraPathFinding());
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
@@ -142,7 +147,8 @@ namespace TowerDefense
 
         public bool FindPaths(Vector2Int endPos, bool includeEnemy)
         {
-            List<MapObject> spawnPoints = MapManager.spawnPoints.ToList();
+            // 处理起始点数据
+            List<MapObject> spawnPoints = MapManager.SpawnPoints.ToList();
 
             int spawnPointCount = spawnPoints.Count;
             int enemyCount = includeEnemy ? EnemyManager.enemys.Count : 0;
@@ -172,9 +178,10 @@ namespace TowerDefense
                 paths[i] = new List<Vector2Int>();
             }
 
-            PathFinder.SetMapData(MapManager.width, MapManager.height, MapManager.map.GridArray, endPos);
+            // 寻路并设置路径数据
+            PathFinder.SetMapData(MapManager.Map.GridArray);
 
-            if (PathFinder.FindPaths(startPosArray, true, ref paths))
+            if (PathFinder.FindPaths(startPosArray, endPos, ref paths, true))
             {
                 List<Vector2Int>[] spawnPointPaths = paths.SubArray(0, spawnPointCount);
                 EnemyManager.SetSpawnPointPaths(spawnPointPaths);
@@ -190,8 +197,9 @@ namespace TowerDefense
 
         public bool FindPaths(Vector2Int[] startPosArray, Vector2Int endPos, bool getPath, ref List<Vector2Int>[] paths)
         {
-            PathFinder.SetMapData(MapManager.width, MapManager.height, MapManager.map.GridArray, endPos);
-            return PathFinder.FindPaths(startPosArray, getPath, ref paths);
+            PathFinder.SetMapData(MapManager.Map.GridArray);
+
+            return PathFinder.FindPaths(startPosArray, endPos, ref paths, true);
         }
 
         private void OnEnemyReach(OnEnemyReach context)

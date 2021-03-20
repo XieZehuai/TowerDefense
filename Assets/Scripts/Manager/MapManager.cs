@@ -8,31 +8,31 @@ namespace TowerDefense
 {
     public class MapManager : SubStageManager
     {
-        public HashSet<MapObject> spawnPoints;
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public Map Map { get; private set; }
+        public HashSet<MapObject> SpawnPoints { get; private set; }
         //public Dictionary<MapObject, List<Vector3>> paths;
 
-        public int width;
-        public int height;
-        public Map map;
         private int cellSize;
         private PoolObject[,] models;
         private MapObject destination;
 
         public MapManager(StageManager stageManager) : base(stageManager)
         {
-            spawnPoints = new HashSet<MapObject>();
+            SpawnPoints = new HashSet<MapObject>();
             //paths = new Dictionary<MapObject, List<Vector3>>();
         }
 
         #region 创建以及加载地图
         public void CreateMap(int width, int height, int cellSize)
         {
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
             this.cellSize = cellSize;
 
             models = new PoolObject[width, height];
-            map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
+            Map = new Map(width, height, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
             LoadMap();
         }
 
@@ -43,12 +43,12 @@ namespace TowerDefense
 
         public void CreateMap(MapObject[,] data, int cellSize)
         {
-            width = data.GetLength(0);
-            height = data.GetLength(1);
+            Width = data.GetLength(0);
+            Height = data.GetLength(1);
             this.cellSize = cellSize;
 
-            models = new PoolObject[width, height];
-            map = new Map(data, cellSize, new Vector3(-width / 2f, 0f, -height / 2f) * cellSize);
+            models = new PoolObject[Width, Height];
+            Map = new Map(data, cellSize, new Vector3(-Width / 2f, 0f, -Height / 2f) * cellSize);
             LoadMap();
         }
 
@@ -69,28 +69,28 @@ namespace TowerDefense
 
         private void LoadMap()
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    MapObjectType type = map.GetGridType(x, y);
+                    MapObjectType type = Map.GetGridType(x, y);
                     LoadModel(x, y, type);
 
                     if (type == MapObjectType.Destination)
                     {
                         if (destination == null)
-                            destination = map.GetValue(x, y);
+                            destination = Map.GetValue(x, y);
                         else
                             Debug.LogError("有多个目标点");
                     }
                 }
             }
 
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    if (map.GetGridType(x, y) == MapObjectType.SpawnPoint)
+                    if (Map.GetGridType(x, y) == MapObjectType.SpawnPoint)
                     {
                         PlaceSpawnPoint(x, y);
                     }
@@ -103,7 +103,7 @@ namespace TowerDefense
             string path = Application.streamingAssetsPath;
             path = Path.Combine(path, fileName);
 
-            map.Save(path);
+            Map.Save(path);
         }
 
         public void LoadMapData(string fileName)
@@ -137,7 +137,7 @@ namespace TowerDefense
         {
             if (CanPlaceTower(worldPosition, out x, out y))
             {
-                map.SetGridType(x, y, MapObjectType.WallWithTower);
+                Map.SetGridType(x, y, MapObjectType.WallWithTower);
                 towerPosition = GetCenterPosition(x, y) + new Vector3(0f, 0.25f, 0f);
                 return true;
             }
@@ -150,7 +150,7 @@ namespace TowerDefense
         {
             if (GetGridPosition(worldPosition, out x, out y))
             {
-                if (map.GetGridType(x, y) == MapObjectType.Wall)
+                if (Map.GetGridType(x, y) == MapObjectType.Wall)
                 {
                     return true;
                 }
@@ -163,21 +163,21 @@ namespace TowerDefense
 
         public bool RemoveTower(int x, int y)
         {
-            if (map.GetGridType(x, y) != MapObjectType.WallWithTower) return false;
+            if (Map.GetGridType(x, y) != MapObjectType.WallWithTower) return false;
 
-            map.SetGridType(x, y, MapObjectType.Wall);
+            Map.SetGridType(x, y, MapObjectType.Wall);
             return true;
         }
 
         public void RemoveAllTower()
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    if (map.GetGridType(x, y) == MapObjectType.WallWithTower)
+                    if (Map.GetGridType(x, y) == MapObjectType.WallWithTower)
                     {
-                        map.SetGridType(x, y, MapObjectType.Wall);
+                        Map.SetGridType(x, y, MapObjectType.Wall);
                     }
                 }
             }
@@ -187,7 +187,7 @@ namespace TowerDefense
         #region 格子相关功能
         public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
         {
-            return map.GetGridPosition(worldPosition, out x, out y);
+            return Map.GetGridPosition(worldPosition, out x, out y);
         }
 
         public Vector3 GetCenterPosition(Vector2Int pos)
@@ -197,17 +197,17 @@ namespace TowerDefense
 
         public Vector3 GetCenterPosition(int x, int y)
         {
-            return map.GetCenterPosition(x, y);
+            return Map.GetCenterPosition(x, y);
         }
 
         public Vector3 GetWorldPosition(int x, int y)
         {
-            return map.GetWorldPosition(x, y);
+            return Map.GetWorldPosition(x, y);
         }
 
         public void ChangeGridType(Vector3 worldPosition, MapObjectType type)
         {
-            if (map.GetGridPosition(worldPosition, out int x, out int y))
+            if (Map.GetGridPosition(worldPosition, out int x, out int y))
             {
                 ChangeGridType(x, y, type);
             }
@@ -216,9 +216,9 @@ namespace TowerDefense
         public void ChangeGridType(int x, int y, MapObjectType type)
         {
             // 如果要替换的格子类型与当前格子类型相同或者当前格子是终点，直接返回
-            if (map.GetGridType(x, y) == type || map.GetGridType(x, y) == MapObjectType.WallWithTower)
+            if (Map.GetGridType(x, y) == type || Map.GetGridType(x, y) == MapObjectType.WallWithTower)
                 return;
-            if (map.GetValue(x, y) == destination)
+            if (Map.GetValue(x, y) == destination)
                 return;
 
             switch (type)
@@ -247,33 +247,33 @@ namespace TowerDefense
 
         private void PlaceEmptyGrid(int x, int y)
         {
-            MapObjectType originType = map.GetGridType(x, y);
+            MapObjectType originType = Map.GetGridType(x, y);
 
             if (originType == MapObjectType.SpawnPoint || originType == MapObjectType.Road)
             {
                 if (originType == MapObjectType.SpawnPoint && !RemoveSpawnPoint(x, y)) return;
 
-                map.SetGridType(x, y, MapObjectType.Empty);
+                Map.SetGridType(x, y, MapObjectType.Empty);
                 if (!FindAllPath(destination))
                 {
-                    map.SetGridType(x, y, originType);
+                    Map.SetGridType(x, y, originType);
                     return;
                 }
             }
 
             UnloadModel(x, y, originType);
-            map.SetGridType(x, y, MapObjectType.Empty);
+            Map.SetGridType(x, y, MapObjectType.Empty);
             LoadModel(x, y, MapObjectType.Empty);
         }
 
         private void PlaceRoadGrid(int x, int y)
         {
-            MapObjectType originType = map.GetGridType(x, y);
+            MapObjectType originType = Map.GetGridType(x, y);
 
             if (originType == MapObjectType.SpawnPoint && !RemoveSpawnPoint(x, y)) return;
 
             UnloadModel(x, y);
-            map.SetGridType(x, y, MapObjectType.Road);
+            Map.SetGridType(x, y, MapObjectType.Road);
             LoadModel(x, y, MapObjectType.Road);
 
             FindAllPath(destination);
@@ -281,81 +281,81 @@ namespace TowerDefense
 
         private void PlaceWallGrid(int x, int y)
         {
-            MapObjectType originType = map.GetGridType(x, y);
+            MapObjectType originType = Map.GetGridType(x, y);
 
             if (originType == MapObjectType.SpawnPoint || originType == MapObjectType.Road)
             {
                 if (originType == MapObjectType.SpawnPoint && !RemoveSpawnPoint(x, y)) return;
 
-                map.SetGridType(x, y, MapObjectType.Wall);
+                Map.SetGridType(x, y, MapObjectType.Wall);
                 if (!FindAllPath(destination))
                 {
-                    map.SetGridType(x, y, originType);
+                    Map.SetGridType(x, y, originType);
                     return;
                 }
             }
 
             UnloadModel(x, y, originType);
-            map.SetGridType(x, y, MapObjectType.Wall);
+            Map.SetGridType(x, y, MapObjectType.Wall);
             LoadModel(x, y, MapObjectType.Wall);
         }
 
         private void PlaceDestination(int x, int y)
         {
-            MapObjectType originType = map.GetGridType(x, y);
+            MapObjectType originType = Map.GetGridType(x, y);
             if (originType == MapObjectType.SpawnPoint && !RemoveSpawnPoint(x, y)) return;
 
-            map.SetGridType(x, y, MapObjectType.Destination);
+            Map.SetGridType(x, y, MapObjectType.Destination);
 
-            if (FindAllPath(map.GetValue(x, y)))
+            if (FindAllPath(Map.GetValue(x, y)))
             {
                 UnloadModel(x, y, originType);
                 int xTemp = destination.x;
                 int yTemp = destination.y;
-                destination = map.GetValue(x, y);
+                destination = Map.GetValue(x, y);
 
                 UnloadModel(xTemp, yTemp);
-                map.SetGridType(xTemp, yTemp, MapObjectType.Road);
+                Map.SetGridType(xTemp, yTemp, MapObjectType.Road);
                 LoadModel(xTemp, yTemp, MapObjectType.Road);
 
                 LoadModel(x, y, MapObjectType.Destination);
             }
             else
             {
-                map.SetGridType(x, y, originType);
+                Map.SetGridType(x, y, originType);
             }
         }
 
         private void PlaceSpawnPoint(int x, int y)
         {
             //List<Vector3> path = new List<Vector3>();
-            MapObject obj = map.GetValue(x, y);
+            MapObject obj = Map.GetValue(x, y);
             Vector2Int endPos = new Vector2Int(destination.x, destination.y);
 
-            spawnPoints.Add(obj);
+            SpawnPoints.Add(obj);
             //if (Dijkstra(obj, destination, true, path))
             if (manager.FindPaths(endPos, false))
             {
                 UnloadModel(x, y);
-                map.SetGridType(x, y, MapObjectType.SpawnPoint);
+                Map.SetGridType(x, y, MapObjectType.SpawnPoint);
                 LoadModel(x, y, MapObjectType.SpawnPoint);
                 //this.paths.Add(obj, path);
                 //TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
             }
             else
             {
-                spawnPoints.Remove(obj);
+                SpawnPoints.Remove(obj);
             }
         }
 
         private bool RemoveSpawnPoint(int x, int y)
         {
-            if (spawnPoints.Count <= 1) return false;
+            if (SpawnPoints.Count <= 1) return false;
 
-            MapObject obj = map.GetValue(x, y);
+            MapObject obj = Map.GetValue(x, y);
             if (obj == null) return false;
 
-            spawnPoints.Remove(obj);
+            SpawnPoints.Remove(obj);
             //paths.Remove(obj);
             manager.FindPaths(new Vector2Int(destination.x, destination.y), false);
             //TypeEventSystem.Send(new OnChangePaths { paths = GetPaths() });
@@ -365,7 +365,7 @@ namespace TowerDefense
 
         private void LoadModel(int x, int y, MapObjectType type)
         {
-            Vector3 pos = map.GetWorldPosition(x, y);
+            Vector3 pos = Map.GetWorldPosition(x, y);
             PoolObject obj = ObjectPool.Spawn<PoolObject>(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
             //Transform obj = GenericObjectPool<Transform>.Spawn(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
             models[x, y] = obj;
@@ -373,7 +373,7 @@ namespace TowerDefense
 
         private void UnloadModel(int x, int y)
         {
-            UnloadModel(x, y, map.GetGridType(x, y));
+            UnloadModel(x, y, Map.GetGridType(x, y));
         }
 
         private void UnloadModel(int x, int y, MapObjectType type)
@@ -421,10 +421,10 @@ namespace TowerDefense
         {
             List<MapObject> openList = new List<MapObject>();
             HashSet<MapObject> closeList = new HashSet<MapObject>();
-            MapObject[,] parents = new MapObject[width, height];
+            MapObject[,] parents = new MapObject[Width, Height];
 
-            int[,] costG = new int[width, height]; // 保存起点到每个点的距离
-            int[,] costH = new int[width, height]; // 保存每个点到终点的距离
+            int[,] costG = new int[Width, Height]; // 保存起点到每个点的距离
+            int[,] costH = new int[Width, Height]; // 保存每个点到终点的距离
 
             int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
             int CostG(MapObject obj) => costG[obj.x, obj.y];
@@ -492,7 +492,7 @@ namespace TowerDefense
         {
             PriorityQueue<MapObject> openList = new PriorityQueue<MapObject>(8); // 保存所有待寻路的节点（可用优先队列保存）
             HashSet<MapObject> closeList = new HashSet<MapObject>(); // 保存所有已经寻路过的节点
-            MapObject[,] parents = new MapObject[width, height]; // 每个节点的父节点，构成一棵树，形成路径
+            MapObject[,] parents = new MapObject[Width, Height]; // 每个节点的父节点，构成一棵树，形成路径
 
             openList.Add(start);
             while (!openList.IsEmpty)
@@ -562,15 +562,15 @@ namespace TowerDefense
             int x = obj.x;
             int y = obj.y;
 
-            MapObject left = map.GetValue(x - 1, y);
-            MapObject right = map.GetValue(x + 1, y);
-            MapObject up = map.GetValue(x, y + 1);
-            MapObject down = map.GetValue(x, y - 1);
+            MapObject left = Map.GetValue(x - 1, y);
+            MapObject right = Map.GetValue(x + 1, y);
+            MapObject up = Map.GetValue(x, y + 1);
+            MapObject down = Map.GetValue(x, y - 1);
 
-            MapObject leftUp = map.GetValue(x - 1, y + 1);
-            MapObject rightUp = map.GetValue(x + 1, y + 1);
-            MapObject leftDown = map.GetValue(x - 1, y - 1);
-            MapObject rightDown = map.GetValue(x + 1, y - 1);
+            MapObject leftUp = Map.GetValue(x - 1, y + 1);
+            MapObject rightUp = Map.GetValue(x + 1, y + 1);
+            MapObject leftDown = Map.GetValue(x - 1, y - 1);
+            MapObject rightDown = Map.GetValue(x + 1, y - 1);
 
             if (IsWalkable(left)) list.Add(left);
             if (IsWalkable(right)) list.Add(right);
@@ -592,11 +592,11 @@ namespace TowerDefense
 
             while (temp != start)
             {
-                path.Add(map.GetCenterPosition(temp.x, temp.y));
+                path.Add(Map.GetCenterPosition(temp.x, temp.y));
                 temp = parents[temp.x, temp.y];
             }
 
-            path.Add(map.GetCenterPosition(start.x, start.y));
+            path.Add(Map.GetCenterPosition(start.x, start.y));
 
             path.Reverse();
         }

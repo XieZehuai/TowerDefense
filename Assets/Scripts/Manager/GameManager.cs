@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 namespace TowerDefense
 {
@@ -7,6 +6,7 @@ namespace TowerDefense
     {
         public bool load = false;
         public string fileName = "MapData";
+        public PathFindingStrategy pathFindingStrategy;
 
         protected override void OnInit()
         {

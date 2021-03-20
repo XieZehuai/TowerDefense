@@ -56,7 +56,6 @@ namespace TowerDefense
 
             for (int i = 0; i < paths.Length; i++)
             {
-                Debug.Log(i);
                 List<Vector3> path = new List<Vector3>();
 
                 for (int j = 0; j < paths[i].Count; j++)
