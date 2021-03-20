@@ -7,6 +7,7 @@ namespace TowerDefense
     {
         Dijkstra,
         ReverseDijkstra,
+        DOTS,
     }
 
 

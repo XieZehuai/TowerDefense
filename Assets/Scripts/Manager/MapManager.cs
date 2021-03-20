@@ -428,7 +428,6 @@ namespace TowerDefense
 
             int CostF(MapObject obj) => costH[obj.x, obj.y] + costG[obj.x, obj.y];
             int CostG(MapObject obj) => costG[obj.x, obj.y];
-            int CostH(MapObject obj) => costH[obj.x, obj.y];
 
             openList.Add(start);
             while (openList.Count > 0)

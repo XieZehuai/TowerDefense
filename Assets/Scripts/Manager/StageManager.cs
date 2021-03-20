@@ -55,6 +55,8 @@ namespace TowerDefense
                 PathFinder = new PathFinder(new DijkstraPathFinding());
             else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.ReverseDijkstra)
                 PathFinder = new PathFinder(new ReverseDijkstraPathFinding());
+            else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.DOTS)
+                PathFinder = new PathFinder(new DOTSPathFinding());
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);

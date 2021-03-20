@@ -3,6 +3,9 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Collections;
 
+/*
+ * 各种用于类型事件系统传递的消息参数
+ */
 namespace TowerDefense
 {
     public struct OnChangePaths
