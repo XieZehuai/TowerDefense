@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TowerDefense
+﻿namespace TowerDefense
 {
-    public struct PathNode : IComparable<PathNode>
+    public struct PathNode
     {
         public int x;
         public int y;
@@ -11,15 +8,11 @@ namespace TowerDefense
 
         public int costG;
         public int costH;
-        public int costF => costG = costH;
 
         public bool isWalkable;
         public int parentIndex;
 
-        public int CompareTo(PathNode other)
-        {
-            return other.costG - costG;
-        }
+        public int CostF => costG = costH;
 
         public override int GetHashCode()
         {

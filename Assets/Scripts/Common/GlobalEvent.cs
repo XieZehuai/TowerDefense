@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Unity.Mathematics;
-using Unity.Collections;
 
 /*
  * 各种用于类型事件系统传递的消息参数
@@ -21,14 +19,6 @@ namespace TowerDefense
     }
 
     public struct OnReplay { }
-
-    // 目前没用
-    public struct OnFindPathFinish
-    {
-        public int index;
-        public bool isSuccess;
-        public NativeList<int2> path;
-    }
 
     #region UI点击事件
     public struct StartGame { }

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 自定义Button组件
+    /// </summary>
     [AddComponentMenu("UI/CustomButton", 30)]
     public class CustomButton : Selectable, IPointerClickHandler, IEventSystemHandler, ISubmitHandler
     {
@@ -62,20 +65,20 @@ namespace TowerDefense
             if (IsActive() && IsInteractable())
             {
                 DoStateTransition(SelectionState.Pressed, false);
-                base.StartCoroutine(OnFinishSubmit());
+                StartCoroutine(OnFinishSubmit());
             }
         }
 
         private IEnumerator OnFinishSubmit()
         {
-            float fadeTime = base.colors.fadeDuration;
+            float fadeTime = colors.fadeDuration;
             float elapsedTime = 0f;
             while (elapsedTime < fadeTime)
             {
                 elapsedTime += Time.unscaledDeltaTime;
-                yield return (object)null;
+                yield return null;
             }
-            DoStateTransition(base.currentSelectionState, false);
+            DoStateTransition(currentSelectionState, false);
         }
     }
 }

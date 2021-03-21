@@ -31,6 +31,10 @@ namespace TowerDefense
             rotation = transform.localEulerAngles;
         }
 
+        /// <summary>
+        /// 相机移动
+        /// </summary>
+        /// <param name="movement">XZ平面上的位移</param>
         public void Move(Vector2 movement)
         {
             movement *= moveSpeed * Time.deltaTime;
@@ -44,6 +48,11 @@ namespace TowerDefense
             transform.localPosition += right * movement.x + forward * movement.y;
         }
 
+        /// <summary>
+        /// 相机旋转
+        /// </summary>
+        /// <param name="x">水平方向上的旋转</param>
+        /// <param name="y">垂直方向上的旋转</param>
         public void Rotate(float x, float y)
         {
             x *= horizontalSpeed;
@@ -53,6 +62,10 @@ namespace TowerDefense
             transform.localRotation = Quaternion.Euler(rotation);
         }
 
+        /// <summary>
+        /// 缩放
+        /// </summary>
+        /// <param name="zoom">缩放值</param>
         public void Zoom(float zoom)
         {
             distance -= zoom * zoomSpeed;

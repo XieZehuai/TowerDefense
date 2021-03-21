@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using UnityEngine;
 
 namespace TowerDefense
@@ -27,22 +25,11 @@ namespace TowerDefense
     /// <summary>
     /// 地图上的格子
     /// </summary>
-    public class MapObject : IComparable<MapObject>
+    public class MapObject
     {
         public MapObjectType type;
         public int x;
         public int y;
-
-        public int costG = int.MaxValue;
-        public int costH;
-        public int costF => costG + costH; // 从起点经过当前节点到终点的距离
-
-        public MapObject()
-        {
-            type = MapObjectType.Road;
-            x = 0;
-            y = 0;
-        }
 
         public MapObject(MapObjectType type, int x, int y)
         {
@@ -59,11 +46,6 @@ namespace TowerDefense
         public override int GetHashCode()
         {
             return x << 16 + y;
-        }
-
-        public int CompareTo(MapObject other)
-        {
-            return other.costG - costG;
         }
     }
     #endregion

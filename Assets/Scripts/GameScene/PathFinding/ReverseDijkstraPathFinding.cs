@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 直接从目标点开始，遍历所有可以行走的节点，一次获得所有节点到目标点的最短路径，
+    /// 在起始点较多的时候效率较高，起始点少效率较低
+    /// </summary>
     public class ReverseDijkstraPathFinding : IPathFindingStrategy
     {
         protected int width;
@@ -36,7 +40,7 @@ namespace TowerDefense
 
         public virtual bool FindPaths(Vector2Int[] startPositions, Vector2Int endPosition, ref List<Vector2Int>[] paths)
         {
-            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(8); // 保存所有待寻路的节点（可用优先队列保存）
+            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(new DijkstraPrioirtyComparer()); // 保存所有待寻路的节点（可用优先队列保存）
             HashSet<PathNode> closeList = new HashSet<PathNode>(); // 保存所有已经寻路过的节点
 
             int endIndex = GetIndex(endPosition);

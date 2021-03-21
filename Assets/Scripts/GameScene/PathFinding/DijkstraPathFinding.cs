@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 单独计算每个起始点到目标点的最短路径，起始点较少时效率较高
+    /// </summary>
     public class DijkstraPathFinding : ReverseDijkstraPathFinding
     {
         public override bool FindPaths(Vector2Int[] startPositions, Vector2Int endPosition, ref List<Vector2Int>[] paths)
@@ -21,7 +24,7 @@ namespace TowerDefense
 
         protected bool FindPath(Vector2Int startPos, Vector2Int endPos, ref List<Vector2Int> path)
         {
-            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(8); // 保存所有待寻路的节点（可用优先队列保存）
+            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(new DijkstraPrioirtyComparer()); // 保存所有待寻路的节点（可用优先队列保存）
             HashSet<PathNode> closeList = new HashSet<PathNode>(); // 保存所有已经寻路过的节点
 
             int endIndex = GetIndex(endPos);

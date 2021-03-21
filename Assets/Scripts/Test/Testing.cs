@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace TowerDefense.Test
 {
@@ -84,7 +83,7 @@ namespace TowerDefense.Test
         {
             PathNode start = nodes[endPos.x, endPos.y];
             start.distance = 0;
-            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(8); // 保存所有待寻路的节点（可用优先队列保存）
+            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(new PriorityComparer()); // 保存所有待寻路的节点（可用优先队列保存）
             HashSet<PathNode> closeList = new HashSet<PathNode>(); // 保存所有已经寻路过的节点
 
             openList.Add(start);
@@ -181,7 +180,17 @@ namespace TowerDefense.Test
         }
     }
 
-    public class PathNode : IComparable<PathNode>
+
+    public class PriorityComparer : IPriorityComparer<PathNode>
+    {
+        public int Compare(PathNode a, PathNode b)
+        {
+            return b.distance - a.distance;
+        }
+    }
+
+
+    public class PathNode
     {
         public int x;
         public int y;
@@ -190,10 +199,5 @@ namespace TowerDefense.Test
         public int distance;
         public bool isWalkable;
         public PathNode parent;
-
-        public int CompareTo(PathNode other)
-        {
-            return other.distance - distance;
-        }
     }
 }
