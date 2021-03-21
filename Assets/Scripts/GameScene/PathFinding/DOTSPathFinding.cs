@@ -12,13 +12,13 @@ namespace TowerDefense
     {
         private int width;
         private int height;
-        private NativeArray<PathNode> nodes;
+        private NativeArray<PathNode> mapData;
 
         public void SetMapData(MapObject[,] datas)
         {
             width = datas.GetLength(0);
             height = datas.GetLength(1);
-            nodes = new NativeArray<PathNode>(width * height, Allocator.Temp);
+            mapData = new NativeArray<PathNode>(width * height, Allocator.TempJob);
 
             for (int x = 0; x < width; x++)
             {
@@ -34,7 +34,7 @@ namespace TowerDefense
                         parentIndex = -1,
                     };
 
-                    nodes[node.index] = node;
+                    mapData[node.index] = node;
                 }
             }
         }
@@ -45,33 +45,33 @@ namespace TowerDefense
 
             NativeArray<bool>[] results = new NativeArray<bool>[startPosCount];
             NativeList<int2>[] tempPaths = new NativeList<int2>[startPosCount];
-
+            NativeArray<PathNode>[] mapDatas = new NativeArray<PathNode>[startPosCount];
             for (int i = 0; i < startPosCount; i++)
             {
                 results[i] = new NativeArray<bool>(1, Allocator.TempJob);
                 tempPaths[i] = new NativeList<int2>(Allocator.TempJob);
+                mapDatas[i] = new NativeArray<PathNode>(mapData, Allocator.TempJob);
             }
 
             NativeArray<JobHandle> jobHandles = new NativeArray<JobHandle>(startPosCount, Allocator.TempJob);
-            FindPathJob[] findPathJobs = new FindPathJob[startPosCount];
 
             int2 endPos = new int2(endPosition.x, endPosition.y);
             for (int i = 0; i < startPosCount; i++)
             {
-                findPathJobs[i] = new FindPathJob
+                FindPathJob findPathJob = new FindPathJob
                 {
                     width = width,
                     height = height,
                     startPos = new int2(startPositions[i].x, startPositions[i].y),
                     endPos = endPos,
-                    nodes = new NativeArray<PathNode>(nodes, Allocator.TempJob),
+                    nodes = mapDatas[i],
                     result = results[i],
                     path = tempPaths[i],
                 };
 
-                jobHandles[i] = findPathJobs[i].Schedule();
+                jobHandles[i] = findPathJob.Schedule();
             }
-            
+
             JobHandle.CompleteAll(jobHandles);
 
             bool success = true;
@@ -84,13 +84,13 @@ namespace TowerDefense
 
                 GetPath(ref paths[i], tempPaths[i]);
 
-                findPathJobs[i].Dispose();
                 results[i].Dispose();
                 tempPaths[i].Dispose();
+                mapDatas[i].Dispose();
             }
 
             jobHandles.Dispose();
-            nodes.Dispose();
+            mapData.Dispose();
 
             return success;
         }
@@ -121,6 +121,8 @@ namespace TowerDefense
 
             public void Execute()
             {
+                //NativeArray<PathNode> nodes = new NativeArray<PathNode>(mapData, Allocator.Temp);
+
                 PathNode start = nodes[GetIndex(startPos.x, startPos.y)];
                 start.costG = 0;
                 nodes[start.index] = start;
@@ -158,7 +160,7 @@ namespace TowerDefense
 
                     closeList.Add(currIndex);
 
-                    NativeList<PathNode> neighbours = GetNeighbours(currNode);
+                    NativeList<PathNode> neighbours = GetNeighbours(nodes, currNode);
                     for (int i = 0; i < neighbours.Length; i++)
                     {
                         PathNode neighbourNode = neighbours[i];
@@ -202,27 +204,22 @@ namespace TowerDefense
                 }
             }
 
-            public void Dispose()
-            {
-                nodes.Dispose();
-            }
-
-            private NativeList<PathNode> GetNeighbours(PathNode node)
+            private NativeList<PathNode> GetNeighbours(NativeArray<PathNode> nodes, PathNode node)
             {
                 NativeList<PathNode> neighbours = new NativeList<PathNode>(Allocator.Temp);
 
                 int x = node.x;
                 int y = node.y;
 
-                bool left = IsNeighbourWalkable(x - 1, y);
-                bool right = IsNeighbourWalkable(x + 1, y);
-                bool up = IsNeighbourWalkable(x, y + 1);
-                bool down = IsNeighbourWalkable(x, y - 1);
+                bool left = IsNeighbourWalkable(nodes, x - 1, y);
+                bool right = IsNeighbourWalkable(nodes, x + 1, y);
+                bool up = IsNeighbourWalkable(nodes, x, y + 1);
+                bool down = IsNeighbourWalkable(nodes, x, y - 1);
 
-                bool leftUp = IsNeighbourWalkable(x - 1, y + 1);
-                bool rightUp = IsNeighbourWalkable(x + 1, y + 1);
-                bool leftDown = IsNeighbourWalkable(x - 1, y - 1);
-                bool rightDown = IsNeighbourWalkable(x + 1, y - 1);
+                bool leftUp = IsNeighbourWalkable(nodes, x - 1, y + 1);
+                bool rightUp = IsNeighbourWalkable(nodes, x + 1, y + 1);
+                bool leftDown = IsNeighbourWalkable(nodes, x - 1, y - 1);
+                bool rightDown = IsNeighbourWalkable(nodes, x + 1, y - 1);
 
                 if (left) neighbours.Add(nodes[GetIndex(x - 1, y)]);
                 if (right) neighbours.Add(nodes[GetIndex(x + 1, y)]);
@@ -237,7 +234,7 @@ namespace TowerDefense
                 return neighbours;
             }
 
-            private bool IsNeighbourWalkable(int x, int y)
+            private bool IsNeighbourWalkable(NativeArray<PathNode> nodes, int x, int y)
             {
                 if (!IsValidPos(new int2(x, y))) return false;
 
