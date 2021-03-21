@@ -12,6 +12,7 @@ namespace TowerDefense
     #endregion
 
 
+    [SelectionBase]
     public abstract class Tower : PoolObject
     {
         public int x;
@@ -80,7 +81,7 @@ namespace TowerDefense
         private void OnDrawGizmosSelected()
         {
             // 显示塔的攻击范围
-            Gizmos.color = Color.yellow;
+            Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.localPosition + new Vector3(0f, 0.01f, 0f), attackRange);
         }
     }

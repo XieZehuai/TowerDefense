@@ -20,8 +20,17 @@ namespace TowerDefense
         {
             if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
             {
-                //Tower tower = ObjectPool<Tower>.Spawn("LaserTower", towerPos);
-                Tower tower = ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
+                int i = Random.Range(0, 2);
+                Tower tower;
+                if (i == 0)
+                {
+                    tower = ObjectPool.Spawn<Tower>("MachineGunTower", towerPos);
+                }
+                else
+                {
+                    tower = ObjectPool.Spawn<Tower>("LaserTower", towerPos);
+                }
+
                 tower.SetCoordinate(x, y);
                 towers.Add(tower);
                 return true;
@@ -40,7 +49,6 @@ namespace TowerDefense
                     {
                         manager.MapManager.RemoveTower(x, y);
                         ObjectPool.Unspawn(towers[i]);
-                        // ObjectPool.Unspawn(towers[i].Tag, (PoolObject)towers[i]);
                         towers.QuickRemove(i);
                         break;
                     }
@@ -53,6 +61,7 @@ namespace TowerDefense
             if (towers.Count == 0) return;
 
             manager.MapManager.RemoveAllTower();
+            ObjectPool.UnspawnAll("MachineGunTower");
             ObjectPool.UnspawnAll("LaserTower");
             towers.Clear();
         }

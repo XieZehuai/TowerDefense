@@ -2,7 +2,6 @@
 
 namespace TowerDefense
 {
-    [SelectionBase]
     public class LaserTower : Tower
     {
         public float damagePerSecond = 100f; // 每秒钟造成的伤害
@@ -52,7 +51,7 @@ namespace TowerDefense
             turret.LookAt(pos);
 
             Vector3 hitPosition = target.Position;
-            hitPosition.y += 0.25f;
+            hitPosition.y += 0.2f;
             lineRenderer.SetPosition(1, laser.InverseTransformPoint(hitPosition));
 
             if (hitEffect == null)
@@ -73,20 +72,30 @@ namespace TowerDefense
             target.GetDamage(deltaDamage, AttackType);
         }
 
+        public override void OnUnspanw()
+        {
+            StopAllCoroutines();
+            if (hitEffect != null)
+            {
+                ObjectPool.Unspawn(hitEffect);
+            }
+        }
+
+        public override void OnReclaim()
+        {
+            StopAllCoroutines();
+            if (hitEffect != null)
+            {
+                ObjectPool.Unspawn(hitEffect);
+            }
+        }
+
         private void OnDrawGizmos()
         {
             if (target != null)
             {
                 Gizmos.DrawLine(transform.localPosition, target.Position);
             }
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.yellow;
-            Vector3 pos = transform.localPosition;
-            pos.y += 0.01f;
-            Gizmos.DrawWireSphere(pos, attackRange);
         }
     }
 }

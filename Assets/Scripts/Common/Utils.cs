@@ -40,9 +40,9 @@ namespace TowerDefense
         /// </summary>
         /// <param name="action">要执行的事件</param>
         /// <param name="delay">延迟时间</param>
-        public static void Invoke(this MonoBehaviour obj, Action action, float delay)
+        public static Coroutine Invoke(this MonoBehaviour obj, Action action, float delay)
         {
-            obj.StartCoroutine(DoInvoke(action, new WaitForSeconds(delay)));
+            return obj.StartCoroutine(DoInvoke(action, new WaitForSeconds(delay)));
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace TowerDefense
         /// </summary>
         /// <param name="action">要执行的事件</param>
         /// <param name="condition">延迟条件</param>
-        public static void Invoke(this MonoBehaviour obj, Action action, YieldInstruction condition)
+        public static Coroutine Invoke(this MonoBehaviour obj, Action action, YieldInstruction condition)
         {
-            obj.StartCoroutine(DoInvoke(action, condition));
+            return obj.StartCoroutine(DoInvoke(action, condition));
         }
 
         private static IEnumerator DoInvoke(Action action, YieldInstruction condition)
