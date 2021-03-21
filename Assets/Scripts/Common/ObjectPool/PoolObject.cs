@@ -30,7 +30,7 @@ namespace TowerDefense
             }
 
             isDestroy = true;
-            ObjectPool.Clear(Tag, this);
+            ObjectPool.Clear(this);
         }
 
         /// <summary>

@@ -100,8 +100,8 @@ namespace TowerDefense
             {
                 for (int i = 0; i < enemys.Count; i++)
                 {
-                    //ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
-                    ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
+                    ObjectPool.Unspawn(enemys[i]);
+                    // ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
                 }
 
                 enemys.Clear();
@@ -177,7 +177,7 @@ namespace TowerDefense
             {
                 if (!enemys[i].OnUpdate())
                 {
-                    //ObjectPool<Enemy>.Unspawn(enemys[i].Name, enemys[i]);
+                    ObjectPool.Unspawn(enemys[i]);
                     ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
                     enemys.QuickRemove(i--);
                 }

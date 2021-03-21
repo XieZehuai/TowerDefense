@@ -15,6 +15,7 @@ namespace TowerDefense
         private Enemy target; // 要攻击的目标敌人
         private LineRenderer lineRenderer;
         private static readonly Vector3 laserOriginPos = new Vector3(0f, 0f, -0.5f); // 激光的发射点
+        private PoolObject hitEffect; // 敌人受到攻击的特效
 
         public override AttackType AttackType => AttackType.Laser;
 
@@ -50,7 +51,23 @@ namespace TowerDefense
             pos += turret.position;
             turret.LookAt(pos);
 
-            lineRenderer.SetPosition(1, laser.InverseTransformPoint(target.Position));
+            Vector3 hitPosition = target.Position;
+            hitPosition.y += 0.25f;
+            lineRenderer.SetPosition(1, laser.InverseTransformPoint(hitPosition));
+
+            if (hitEffect == null)
+            {
+                hitEffect = ObjectPool.Spawn<PoolObject>("HitEffect", hitPosition);
+                this.Invoke(() =>
+                {
+                    ObjectPool.Unspawn(hitEffect);
+                    hitEffect = null;
+                }, 0.5f);
+            }
+            else
+            {
+                hitEffect.transform.localPosition = hitPosition;
+            }
 
             float deltaDamage = damagePerSecond * Time.deltaTime;
             target.GetDamage(deltaDamage, AttackType);

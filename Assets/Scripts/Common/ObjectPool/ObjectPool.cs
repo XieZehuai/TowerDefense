@@ -106,6 +106,11 @@ namespace TowerDefense
             return pools[tag].Spawn<T>(pos, rot, scale, parent);
         }
 
+        public static void Unspawn(PoolObject obj)
+        {
+            Unspawn(obj.Tag, obj);
+        }
+
         /// <summary>
         /// 回收对象
         /// </summary>
@@ -146,6 +151,11 @@ namespace TowerDefense
             {
                 pool.UnspawnAll();
             }
+        }
+
+        public static void Clear(PoolObject obj)
+        {
+            Clear(obj.Tag, obj);
         }
 
         public static void Clear(string tag, PoolObject obj)

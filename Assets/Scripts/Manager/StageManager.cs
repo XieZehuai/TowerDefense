@@ -82,9 +82,8 @@ namespace TowerDefense
 
             if (IsPlaying)
             {
-                EnemyManager.OnUpdate();
-                Physics.SyncTransforms(); // 敌人移动后把Transform信息同步到物理引擎
                 TowerManager.OnUpdate();
+                EnemyManager.OnUpdate();
             }
         }
 

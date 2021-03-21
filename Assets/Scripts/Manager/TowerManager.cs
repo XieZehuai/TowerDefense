@@ -39,8 +39,8 @@ namespace TowerDefense
                     if (towers[i].x == x && towers[i].y == y)
                     {
                         manager.MapManager.RemoveTower(x, y);
-                        //ObjectPool<Tower>.Unspawn("LaserTower", towers[i]);
-                        ObjectPool.Unspawn(towers[i].Tag, (PoolObject)towers[i]);
+                        ObjectPool.Unspawn(towers[i]);
+                        // ObjectPool.Unspawn(towers[i].Tag, (PoolObject)towers[i]);
                         towers.QuickRemove(i);
                         break;
                     }

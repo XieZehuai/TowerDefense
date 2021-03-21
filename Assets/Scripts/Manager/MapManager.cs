@@ -382,7 +382,8 @@ namespace TowerDefense
 
         private void UnloadModel(int x, int y, MapObjectType type)
         {
-            ObjectPool.Unspawn(type.ToString(), models[x, y]);
+            ObjectPool.Unspawn(models[x, y]);
+            // ObjectPool.Unspawn(type.ToString(), models[x, y]);
         }
         #endregion
 
