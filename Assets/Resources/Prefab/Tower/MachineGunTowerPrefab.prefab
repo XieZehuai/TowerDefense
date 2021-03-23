@@ -622,8 +622,9 @@ MonoBehaviour:
   x: 0
   y: 0
   attackRange: 3
-  damage: 15
-  attackDuration: 0.2
+  damage: 7
+  attackDuration: 0.1
   turretBase: {fileID: 920016587461301666}
   turret: {fileID: 920016587461338892}
+  gun: {fileID: 920016587461348018}
   shootPoint: {fileID: 920016586879288640}

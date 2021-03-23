@@ -3,6 +3,7 @@ DamageConfig=Config/DamageConfig.asset
 EnemyConfig=Config/EnemyConfig.asset
 Prefab=Prefab
 Effect=Prefab/Effect
+ExplosionEffectPrefab=Prefab/Effect/ExplosionEffectPrefab
 HitEffectPrefab=Prefab/Effect/HitEffectPrefab
 MuzzleEffectPrefab=Prefab/Effect/MuzzleEffectPrefab
 Enemy=Prefab/Enemy

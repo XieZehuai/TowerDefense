@@ -21,6 +21,22 @@ namespace TowerDefense
             }
         }
 
+        public void DelayUnspawn(float delay)
+        {
+            this.Invoke(() =>
+            {
+                ObjectPool.Unspawn(this);
+            }, delay);
+        }
+
+        public void DelayUnspawn(YieldInstruction condition)
+        {
+            this.Invoke(() =>
+            {
+                ObjectPool.Unspawn(this);
+            }, condition);
+        }
+
         public void Destroy()
         {
             if (isDestroy)
@@ -41,7 +57,7 @@ namespace TowerDefense
         /// <summary>
         /// 回收进对象池时调用
         /// </summary>
-        public virtual void OnUnspanw() { }
+        public virtual void OnUnspawn() { }
 
         /// <summary>
         /// 从对象池中移除时调用

@@ -46,6 +46,11 @@ namespace TowerDefense
             return pools[tag];
         }
 
+        public static PoolObject Spawn(string tag, Vector3 pos, Quaternion rot, Vector3 scale, Transform parent = null)
+        {
+            return Spawn<PoolObject>(tag, pos, rot, scale, parent);
+        }
+
         /// <summary>
         /// 根据池子的标签获取对象
         /// </summary>

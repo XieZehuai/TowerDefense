@@ -15,6 +15,8 @@ namespace TowerDefense
         private float distance; // 当前物体距离目标点的距离
         private float progress;
         private Vector3 height = new Vector3(0f, 0.3f, 0f); // 飞行的高度
+        private float hitEffectDuration = 0.1f;
+        private float hitEffectTimer;
 
         public Vector3 Position => transform.localPosition;
 
@@ -58,9 +60,15 @@ namespace TowerDefense
 
         public bool OnUpdate()
         {
+            if (hitEffectTimer < hitEffectDuration)
+            {
+                hitEffectTimer += Time.deltaTime;
+            }
+
             if (currentHp <= 0)
             {
                 TypeEventSystem.Send(new OnEnemyDestroy { reward = data.reward });
+                ObjectPool.Spawn("ExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
                 return false;
             }
 
@@ -71,6 +79,12 @@ namespace TowerDefense
         {
             float actualDamage = ConfigManager.Instance.DamageConfig.GetDamage(damage, attackType, data.armorType);
             currentHp -= actualDamage;
+
+            if (hitEffectTimer >= hitEffectDuration)
+            {
+                hitEffectTimer = 0f;
+                ObjectPool.Spawn("HitEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(0.5f);
+            }
         }
 
         public Vector3 GetNextWayPoint()

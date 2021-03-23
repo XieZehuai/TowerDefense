@@ -76,7 +76,8 @@ namespace TowerDefense
 
             if (activeList.Contains(obj))
             {
-                obj.OnUnspanw();
+                obj.OnUnspawn();
+                obj.transform.SetParent(null);
                 obj.gameObject.SetActive(false);
                 activeList.Remove(obj);
                 inactiveList.Add(obj);
@@ -91,7 +92,8 @@ namespace TowerDefense
         {
             foreach (var obj in activeList)
             {
-                obj.OnUnspanw();
+                obj.OnUnspawn();
+                obj.transform.SetParent(null);
                 obj.gameObject.SetActive(false);
                 inactiveList.Add(obj);
             }
