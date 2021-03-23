@@ -11,10 +11,10 @@ namespace TowerDefense
 
         private bool isDestroy = false;
 
-        public void Init(string tag, bool destroyOnLoad = true)
+        public void OnInstantiate(string tag, bool destroyOnLoad = true)
         {
             Tag = tag;
-
+           
             if (!destroyOnLoad)
             {
                 DontDestroyOnLoad(gameObject);

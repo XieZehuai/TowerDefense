@@ -83,7 +83,8 @@ namespace TowerDefense
             if (hitEffectTimer >= hitEffectDuration)
             {
                 hitEffectTimer = 0f;
-                ObjectPool.Spawn("HitEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(0.5f);
+
+                ObjectPool.Spawn<Particle>("HitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f)).DelayUnspawn(0.5f);
             }
         }
 
