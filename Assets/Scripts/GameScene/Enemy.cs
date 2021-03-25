@@ -5,6 +5,40 @@ namespace TowerDefense
 {
     public class Enemy : PoolObject
     {
+        #region 静态方法，用于寻找范围内的敌人
+        private static readonly Collider[] buffer = new Collider[100];
+
+        public static int BufferCount { get; private set; }
+
+        public static bool FillBuffer(Vector3 pos, float range)
+        {
+            Vector3 top = pos;
+            top.y += 3f;
+
+            BufferCount = Physics.OverlapCapsuleNonAlloc(pos, top, range, buffer, Utils.ENEMY_LAYER_MASK);
+
+            return BufferCount > 0;
+        }
+
+        public static Enemy GetTarget(int index)
+        {
+            if (index >= BufferCount)
+            {
+                Debug.LogError("索引不能大于Buffer大小" + index + " " + BufferCount);
+                return null;
+            }
+
+            Enemy target = buffer[index].GetComponent<Enemy>();
+            return target;
+        }
+
+        public static Enemy GetTarget(AttackType attackType)
+        {
+            // TODO: 寻找最合适的敌人
+            return null;
+        }
+        #endregion
+
         private EnemyData data;
         private float currentHp;
         private float currentSpeed;
@@ -18,7 +52,7 @@ namespace TowerDefense
         private float hitEffectDuration = 0.1f;
         private float hitEffectTimer;
 
-        public Vector3 Position => transform.localPosition;
+        public Vector3 LocalPosition => transform.localPosition;
 
         public Vector3 NextWayPoint => path[curr];
 

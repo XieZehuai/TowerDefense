@@ -415,10 +415,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99e6540d6a26e3149ae4155da30087a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: EnemyDeminer
-  hp: 100
-  speed: 2
-  armorType: 0
 --- !u!135 &446382551882885465
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -430,5 +426,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}

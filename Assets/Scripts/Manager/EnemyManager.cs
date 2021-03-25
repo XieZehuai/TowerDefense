@@ -5,6 +5,8 @@ namespace TowerDefense
 {
     public class EnemyManager : SubStageManager
     {
+        public readonly List<Enemy> enemys = new List<Enemy>(); // 保存所有敌人的引用
+
         // 关卡敌人数据
         private readonly float waveInterval; // 每一波的间隔
         private readonly Dictionary<int, int>[] waveData; // 每一波及每波包含敌人的数据
@@ -18,7 +20,6 @@ namespace TowerDefense
         private Dictionary<int, int>.Enumerator enumerator; // 当前波敌人的枚举器
 
         private List<Vector3>[] spawnPointPaths; // 从生成点到终点的所有路径
-        public readonly List<Enemy> enemys = new List<Enemy>(); // 保存所有敌人的引用
 
         public EnemyManager(StageManager stageManager, float waveInterval, Dictionary<int, int>[] waveData) : base(stageManager)
         {
@@ -101,7 +102,6 @@ namespace TowerDefense
                 for (int i = 0; i < enemys.Count; i++)
                 {
                     ObjectPool.Unspawn(enemys[i]);
-                    // ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
                 }
 
                 enemys.Clear();
@@ -157,7 +157,6 @@ namespace TowerDefense
         private void CreateEnemy(int id)
         {
             EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
-            //Enemy enemy = ObjectPool<Enemy>.Spawn(enemyData.name);
             Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name);
             int random = Random.Range(0, spawnPointPaths.Length); // 随机设置路径
             enemy.SetData(enemyData).SetPath(spawnPointPaths[random], true);
@@ -178,7 +177,6 @@ namespace TowerDefense
                 if (!enemys[i].OnUpdate())
                 {
                     ObjectPool.Unspawn(enemys[i]);
-                    ObjectPool.Unspawn(enemys[i].Tag, (PoolObject)enemys[i]);
                     enemys.QuickRemove(i--);
                 }
             }

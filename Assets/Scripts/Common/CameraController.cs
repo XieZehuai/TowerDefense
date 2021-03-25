@@ -22,7 +22,7 @@ namespace TowerDefense
 
         [SerializeField] private Transform cameraContainer = default;
 
-        private float distance = 15f;
+        private float distance = 25f;
         private Vector3 rotation;
 
         protected override void OnInit()

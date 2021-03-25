@@ -12,8 +12,8 @@ namespace TowerDefense
     {
         #region 常量
         public const int ENEMY_LAYER_MASK = 1 << 8;
-
         public const int MAP_CELL_SIZE = 1;
+        public const float GRAVITY = 20f;
         #endregion
 
         #region 各种常用方法

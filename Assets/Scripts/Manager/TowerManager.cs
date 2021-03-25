@@ -20,16 +20,22 @@ namespace TowerDefense
         {
             if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
             {
-                int i = Random.Range(0, 2);
-                Tower tower;
-                if (i == 0)
-                {
-                    tower = ObjectPool.Spawn<Tower>("MachineGunTower", towerPos);
-                }
-                else
-                {
-                    tower = ObjectPool.Spawn<Tower>("LaserTower", towerPos);
-                }
+                //int i = Random.Range(0, 3);
+                //if (i == 0)
+                //{
+                //    tower = ObjectPool.Spawn<Tower>("MachineGunTower", towerPos);
+                //}
+                //else if (i == 1)
+                //{
+                //    tower = ObjectPool.Spawn<Tower>("LaserTower", towerPos);
+                //}
+                //else
+                //{
+                //    tower = ObjectPool.Spawn<Tower>("CannonTower", towerPos);
+                //}
+
+                CannonTower tower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos);
+                tower.SetWarEntityManager(manager.WarEntityManager);
 
                 tower.SetCoordinate(x, y);
                 towers.Add(tower);
@@ -45,7 +51,7 @@ namespace TowerDefense
             {
                 for (int i = 0; i < towers.Count; i++)
                 {
-                    if (towers[i].x == x && towers[i].y == y)
+                    if (towers[i].X == x && towers[i].Y == y)
                     {
                         manager.MapManager.RemoveTower(x, y);
                         ObjectPool.Unspawn(towers[i]);
@@ -63,6 +69,7 @@ namespace TowerDefense
             manager.MapManager.RemoveAllTower();
             ObjectPool.UnspawnAll("MachineGunTower");
             ObjectPool.UnspawnAll("LaserTower");
+            ObjectPool.UnspawnAll("CannonTower");
             towers.Clear();
         }
 

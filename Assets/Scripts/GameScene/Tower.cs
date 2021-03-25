@@ -15,26 +15,50 @@ namespace TowerDefense
     [SelectionBase]
     public abstract class Tower : PoolObject
     {
-        public int x;
-        public int y;
-        public float attackRange = 2f;
-
         // 避免每次检测敌人时都分配内存
-        protected static readonly Collider[] targetsBuffer = new Collider[100];
+        //protected static readonly Collider[] targetsBuffer = new Collider[100];
+
+        [SerializeField] protected float attackRange = 2f; // 攻击范围
+
+        /// <summary>
+        /// 炮塔在地图上的X轴坐标
+        /// </summary>
+        public int X { get; protected set; }
+
+        /// <summary>
+        /// 炮塔在地图上的Y轴坐标
+        /// </summary>
+        public int Y { get; protected set; }
+
+        /// <summary>
+        /// 炮塔的攻击范围
+        /// </summary>
+        public float AttackRange => attackRange;
 
         /// <summary>
         /// 炮塔的攻击类型
         /// </summary>
         public abstract AttackType AttackType { get; }
 
-        public Vector3 Position => transform.localPosition;
+        /// <summary>
+        /// 炮塔的本地坐标
+        /// </summary>
+        public Vector3 LocalPosition => transform.localPosition;
 
+        /// <summary>
+        /// 设置炮塔坐标
+        /// </summary>
+        /// <param name="x">X轴坐标</param>
+        /// <param name="y">Y轴坐标</param>
         public void SetCoordinate(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            X = x;
+            Y = y;
         }
 
+        /// <summary>
+        /// 炮塔更新逻辑，每帧调用
+        /// </summary>
         public virtual void OnUpdate()
         {
         }
@@ -46,16 +70,27 @@ namespace TowerDefense
         /// <returns>找到返回true，失败返回false</returns>
         protected virtual bool FindTarget(out Enemy target)
         {
-            int hits = Physics.OverlapSphereNonAlloc(Position, attackRange, targetsBuffer, Utils.ENEMY_LAYER_MASK);
-
-            if (hits > 0)
+            if (Enemy.FillBuffer(transform.localPosition, attackRange))
             {
-                target = targetsBuffer[UnityEngine.Random.Range(0, hits)].GetComponent<Enemy>();
-                return true;
+                target = Enemy.GetTarget(0);
+                return target != null;
+            }
+            else
+            {
+                target = null;
+                return false;
             }
 
-            target = null;
-            return false;
+            //int hits = Physics.OverlapSphereNonAlloc(LocalPosition, attackRange, targetsBuffer, Utils.ENEMY_LAYER_MASK);
+
+            //if (hits > 0)
+            //{
+            //    target = targetsBuffer[Random.Range(0, hits)].GetComponent<Enemy>();
+            //    return true;
+            //}
+
+            //target = null;
+            //return false;
         }
 
         /// <summary>
@@ -67,8 +102,8 @@ namespace TowerDefense
         {
             if (target == null || !target.gameObject.activeSelf) return false;
 
-            Vector3 a = Position;
-            Vector3 b = target.Position;
+            Vector3 a = LocalPosition;
+            Vector3 b = target.LocalPosition;
             if (Vector3.Distance(a, b) > attackRange + 0.25f)
             {
                 target = null;

@@ -11,16 +11,25 @@ namespace TowerDefense
 
         private bool isDestroy = false;
 
+        /// <summary>
+        /// 在预设被加载并实例化时调用
+        /// </summary>
+        /// <param name="tag">对象所在池子标签</param>
+        /// <param name="destroyOnLoad">是否在切换场景时销毁当前对象，默认为true</param>
         public void OnInstantiate(string tag, bool destroyOnLoad = true)
         {
             Tag = tag;
-           
+
             if (!destroyOnLoad)
             {
                 DontDestroyOnLoad(gameObject);
             }
         }
 
+        /// <summary>
+        /// 延迟一段时间后回收当前对象
+        /// </summary>
+        /// <param name="delay">延迟时间</param>
         public void DelayUnspawn(float delay)
         {
             this.Invoke(() =>
@@ -29,6 +38,10 @@ namespace TowerDefense
             }, delay);
         }
 
+        /// <summary>
+        /// 延迟一定条件后回收当前对象
+        /// </summary>
+        /// <param name="condition">延迟条件</param>
         public void DelayUnspawn(YieldInstruction condition)
         {
             this.Invoke(() =>
@@ -37,6 +50,9 @@ namespace TowerDefense
             }, condition);
         }
 
+        /// <summary>
+        /// 销毁当前对象
+        /// </summary>
         public void Destroy()
         {
             if (isDestroy)

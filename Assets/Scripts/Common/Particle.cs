@@ -77,5 +77,10 @@ namespace TowerDefense
         {
             NotFollow();
         }
+
+        public override void OnReclaim()
+        {
+            NotFollow();
+        }
     }
 }

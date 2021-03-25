@@ -1,4 +1,5 @@
 ﻿using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace TowerDefense
 {
@@ -11,6 +12,13 @@ namespace TowerDefense
         protected override void OnInit()
         {
             UIManager.Instance.Open<UIMainScene>();
+        }
+
+        private void Start()
+        {
+            Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Heavy));
+            Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Medium));
+            Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Light));
         }
 
         public void LoadGameScene()

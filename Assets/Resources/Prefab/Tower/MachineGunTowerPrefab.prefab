@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 920016586879288640}
   m_Layer: 0
-  m_Name: ShootPoint
+  m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -281,7 +281,6 @@ GameObject:
   - component: {fileID: 920016587461231346}
   - component: {fileID: 920016587462644058}
   - component: {fileID: 920016587463718222}
-  - component: {fileID: 920016587469079588}
   m_Layer: 0
   m_Name: AA
   m_TagString: Untagged
@@ -352,25 +351,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &920016587469079588
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920016587461597874}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 299737f5f38315d44b621dba61800bd6, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &920016587461704616
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,12 +599,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5797133eabc5b3745bffaafe0819cbd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  x: 0
-  y: 0
   attackRange: 3
   damage: 7
   attackDuration: 0.1
   turretBase: {fileID: 920016587461301666}
   turret: {fileID: 920016587461338892}
   gun: {fileID: 920016587461348018}
-  shootPoint: {fileID: 920016586879288640}
+  attackPoint: {fileID: 920016586879288640}

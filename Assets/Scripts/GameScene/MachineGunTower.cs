@@ -4,59 +4,63 @@ namespace TowerDefense
 {
     public class MachineGunTower : Tower
     {
-        public float damage = 50f;
-        public float attackDuration = 2f;
+        [SerializeField] private float damage = 7f;
+        [SerializeField] private float attackDuration = 0.1f; // 攻击间隔
 
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
         [SerializeField] private Transform gun = default;
-        [SerializeField] private Transform shootPoint = default;
+        [SerializeField] private Transform attackPoint = default;
 
         private Enemy target;
-        private float shootTimer;
+        private float attackTimer;
+
+        public float Damage => damage;
+
+        public float AttackDuration => AttackDuration;
 
         public override AttackType AttackType => AttackType.Normal;
 
         public override void OnUpdate()
         {
-            if (shootTimer < attackDuration)
+            if (attackTimer < attackDuration)
             {
-                shootTimer += Time.deltaTime;
+                attackTimer += Time.deltaTime;
             }
 
             if (TrackTarget(ref target) || FindTarget(out target))
             {
                 LookTarget();
 
-                if (shootTimer >= attackDuration)
+                if (attackTimer >= attackDuration)
                 {
-                    shootTimer = 0f;
-                    Shoot();
+                    attackTimer = 0f;
+                    Attack();
                 }
             }
         }
 
         private void LookTarget()
         {
-            Vector3 pos = target.Position;
+            Vector3 pos = target.LocalPosition;
             pos.y = 0f;
             turretBase.LookAt(pos);
 
-            pos = (target.Position - gun.position).normalized;
+            pos = (target.LocalPosition - gun.position).normalized;
             pos += turret.position;
             turret.LookAt(pos);
         }
 
-        private void Shoot()
+        private void Attack()
         {
-            ShowShootEffect();
+            ShowAttackEffect();
 
             target.GetDamage(damage, AttackType);
         }
 
-        private void ShowShootEffect()
+        private void ShowAttackEffect()
         {
-            ObjectPool.Spawn<PoolObject>("MuzzleEffect", shootPoint.position, shootPoint.rotation, Vector3.one).DelayUnspawn(1.5f);
+            ObjectPool.Spawn<PoolObject>("MuzzleEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(1.5f);
         }
     }
 }

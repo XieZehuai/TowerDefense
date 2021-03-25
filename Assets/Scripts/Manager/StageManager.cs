@@ -26,6 +26,7 @@ namespace TowerDefense
         public MapManager MapManager { get; private set; }
         public EnemyManager EnemyManager { get; private set; }
         public TowerManager TowerManager { get; private set; }
+        public WarEntityManager WarEntityManager { get; private set; }
         public PathIndicator PathIndicator { get; private set; }
         public PathFinder PathFinder { get; private set; }
         public CameraController CameraController => cameraController;
@@ -48,6 +49,7 @@ namespace TowerDefense
             MapManager = new MapManager(this);
             EnemyManager = new EnemyManager(this, levelData.waveInterval, levelData.waveData);
             TowerManager = new TowerManager(this);
+            WarEntityManager = new WarEntityManager(this);
             PathIndicator = new PathIndicator(this);
 
             if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.Dijkstra)
@@ -84,6 +86,7 @@ namespace TowerDefense
             {
                 TowerManager.OnUpdate();
                 EnemyManager.OnUpdate();
+                WarEntityManager.OnUpdate();
             }
         }
 
@@ -129,6 +132,7 @@ namespace TowerDefense
 
             EnemyManager.Replay();
             TowerManager.Replay();
+            WarEntityManager.Replay();
 
             TypeEventSystem.Send(new OnReplay());
         }
@@ -229,6 +233,7 @@ namespace TowerDefense
             MapManager.Dispose();
             EnemyManager.Dispose();
             TowerManager.Dispose();
+            WarEntityManager.Dispose();
             PathIndicator.Dispose();
         }
     }

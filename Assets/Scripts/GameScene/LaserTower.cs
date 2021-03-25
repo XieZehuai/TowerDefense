@@ -41,15 +41,15 @@ namespace TowerDefense
 
         private void Shoot()
         {
-            Vector3 pos = target.Position;
+            Vector3 pos = target.LocalPosition;
             pos.y = 0f;
             turretBase.LookAt(pos);
 
-            pos = (target.Position - upGun.position).normalized;
+            pos = (target.LocalPosition - upGun.position).normalized;
             pos += turret.position;
             turret.LookAt(pos);
 
-            lineRenderer.SetPosition(1, laser.InverseTransformPoint(target.Position));
+            lineRenderer.SetPosition(1, laser.InverseTransformPoint(target.LocalPosition));
 
             float deltaDamage = damagePerSecond * Time.deltaTime;
             target.GetDamage(deltaDamage, AttackType);
@@ -59,7 +59,7 @@ namespace TowerDefense
         {
             if (target != null)
             {
-                Gizmos.DrawLine(transform.localPosition, target.Position);
+                Gizmos.DrawLine(transform.localPosition, target.LocalPosition);
             }
         }
     }
