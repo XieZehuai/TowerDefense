@@ -72,7 +72,7 @@ namespace TowerDefense
             }
             else
             {
-                MapManager.CreateMap(levelData.mapWidth, levelData.mapHeight, levelData.mapData, Utils.MAP_CELL_SIZE);
+                MapManager.CreateMap(20, 20, Utils.MAP_CELL_SIZE);
             }
 
             UIManager.Instance.Open<UIGameScene>(new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = levelData.waveData.Length }, UILayer.Background);

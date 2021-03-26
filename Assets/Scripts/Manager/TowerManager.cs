@@ -69,6 +69,7 @@ namespace TowerDefense
             ObjectPool.UnspawnAll("MachineGunTower");
             ObjectPool.UnspawnAll("LaserTower");
             ObjectPool.UnspawnAll("CannonTower");
+            ObjectPool.UnspawnAll("DecelerateTower");
             towers.Clear();
         }
 

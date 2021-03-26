@@ -1,11 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace TowerDefense
 {
+    public enum EnemyType
+    {
+        Light_1,
+        Light_2,
+        Light_3,
+        Mideum_1,
+        Mideum_2,
+        Mideum_3,
+        Heavy_1,
+        Heavy_2,
+        Heavy_3,
+    }
+
+
+    [Serializable]
+    public struct EnemySequence
+    {
+        public EnemyType enemyType;
+        public int count;
+    }
+
+
+    [Serializable]
+    public struct WaveData
+    {
+        public EnemySequence[] sequences;
+    }
+
+
+    [CreateAssetMenu(menuName = "TowerDefense/StageData")]
+    public class StageData : ScriptableObject
+    {
+        public int index;
+        public int playerHp;
+        public int coins;
+        public float waveInterval;
+
+        [SerializeField] private WaveData[] waveDatas = default;
+    }
+
+
     [Serializable]
     public class LevelData
     {
+        // 第几关
+        public int index;
+
         // 初始生命以及金币
         public int playerHp;
         public int coins;
@@ -13,11 +58,6 @@ namespace TowerDefense
         // 敌人数据
         public float waveInterval; // 每波的间隔
         public Dictionary<int, int>[] waveData; // 每波敌人的配置
-
-        // 地图数据
-        public int mapWidth;
-        public int mapHeight;
-        public MapObjectType[] mapData;
 
         /// <summary>
         /// 生成默认关卡数据
@@ -30,21 +70,9 @@ namespace TowerDefense
             data.playerHp = 10;
             data.coins = 200;
 
-            data.mapWidth = 20;
-            data.mapHeight = 20;
-            data.mapData = new MapObjectType[data.mapWidth * data.mapHeight];
-
-            for (int i = 0; i < data.mapData.Length; i++)
-            {
-                data.mapData[i] = MapObjectType.Road;
-            }
-            data.mapData[0] = MapObjectType.SpawnPoint;
-            data.mapData[data.mapData.Length - 1] = MapObjectType.Destination;
-
             data.waveInterval = 10f;
             data.waveData = new Dictionary<int, int>[5];
 
-            //data.waveData[0] = new Dictionary<int, int> { { 0, 6 }, { 3, 4 }, { 6, 2 }, };
             data.waveData[0] = new Dictionary<int, int> { { 6, 2 } };
             data.waveData[1] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 5 }, { 6, 2 }, };
             data.waveData[2] = new Dictionary<int, int> { { 0, 4 }, { 1, 4 }, { 3, 2 }, { 4, 2 }, { 6, 1 }, { 7, 1 } };
