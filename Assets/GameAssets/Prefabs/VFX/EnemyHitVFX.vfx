@@ -97,10 +97,10 @@ MonoBehaviour:
   - title: Shadow
     position:
       serializedVersion: 2
-      x: 4127
-      y: 49
-      width: 476
-      height: 1526
+      x: 3771
+      y: 36
+      width: 938
+      height: 1525
     contents:
     - model: {fileID: 8926484042661614774}
       id: 0
@@ -114,15 +114,21 @@ MonoBehaviour:
     - model: {fileID: 8926484042661614796}
       id: 0
       isStickyNote: 0
+    - model: {fileID: 8926484042661614828}
+      id: 0
+      isStickyNote: 0
+    - model: {fileID: 8926484042661614623}
+      id: 4
+      isStickyNote: 0
   stickyNoteInfos: []
   systemInfos: []
   categories: []
   uiBounds:
     serializedVersion: 2
     x: 781
-    y: 40
-    width: 3822
-    height: 2056
+    y: 36
+    width: 3928
+    height: 2060
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -133,7 +139,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d4c867f6b72b714dbb5fd1780afe208, type: 3}
-  m_Name: HitVFX
+  m_Name: EnemyHitVFX
   m_EditorClassIdentifier: 
   m_Parent: {fileID: 0}
   m_Children:
@@ -214,7 +220,7 @@ VisualEffectResource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: HitVFX
+  m_Name: EnemyHitVFX
   m_Graph: {fileID: 114350483966674976}
   m_ShaderSources:
   - compute: 1
@@ -359,7 +365,7 @@ VisualEffectResource:
       = index;\r\n#endif\r\n#endif\r\n\t}\r\n}\r\n"
   - compute: 0
     name: '[System 1]Output Particle Quad'
-    source: "Shader \"Hidden/VFX/HitVFX/System 1/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
+    source: "Shader \"Hidden/VFX/EnemyHitVFX/System 1/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
       Off\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
       \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha One\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Off\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define
@@ -832,7 +838,7 @@ VisualEffectResource:
       //Independant clipping for motion vector pass\n\t\t#endif\n\t\t\t\treturn o;\n\t\t\t}\n\t\t\tENDHLSL\n\t\t}\n\t\t\n\r\n\t\t\r\n\t}\r\n}\r\n"
   - compute: 0
     name: '[System 2]Output Particle Quad'
-    source: "Shader \"Hidden/VFX/HitVFX/System 2/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
+    source: "Shader \"Hidden/VFX/EnemyHitVFX/System 2/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
       Off\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
       \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha One\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Off\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define
@@ -1455,7 +1461,7 @@ VisualEffectResource:
       \n\r\n        }\r\n    }\r\n}\r\n"
   - compute: 0
     name: '[System 3]Output Particle Quad'
-    source: "Shader \"Hidden/VFX/HitVFX/System 3/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
+    source: "Shader \"Hidden/VFX/EnemyHitVFX/System 3/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
       Off\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
       \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha One\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Off\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define
@@ -2275,7 +2281,7 @@ VisualEffectResource:
       \n\r\n        }\r\n    }\r\n}\r\n"
   - compute: 0
     name: '[System 4]Output Particle Forward Decal'
-    source: "Shader \"Hidden/VFX/HitVFX/System 4/Output Particle Forward Decal\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
+    source: "Shader \"Hidden/VFX/EnemyHitVFX/System 4/Output Particle Forward Decal\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
       Back\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
       \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha OneMinusSrcAlpha\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Back\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define
@@ -5350,7 +5356,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614624}
       inputSlot: {fileID: 8926484042661614832}
-    position: {x: 3636, y: 1337}
+    position: {x: 3796, y: 1325}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614624
@@ -9797,7 +9803,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 4153, y: 818}
+  m_UIPosition: {x: 4259, y: 804}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
@@ -9832,7 +9838,7 @@ MonoBehaviour:
   m_Children:
   - {fileID: 8926484042661614787}
   - {fileID: 8926484042661614823}
-  m_UIPosition: {x: 4152, y: 396}
+  m_UIPosition: {x: 4258, y: 382}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -10241,7 +10247,7 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children:
   - {fileID: 8926484042661614791}
-  m_UIPosition: {x: 4152, y: 107}
+  m_UIPosition: {x: 4258, y: 93}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
@@ -10393,7 +10399,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614808}
   - {fileID: 8926484042661614817}
   - {fileID: 8926484042661614815}
-  m_UIPosition: {x: 4154, y: 1022}
+  m_UIPosition: {x: 4260, y: 1008}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -10982,7 +10988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 3802, y: 1305}
+  m_UIPosition: {x: 3936, y: 1292}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
   m_InputSlots:

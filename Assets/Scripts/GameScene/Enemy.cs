@@ -111,7 +111,7 @@ namespace TowerDefense
             if (currentHp <= 0)
             {
                 TypeEventSystem.Send(new OnEnemyDestroy { reward = data.reward });
-                ObjectPool.Spawn("ExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
+                ObjectPool.Spawn("EnemyDestroyEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
                 return false;
             }
 
@@ -140,7 +140,7 @@ namespace TowerDefense
             {
                 hitEffectTimer = 0f;
 
-                ObjectPool.Spawn<Particle>("HitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f)).DelayUnspawn(0.5f);
+                ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f)).DelayUnspawn(0.5f);
             }
         }
 

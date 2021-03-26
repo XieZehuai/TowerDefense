@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d4c867f6b72b714dbb5fd1780afe208, type: 3}
-  m_Name: ExplosionVFX
+  m_Name: EnemyDestroyVFX
   m_EditorClassIdentifier: 
   m_Parent: {fileID: 0}
   m_Children:
@@ -172,7 +172,7 @@ VisualEffectResource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ExplosionVFX
+  m_Name: EnemyDestroyVFX
   m_Graph: {fileID: 114350483966674976}
   m_ShaderSources:
   - compute: 1
@@ -366,9 +366,9 @@ VisualEffectResource:
       = index;\r\n#endif\r\n#endif\r\n\t}\r\n}\r\n"
   - compute: 0
     name: '[Explosion Spark]Output Particle Quad'
-    source: "Shader \"Hidden/VFX/ExplosionVFX/Explosion Spark/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
-      Off\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
-      \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
+    source: "Shader \"Hidden/VFX/EnemyDestroyVFX/Explosion Spark/Output Particle
+      Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull Off\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\"
+      \"IgnoreProjector\"=\"True\" \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha One\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Off\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define
       NB_THREADS_PER_GROUP 64\n\t\t#define HAS_ATTRIBUTES 1\n\t\t#define VFX_PASSDEPTH_ACTUAL
       (0)\n\t\t#define VFX_PASSDEPTH_MOTION_VECTOR (1)\n\t\t#define VFX_PASSDEPTH_SELECTION
@@ -997,7 +997,7 @@ VisualEffectResource:
       = index;\r\n#endif\r\n#endif\r\n\t}\r\n}\r\n"
   - compute: 0
     name: '[System 2]Output Particle Quad'
-    source: "Shader \"Hidden/VFX/ExplosionVFX/System 2/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
+    source: "Shader \"Hidden/VFX/EnemyDestroyVFX/System 2/Output Particle Quad\"\n{\r\n\tSubShader\r\n\t{\t\r\n\t\tCull
       Off\r\n\t\t\r\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
       \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha One\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Off\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define

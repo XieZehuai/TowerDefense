@@ -60,7 +60,7 @@ namespace TowerDefense
 
         private void ShowAttackEffect()
         {
-            ObjectPool.Spawn<PoolObject>("MuzzleEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(1.5f);
+            ObjectPool.Spawn<PoolObject>("MachineGunAttackEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(1.5f);
         }
     }
 }

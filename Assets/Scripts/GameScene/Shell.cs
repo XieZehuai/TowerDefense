@@ -43,20 +43,12 @@ namespace TowerDefense
 
         private void Blast()
         {
-            //Enemy.FindTargets(targetPos, blastRadius);
-            //for (int i = 0; i < Enemy.TargetCount; i++)
-            //{
-            //    Enemy target = Enemy.GetTarget(i);
-            //    target.GetDamage(damage, AttackType.Cannon);
-            //    target.Decelerate(3f, 0.5f);
-            //}
-
             Enemy.AttackAll(targetPos, blastRadius, enemy =>
             {
                 enemy.GetDamage(damage, AttackType.Cannon);
             });
 
-            ObjectPool.Spawn("ExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
+            ObjectPool.Spawn("ShellExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
         }
     }
 }
