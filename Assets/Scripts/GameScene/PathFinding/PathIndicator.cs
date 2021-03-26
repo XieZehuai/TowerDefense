@@ -12,7 +12,6 @@ namespace TowerDefense
 
         public PathIndicator(StageManager stageManager) : base(stageManager)
         {
-            TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
         }
 
         public void SetPath(List<Vector2Int>[] paths)
@@ -57,7 +56,6 @@ namespace TowerDefense
                     Vector3 pos = paths[i][j] + height;
                     float dir = GetDirection(paths[i][j], paths[i][j + 1]);
                     Quaternion rot = Quaternion.Euler(new Vector3(90f, dir, 0f));
-                    //Transform arrow = GenericObjectPool<Transform>.Spawn("Arrow", pos, rot);
                     PoolObject arrow = ObjectPool.Spawn<PoolObject>("Arrow", pos, rot);
                     arrows.Add(arrow);
                 }
@@ -66,26 +64,11 @@ namespace TowerDefense
 
         private void HidePath()
         {
-            //for (int i = 0; i < arrows.Count; i++)
-            //{
-            //    GenericObjectPool<Transform>.Unspawn("Arrow", arrows[i]);
-            //}
             ObjectPool.UnspawnAll("Arrow");
             arrows.Clear();
         }
 
-        private void OnChangePaths(OnChangePaths context)
-        {
-            paths = context.paths;
-
-            if (showPath)
-            {
-                HidePath();
-                ShowPath();
-            }
-        }
-
-        public float GetDirection(Vector3 from, Vector3 to)
+        private static float GetDirection(Vector3 from, Vector3 to)
         {
             float x = to.x - from.x;
             float z = to.z - from.z;
@@ -98,11 +81,6 @@ namespace TowerDefense
             if (x < 0f && z < 0f) return 225f;
             if (x < 0f && z == 0f) return 270f;
             return 315f;
-        }
-
-        public override void Dispose()
-        {
-            TypeEventSystem.UnRegister<OnChangePaths>(OnChangePaths);
         }
     }
 }

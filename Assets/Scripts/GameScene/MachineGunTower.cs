@@ -26,14 +26,13 @@ namespace TowerDefense
             attackTimer = attackDuration;
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
             if (attackTimer < attackDuration)
             {
-                attackTimer += Time.deltaTime;
+                attackTimer += deltaTime;
             }
-
-            if (TrackTarget(ref target) || FindTarget(out target))
+            else if (TrackTarget(ref target) || FindTarget(out target))
             {
                 LookTarget();
 

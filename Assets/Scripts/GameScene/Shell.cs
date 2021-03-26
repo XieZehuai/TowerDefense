@@ -25,9 +25,9 @@ namespace TowerDefense
             this.velocity = velocity;
         }
 
-        public override bool OnUpdate()
+        public override bool OnUpdate(float deltaTime)
         {
-            timer += Time.deltaTime;
+            timer += deltaTime;
             Vector3 pos = attackPos + velocity * timer;
             pos.y -= 0.5f * Utils.GRAVITY * timer * timer;
 

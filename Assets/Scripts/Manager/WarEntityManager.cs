@@ -19,9 +19,9 @@ namespace TowerDefense
             entities.Add(shell);
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
-            UpdateWarEntities();
+            UpdateWarEntities(deltaTime);
         }
 
         public void Replay()
@@ -34,11 +34,11 @@ namespace TowerDefense
             entities.Clear();
         }
 
-        private void UpdateWarEntities()
+        private void UpdateWarEntities(float deltaTime)
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                if (!entities[i].OnUpdate())
+                if (!entities[i].OnUpdate(deltaTime))
                 {
                     ObjectPool.Unspawn(entities[i]);
                     entities.QuickRemove(i--);

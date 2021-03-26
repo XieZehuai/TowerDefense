@@ -26,11 +26,11 @@ namespace TowerDefense
             attackTimer = attackDuration;
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
             if (attackTimer < attackDuration)
             {
-                attackTimer += Time.deltaTime;
+                attackTimer += deltaTime;
             }
             else if (attackTimer >= attackDuration)
             {

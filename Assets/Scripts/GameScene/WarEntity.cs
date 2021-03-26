@@ -5,7 +5,7 @@ namespace TowerDefense
 {
     public abstract class WarEntity : PoolObject
     {
-        public virtual bool OnUpdate()
+        public virtual bool OnUpdate(float deltaTime)
         {
             return true;
         }

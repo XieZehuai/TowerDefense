@@ -356,6 +356,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 994268176811265511, guid: 21e395f65f796224a93f3098b84fb03a,
         type: 3}
+      propertyPath: stage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 994268176811265511, guid: 21e395f65f796224a93f3098b84fb03a,
+        type: 3}
       propertyPath: pathFindingStrategy
       value: 2
       objectReference: {fileID: 0}

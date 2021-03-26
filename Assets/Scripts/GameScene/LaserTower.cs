@@ -22,11 +22,11 @@ namespace TowerDefense
             lineRenderer = laser.GetComponent<LineRenderer>();
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
             if (TrackTarget(ref target) || FindTarget(out target))
             {
-                Shoot();
+                Shoot(deltaTime);
             }
             else
             {
@@ -39,7 +39,7 @@ namespace TowerDefense
             lineRenderer.SetPosition(1, laserOriginPos);
         }
 
-        private void Shoot()
+        private void Shoot(float deltaTime)
         {
             Vector3 pos = target.LocalPosition;
             pos.y = 0f;
@@ -51,7 +51,7 @@ namespace TowerDefense
 
             lineRenderer.SetPosition(1, laser.InverseTransformPoint(target.LocalPosition));
 
-            float deltaDamage = damagePerSecond * Time.deltaTime;
+            float deltaDamage = damagePerSecond * deltaTime;
             target.GetDamage(deltaDamage, AttackType);
         }
 

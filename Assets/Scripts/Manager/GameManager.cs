@@ -5,7 +5,7 @@ namespace TowerDefense
 {
     public class GameManager : MonoSingleton<GameManager>
     {
-        public bool load = false;
+        public bool load;
         public string fileName = "MapData";
         public PathFindingStrategy pathFindingStrategy;
         [SerializeField] private int stage;
@@ -19,9 +19,9 @@ namespace TowerDefense
 
         private void Start()
         {
-            Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Heavy));
-            Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Medium));
-            Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Light));
+            // Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Heavy));
+            // Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Medium));
+            // Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Light));
         }
 
         public void LoadGameScene()

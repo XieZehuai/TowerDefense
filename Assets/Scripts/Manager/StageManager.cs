@@ -22,6 +22,8 @@ namespace TowerDefense
         private int coins; // 当前金币
         private GameState state = GameState.Preparing; // 当前游戏的状态
         private GameState stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
+        private bool isSpeedUp;
+        private PathFinder pathFinder;
 
         #region 实现各种功能的子管理器
         public InputManager InputManager { get; private set; }
@@ -30,7 +32,6 @@ namespace TowerDefense
         public TowerManager TowerManager { get; private set; }
         public WarEntityManager WarEntityManager { get; private set; }
         public PathIndicator PathIndicator { get; private set; }
-        public PathFinder PathFinder { get; private set; }
         public CameraController CameraController => cameraController;
         #endregion
 
@@ -58,11 +59,11 @@ namespace TowerDefense
 
             // 设置寻路策略
             if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.Dijkstra)
-                PathFinder = new PathFinder(new DijkstraPathFinding());
+                pathFinder = new PathFinder(new DijkstraPathFinding());
             else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.ReverseDijkstra)
-                PathFinder = new PathFinder(new ReverseDijkstraPathFinding());
+                pathFinder = new PathFinder(new ReverseDijkstraPathFinding());
             else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.DOTS)
-                PathFinder = new PathFinder(new DOTSPathFinding());
+                pathFinder = new PathFinder(new DOTSPathFinding());
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
@@ -80,18 +81,23 @@ namespace TowerDefense
                 MapManager.CreateMap(20, 20, Utils.MAP_CELL_SIZE);
             }
 
-            UIManager.Instance.Open<UIGameScene>(new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = stageConfig.waveDatas.Length }, UILayer.Background);
+            UIManager.Instance.Open<UIGameScene>(
+                new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = stageConfig.waveDatas.Length },
+                UILayer.Background);
         }
 
         private void Update()
         {
-            InputManager.OnUpdate();
+            float deltaTime = Time.deltaTime;
+            if (isSpeedUp) deltaTime *= 2f;
+            
+            InputManager.OnUpdate(deltaTime);
 
             if (IsPlaying)
             {
-                TowerManager.OnUpdate();
-                EnemyManager.OnUpdate();
-                WarEntityManager.OnUpdate();
+                TowerManager.OnUpdate(deltaTime);
+                EnemyManager.OnUpdate(deltaTime);
+                WarEntityManager.OnUpdate(deltaTime);
             }
         }
 
@@ -142,6 +148,11 @@ namespace TowerDefense
             TypeEventSystem.Send(new OnReplay());
         }
 
+        public void SpeedUp(bool speedUp)
+        {
+            isSpeedUp = speedUp;
+        }
+
         public void SaveMapData()
         {
             Debug.Log("保存地图数据");
@@ -174,7 +185,8 @@ namespace TowerDefense
                 }
                 else
                 {
-                    if (MapManager.GetGridPosition(EnemyManager.Enemys[i - spawnPointCount].NextWayPoint, out int x, out int y))
+                    if (MapManager.GetGridPosition(EnemyManager.Enemys[i - spawnPointCount].NextWayPoint, out int x,
+                        out int y))
                     {
                         startPosArray[i] = new Vector2Int(x, y);
                     }
@@ -188,9 +200,9 @@ namespace TowerDefense
             }
 
             // 寻路并设置路径数据
-            PathFinder.SetMapData(MapManager.Map.GridArray);
+            pathFinder.SetMapData(MapManager.Map.GridArray);
 
-            if (PathFinder.FindPaths(startPosArray, endPos, ref paths, true))
+            if (pathFinder.FindPaths(startPosArray, endPos, ref paths, true))
             {
                 List<Vector2Int>[] spawnPointPaths = paths.SubArray(0, spawnPointCount);
                 EnemyManager.SetSpawnPointPaths(spawnPointPaths);
@@ -206,9 +218,9 @@ namespace TowerDefense
 
         public bool FindPaths(Vector2Int[] startPosArray, Vector2Int endPos, bool getPath, ref List<Vector2Int>[] paths)
         {
-            PathFinder.SetMapData(MapManager.Map.GridArray);
+            pathFinder.SetMapData(MapManager.Map.GridArray);
 
-            return PathFinder.FindPaths(startPosArray, endPos, ref paths, true);
+            return pathFinder.FindPaths(startPosArray, endPos, ref paths, true);
         }
 
         private void OnEnemyReach(OnEnemyReach context)

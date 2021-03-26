@@ -24,15 +24,15 @@ namespace TowerDefense
             attackTimer = attackDuration;
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
             if (attackTimer < attackDuration)
             {
-                attackTimer += Time.deltaTime;
+                attackTimer += deltaTime;
             }
             else if (attackTimer >= attackDuration)
             {
-                if (FindTarget(out Enemy target))
+                if (FindTarget(out Enemy _))
                 {
                     DecelerateEnemys();
                     attackTimer = 0f;

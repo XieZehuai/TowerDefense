@@ -103,7 +103,7 @@ namespace TowerDefense
             return this;
         }
 
-        public Enemy SetPath(List<Vector3> path, bool moveToFirstWayPoint)
+        public void SetPath(List<Vector3> path, bool moveToFirstWayPoint)
         {
             if (path.Count <= 1) Debug.LogError("路径长度太短");
 
@@ -124,27 +124,26 @@ namespace TowerDefense
                 transform.localPosition += offset;
                 curr = 0;
             }
-
-            return this;
         }
 
-        public bool OnUpdate()
+        public bool OnUpdate(float deltaTime)
         {
             if (hitEffectTimer < hitEffectDuration)
             {
-                hitEffectTimer += Time.deltaTime;
+                hitEffectTimer += deltaTime;
             }
 
             if (currentHp <= 0)
             {
                 TypeEventSystem.Send(new OnEnemyDestroy { reward = data.reward });
-                ObjectPool.Spawn("EnemyDestroyEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
+                ObjectPool.Spawn("EnemyDestroyEffect", transform.localPosition, Quaternion.identity, Vector3.one)
+                    .DelayUnspawn(1.5f);
                 return false;
             }
 
             if (isDecelerate)
             {
-                decelerateTimer += Time.deltaTime;
+                decelerateTimer += deltaTime;
 
                 if (decelerateTimer >= decelerateTime)
                 {
@@ -155,7 +154,7 @@ namespace TowerDefense
                 }
             }
 
-            return Move();
+            return Move(deltaTime);
         }
 
         public void GetDamage(float damage, AttackType attackType)
@@ -167,7 +166,8 @@ namespace TowerDefense
             {
                 hitEffectTimer = 0f;
 
-                ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f)).DelayUnspawn(0.5f);
+                ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f))
+                    .DelayUnspawn(0.5f);
             }
         }
 
@@ -184,7 +184,7 @@ namespace TowerDefense
             return path[curr];
         }
 
-        private bool Move()
+        private bool Move(float deltaTime)
         {
             if (curr >= path.Count)
             {
@@ -192,7 +192,7 @@ namespace TowerDefense
                 return false;
             }
 
-            progress += Time.deltaTime * currentSpeed;
+            progress += deltaTime * currentSpeed;
             transform.localPosition = Vector3.Lerp(originPos, path[curr], progress / distance) + offset;
 
             if (progress >= distance)

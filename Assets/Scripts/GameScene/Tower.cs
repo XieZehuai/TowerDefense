@@ -16,20 +16,17 @@ namespace TowerDefense
     [SelectionBase]
     public abstract class Tower : PoolObject
     {
-        // 避免每次检测敌人时都分配内存
-        //protected static readonly Collider[] targetsBuffer = new Collider[100];
-
         [SerializeField] protected float attackRange = 2f; // 攻击范围
 
         /// <summary>
         /// 炮塔在地图上的X轴坐标
         /// </summary>
-        public int X { get; protected set; }
+        public int X { get; private set; }
 
         /// <summary>
         /// 炮塔在地图上的Y轴坐标
         /// </summary>
-        public int Y { get; protected set; }
+        public int Y { get; private set; }
 
         /// <summary>
         /// 炮塔的攻击范围
@@ -60,7 +57,7 @@ namespace TowerDefense
         /// <summary>
         /// 炮塔更新逻辑，每帧调用
         /// </summary>
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(float deltaTime)
         {
         }
 

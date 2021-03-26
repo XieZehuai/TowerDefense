@@ -9,22 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: WaveData_4
-  m_EditorClassIdentifier: Assembly-CSharp:TowerDefense:WaveData
+  m_Script: {fileID: 11500000, guid: b0612da4ce3a8cf49813f7cdeea6606b, type: 3}
+  m_Name: WaveConfig_1
+  m_EditorClassIdentifier: 
   sequences:
+  - enemyType: 0
+    count: 6
+    interval: 1
+  - enemyType: 3
+    count: 6
+    interval: 1.5
   - enemyType: 1
     count: 4
     interval: 1
-  - enemyType: 2
-    count: 4
-    interval: 1.5
-  - enemyType: 3
-    count: 3
-    interval: 2
-  - enemyType: 4
-    count: 3
-    interval: 2
-  - enemyType: 5
-    count: 3
-    interval: 2

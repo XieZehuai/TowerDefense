@@ -11,9 +11,9 @@ namespace TowerDefense
         {
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
-            UpdateTower();
+            UpdateTower(deltaTime);
         }
 
         public bool CreateTower(Vector3 position, int towerId)
@@ -33,12 +33,19 @@ namespace TowerDefense
         {
             switch (towerId)
             {
-                case 0: return ObjectPool.Spawn<MachineGunTower>("MachineGunTower", towerPos);
-                case 1: return ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
-                case 2: return ObjectPool.Spawn<CannonTower>("CannonTower", towerPos).SetWarEntityManager(manager.WarEntityManager);
-                case 3: return ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
+                case 0:
+                    return ObjectPool.Spawn<MachineGunTower>("MachineGunTower", towerPos);
+                case 1:
+                    return ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
+                case 2:
+                    return ObjectPool.Spawn<CannonTower>("CannonTower", towerPos)
+                        .SetWarEntityManager(manager.WarEntityManager);
+                case 3:
+                    return ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
 
-                default: Debug.LogError("没有ID为" + towerId + "的炮塔"); break;
+                default:
+                    Debug.LogError("没有ID为" + towerId + "的炮塔");
+                    break;
             }
 
             return null;
@@ -73,11 +80,11 @@ namespace TowerDefense
             towers.Clear();
         }
 
-        private void UpdateTower()
+        private void UpdateTower(float deltaTime)
         {
             foreach (var tower in towers)
             {
-                tower.OnUpdate();
+                tower.OnUpdate(deltaTime);
             }
         }
     }

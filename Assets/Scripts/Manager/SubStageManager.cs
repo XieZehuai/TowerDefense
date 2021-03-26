@@ -6,12 +6,12 @@ namespace TowerDefense
     {
         protected StageManager manager;
 
-        public SubStageManager(StageManager stageManager)
+        protected SubStageManager(StageManager stageManager)
         {
             manager = stageManager;
         }
 
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(float deltaTime)
         {
         }
 

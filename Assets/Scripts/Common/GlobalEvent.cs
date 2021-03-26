@@ -1,16 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-/*
+﻿/*
  * 各种用于类型事件系统传递的消息参数
  */
 namespace TowerDefense
 {
-    public struct OnChangePaths
-    {
-        public List<Vector3>[] paths;
-    }
-
     public struct OnEnemyReach { }
 
     public struct OnEnemyDestroy

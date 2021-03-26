@@ -27,7 +27,6 @@ namespace TowerDefense
 
             Replay(); // Replay方法重置场景物体并重新开始游戏，也可用于第一次开始游戏
 
-            TypeEventSystem.Register<OnChangePaths>(OnChangePaths);
             TypeEventSystem.Register<NextWave>(SpawnNextWave);
         }
 
@@ -75,11 +74,11 @@ namespace TowerDefense
             }
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
             if (isSpawning || isNextWave)
             {
-                spawnTimer += Time.deltaTime;
+                spawnTimer += deltaTime;
 
                 if (isSpawning && spawnTimer >= spawnInterval) // 生成敌人
                 {
@@ -100,7 +99,7 @@ namespace TowerDefense
                 }
             }
 
-            UpdateEnemys();
+            UpdateEnemys(deltaTime);
         }
 
         /// <summary>
@@ -177,7 +176,7 @@ namespace TowerDefense
         }
 
         // 执行所有敌人的更新逻辑
-        private void UpdateEnemys()
+        private void UpdateEnemys(float deltaTime)
         {
             // 场景中敌人数量为空，判断是否需要生成下一波敌人并返回
             if (Enemys.Count == 0)
@@ -188,7 +187,7 @@ namespace TowerDefense
 
             for (int i = 0; i < Enemys.Count; i++)
             {
-                if (!Enemys[i].OnUpdate())
+                if (!Enemys[i].OnUpdate(deltaTime))
                 {
                     ObjectPool.Unspawn(Enemys[i]);
                     Enemys.QuickRemove(i--);
@@ -196,16 +195,10 @@ namespace TowerDefense
             }
         }
 
-        private void OnChangePaths(OnChangePaths context)
-        {
-            spawnPointPaths = context.paths;
-        }
-
         public override void Dispose()
         {
             base.Dispose();
 
-            TypeEventSystem.UnRegister<OnChangePaths>(OnChangePaths);
             TypeEventSystem.UnRegister<NextWave>(SpawnNextWave);
         }
     }

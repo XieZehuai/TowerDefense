@@ -19,15 +19,24 @@ namespace TowerDefense
             TypeEventSystem.Register<TogglePathIndicator>(TogglePathIndicator);
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
-            ControlCamera();
+            ControlCamera(deltaTime);
 
             if (manager.IsPreparing || manager.IsPlaying)
             {
                 ChangeMap();
                 PlaceTower();
                 RemoveTower();
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                manager.SpeedUp(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.H))
+            {
+                manager.SpeedUp(false);
             }
         }
 
@@ -57,7 +66,7 @@ namespace TowerDefense
             }
         }
 
-        private void ControlCamera()
+        private void ControlCamera(float deltaTime)
         {
             manager.CameraController.Zoom(Input.GetAxis("Mouse ScrollWheel"));
 
@@ -65,13 +74,13 @@ namespace TowerDefense
             {
                 float x = Input.GetAxis("Mouse X");
                 float y = Input.GetAxis("Mouse Y");
-                manager.CameraController.Rotate(x, y);
+                manager.CameraController.Rotate(x, y, deltaTime);
             }
 
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
             Vector2 movement = new Vector2(h, v).normalized;
-            manager.CameraController.Move(movement);
+            manager.CameraController.Move(movement, deltaTime);
         }
         #endregion
 

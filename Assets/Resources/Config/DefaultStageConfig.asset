@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d9203242733f4b40883f2d4a610c108, type: 3}
+  m_Name: DefaultStageConfig
+  m_EditorClassIdentifier: 
+  stage: 0
+  playerHp: 10
+  coins: 200
+  waveInterval: 6
+  waveDatas:
+  - {fileID: 11400000, guid: 8aed25fc5a5ce7846b1f9257d5e64294, type: 2}
+  - {fileID: 11400000, guid: 0ba770af81a2e44438e17bc3db076b68, type: 2}
+  - {fileID: 11400000, guid: 409ddceb839f65b4393827cfe997ff5e, type: 2}
+  - {fileID: 11400000, guid: da5a28d4937659b4b8b13e44efad19c2, type: 2}
