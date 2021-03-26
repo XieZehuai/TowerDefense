@@ -3,6 +3,7 @@ DamageConfig=Config/DamageConfig.asset
 EnemyConfig=Config/EnemyConfig.asset
 Prefab=Prefab
 Effect=Prefab/Effect
+DecelerateWaveEffectPrefab=Prefab/Effect/DecelerateWaveEffectPrefab
 EnemyDestroyEffectPrefab=Prefab/Effect/EnemyDestroyEffectPrefab
 EnemyHitEffectPrefab=Prefab/Effect/EnemyHitEffectPrefab
 MachineGunAttackEffectPrefab=Prefab/Effect/MachineGunAttackEffectPrefab

@@ -23,7 +23,7 @@ namespace TowerDefense
             float x = attackRange + 0.3f;
             float y = -attackPoint.position.y;
             shootSpeed = Mathf.Sqrt(Utils.GRAVITY * (y + Mathf.Sqrt(x * x + y * y)));
-            attackTimer = 0f;
+            attackTimer = attackDuration;
         }
 
         public override void OnUpdate()

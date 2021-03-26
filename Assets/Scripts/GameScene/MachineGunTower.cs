@@ -21,6 +21,11 @@ namespace TowerDefense
 
         public override AttackType AttackType => AttackType.MachineGun;
 
+        public override void OnSpawn()
+        {
+            attackTimer = attackDuration;
+        }
+
         public override void OnUpdate()
         {
             if (attackTimer < attackDuration)

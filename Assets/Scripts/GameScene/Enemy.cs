@@ -53,7 +53,7 @@ namespace TowerDefense
         private Vector3 originPos; // 初始位置
         private float distance; // 当前物体距离目标点的距离
         private float progress;
-        private Vector3 height = new Vector3(0f, 0.3f, 0f); // 飞行的高度
+        private Vector3 offset; // 移动时距离目标点的偏移量
         private float hitEffectDuration = 0.1f;
         private float hitEffectTimer;
 
@@ -66,6 +66,13 @@ namespace TowerDefense
         public Vector3 NextWayPoint => path[curr];
 
         public string Name => data.name;
+
+        public override void OnSpawn()
+        {
+            float x = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
+            float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
+            offset = new Vector3(x, 0.3f, z);
+        }
 
         public Enemy SetData(EnemyData data)
         {
@@ -85,7 +92,7 @@ namespace TowerDefense
             if (moveToFirstWayPoint)
             {
                 originPos = path[0];
-                transform.localPosition = path[0] + height;
+                transform.localPosition = path[0] + offset;
                 transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
                 distance = Vector3.Distance(path[1], path[0]);
                 curr = 1;
@@ -94,7 +101,7 @@ namespace TowerDefense
             {
                 originPos = transform.localPosition;
                 distance = Vector3.Distance(transform.localPosition, path[0]);
-                transform.localPosition += height;
+                transform.localPosition += offset;
                 curr = 0;
             }
 
@@ -166,7 +173,7 @@ namespace TowerDefense
             }
 
             progress += Time.deltaTime * currentSpeed;
-            transform.localPosition = Vector3.Lerp(originPos, path[curr], progress / distance) + height;
+            transform.localPosition = Vector3.Lerp(originPos, path[curr], progress / distance) + offset;
 
             if (progress >= distance)
             {

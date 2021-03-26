@@ -48,7 +48,7 @@ namespace TowerDefense
                 enemy.GetDamage(damage, AttackType.Cannon);
             });
 
-            ObjectPool.Spawn("ShellExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(1.5f);
+            ObjectPool.Spawn("ShellExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(5f);
         }
     }
 }
