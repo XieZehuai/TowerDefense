@@ -5,9 +5,10 @@ namespace TowerDefense
     #region 炮塔的攻击类型
     public enum AttackType
     {
-        Normal, // 普通机枪
+        MachineGun, // 普通机枪
         Laser, // 激光
         Cannon, // 加农炮
+        Special, // 特殊攻击类型，造成特殊效果，不造成伤害
     }
     #endregion
 
@@ -70,7 +71,7 @@ namespace TowerDefense
         /// <returns>找到返回true，失败返回false</returns>
         protected virtual bool FindTarget(out Enemy target)
         {
-            if (Enemy.FillBuffer(transform.localPosition, attackRange))
+            if (Enemy.FindTargets(transform.localPosition, attackRange))
             {
                 target = Enemy.GetTarget(0);
                 return target != null;
@@ -80,17 +81,6 @@ namespace TowerDefense
                 target = null;
                 return false;
             }
-
-            //int hits = Physics.OverlapSphereNonAlloc(LocalPosition, attackRange, targetsBuffer, Utils.ENEMY_LAYER_MASK);
-
-            //if (hits > 0)
-            //{
-            //    target = targetsBuffer[Random.Range(0, hits)].GetComponent<Enemy>();
-            //    return true;
-            //}
-
-            //target = null;
-            //return false;
         }
 
         /// <summary>

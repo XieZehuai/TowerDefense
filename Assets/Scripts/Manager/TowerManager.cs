@@ -20,22 +20,19 @@ namespace TowerDefense
         {
             if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
             {
-                //int i = Random.Range(0, 3);
-                //if (i == 0)
-                //{
-                //    tower = ObjectPool.Spawn<Tower>("MachineGunTower", towerPos);
-                //}
-                //else if (i == 1)
-                //{
-                //    tower = ObjectPool.Spawn<Tower>("LaserTower", towerPos);
-                //}
-                //else
-                //{
-                //    tower = ObjectPool.Spawn<Tower>("CannonTower", towerPos);
-                //}
+                int i = Random.Range(0, 2);
+                Tower tower;
 
-                CannonTower tower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos);
-                tower.SetWarEntityManager(manager.WarEntityManager);
+                if (i == 0)
+                {
+                    CannonTower cannonTower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos);
+                    cannonTower.SetWarEntityManager(manager.WarEntityManager);
+                    tower = cannonTower;
+                }
+                else
+                {
+                    tower = ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
+                }
 
                 tower.SetCoordinate(x, y);
                 towers.Add(tower);

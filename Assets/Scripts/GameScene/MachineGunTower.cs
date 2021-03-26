@@ -19,7 +19,7 @@ namespace TowerDefense
 
         public float AttackDuration => AttackDuration;
 
-        public override AttackType AttackType => AttackType.Normal;
+        public override AttackType AttackType => AttackType.MachineGun;
 
         public override void OnUpdate()
         {

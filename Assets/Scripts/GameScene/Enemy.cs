@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense
@@ -6,29 +7,23 @@ namespace TowerDefense
     public class Enemy : PoolObject
     {
         #region 静态方法，用于寻找范围内的敌人
-        private static readonly Collider[] buffer = new Collider[100];
+        private static readonly Collider[] targetBuffer = new Collider[100];
 
-        public static int BufferCount { get; private set; }
+        public static int TargetCount { get; private set; }
 
-        public static bool FillBuffer(Vector3 pos, float range)
+        public static bool FindTargets(Vector3 pos, float range)
         {
             Vector3 top = pos;
             top.y += 3f;
 
-            BufferCount = Physics.OverlapCapsuleNonAlloc(pos, top, range, buffer, Utils.ENEMY_LAYER_MASK);
+            TargetCount = Physics.OverlapCapsuleNonAlloc(pos, top, range, targetBuffer, Utils.ENEMY_LAYER_MASK);
 
-            return BufferCount > 0;
+            return TargetCount > 0;
         }
 
         public static Enemy GetTarget(int index)
         {
-            if (index >= BufferCount)
-            {
-                Debug.LogError("索引不能大于Buffer大小" + index + " " + BufferCount);
-                return null;
-            }
-
-            Enemy target = buffer[index].GetComponent<Enemy>();
+            Enemy target = targetBuffer[index].GetComponent<Enemy>();
             return target;
         }
 
@@ -37,20 +32,34 @@ namespace TowerDefense
             // TODO: 寻找最合适的敌人
             return null;
         }
+
+        public static void AttackAll(Vector3 pos, float range, Action<Enemy> action)
+        {
+            FindTargets(pos, range);
+
+            for (int i = 0; i < TargetCount; i++)
+            {
+                action?.Invoke(GetTarget(i));
+            }
+        }
         #endregion
 
         private EnemyData data;
-        private float currentHp;
-        private float currentSpeed;
+        private float currentHp; // 当前生命值
+        private float currentSpeed; // 当前移动速度
 
-        private List<Vector3> path; // 路径点
-        private int curr; // 当前目标路径点的索引
-        private Vector3 originPos;
+        private List<Vector3> path; // 移动路径
+        private int curr; // 当前路径点的索引
+        private Vector3 originPos; // 初始位置
         private float distance; // 当前物体距离目标点的距离
         private float progress;
         private Vector3 height = new Vector3(0f, 0.3f, 0f); // 飞行的高度
         private float hitEffectDuration = 0.1f;
         private float hitEffectTimer;
+
+        private float decelerateTime;
+        private float decelerateTimer;
+        private bool isDecelerate;
 
         public Vector3 LocalPosition => transform.localPosition;
 
@@ -106,6 +115,19 @@ namespace TowerDefense
                 return false;
             }
 
+            if (isDecelerate)
+            {
+                decelerateTimer += Time.deltaTime;
+
+                if (decelerateTimer >= decelerateTime)
+                {
+                    currentSpeed = data.speed;
+                    isDecelerate = false;
+                    decelerateTimer = 0f;
+                    decelerateTime = 0f;
+                }
+            }
+
             return Move();
         }
 
@@ -120,6 +142,14 @@ namespace TowerDefense
 
                 ObjectPool.Spawn<Particle>("HitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f)).DelayUnspawn(0.5f);
             }
+        }
+
+        public void Decelerate(float duration, float rate)
+        {
+            isDecelerate = true;
+            decelerateTimer = 0f;
+            decelerateTime = duration;
+            currentSpeed = Mathf.Min(data.speed * rate, currentSpeed);
         }
 
         public Vector3 GetNextWayPoint()
@@ -152,6 +182,13 @@ namespace TowerDefense
             }
 
             return true;
+        }
+
+        public override void OnUnspawn()
+        {
+            isDecelerate = false;
+            decelerateTimer = 0f;
+            decelerateTime = 0f;
         }
     }
 }

@@ -29,6 +29,7 @@ SpawnPointPrefab=Prefab/GameScene/SpawnPointPrefab
 WallPrefab=Prefab/GameScene/WallPrefab
 Tower=Prefab/Tower
 CannonTowerPrefab=Prefab/Tower/CannonTowerPrefab
+DecelerationTowerPrefab=Prefab/Tower/DecelerationTowerPrefab
 LaserTowerPrefab=Prefab/Tower/LaserTowerPrefab
 MachineGunTowerPrefab=Prefab/Tower/MachineGunTowerPrefab
 UI=Prefab/UI
