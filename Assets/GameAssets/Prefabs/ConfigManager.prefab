@@ -45,3 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageConfig: {fileID: 11400000, guid: 02fa883da5d6d2a40a045344c67d4123, type: 2}
   enemyConfig: {fileID: 11400000, guid: ef2b36c5a86ad1e4d8fc3337ab412356, type: 2}
+  stageDatas:
+  - {fileID: 11400000, guid: bc62db65ecd2e7249bef6a4600caae74, type: 2}

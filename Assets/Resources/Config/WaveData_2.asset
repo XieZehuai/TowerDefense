@@ -10,10 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Stage_1
-  m_EditorClassIdentifier: Assembly-CSharp:TowerDefense:StageData
-  index: 0
-  playerHp: 0
-  coins: 0
-  waveInterval: 0
-  waveDatas: []
+  m_Name: WaveData_3
+  m_EditorClassIdentifier: Assembly-CSharp:TowerDefense:WaveData
+  sequences:
+  - enemyType: 0
+    count: 4
+    interval: 2
+  - enemyType: 0
+    count: 4
+    interval: 2
+  - enemyType: 3
+    count: 4
+    interval: 2
+  - enemyType: 4
+    count: 2
+    interval: 2

@@ -8,6 +8,9 @@ namespace TowerDefense
         public bool load = false;
         public string fileName = "MapData";
         public PathFindingStrategy pathFindingStrategy;
+        [SerializeField] private int stage;
+
+        public int Stage => stage;
 
         protected override void OnInit()
         {

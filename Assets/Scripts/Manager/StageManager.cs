@@ -6,7 +6,7 @@ namespace TowerDefense
 {
     public class StageManager : MonoBehaviour
     {
-        public enum State
+        public enum GameState
         {
             Preparing,
             Playing,
@@ -16,12 +16,14 @@ namespace TowerDefense
 
         [SerializeField] private CameraController cameraController = default;
 
-        private LevelData levelData;
+        private int stage; // 当前关卡数
+        private StageConfig stageConfig; // 当前关卡配置
         private int hp; // 当前生命
         private int coins; // 当前金币
-        private State state = State.Preparing; // 当前游戏的状态
-        private State stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
+        private GameState state = GameState.Preparing; // 当前游戏的状态
+        private GameState stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
 
+        #region 实现各种功能的子管理器
         public InputManager InputManager { get; private set; }
         public MapManager MapManager { get; private set; }
         public EnemyManager EnemyManager { get; private set; }
@@ -30,28 +32,31 @@ namespace TowerDefense
         public PathIndicator PathIndicator { get; private set; }
         public PathFinder PathFinder { get; private set; }
         public CameraController CameraController => cameraController;
+        #endregion
 
-        public bool IsPreparing => state == State.Preparing;
-        public bool IsPlaying => state == State.Playing;
-        public bool IsPaused => state == State.Paused;
-        public bool IsGameOver => state == State.GameOver;
+        public bool IsPreparing => state == GameState.Preparing;
+        public bool IsPlaying => state == GameState.Playing;
+        public bool IsPaused => state == GameState.Paused;
+        public bool IsGameOver => state == GameState.GameOver;
 
         private void Awake()
         {
             // 设置关卡数据
-            levelData = LevelData.CreateDefaultData();
-            hp = levelData.playerHp;
-            coins = levelData.coins;
+            stage = GameManager.Instance.Stage;
+            stageConfig = ConfigManager.Instance.GetStageConfig(stage);
+            hp = stageConfig.playerHp;
+            coins = stageConfig.coins;
 
             if (hp <= 0) Debug.LogError("玩家初始生命值必须大于0" + hp);
 
             InputManager = new InputManager(this);
             MapManager = new MapManager(this);
-            EnemyManager = new EnemyManager(this, levelData.waveInterval, levelData.waveData);
+            EnemyManager = new EnemyManager(this, stageConfig.waveInterval, stageConfig.waveDatas);
             TowerManager = new TowerManager(this);
             WarEntityManager = new WarEntityManager(this);
             PathIndicator = new PathIndicator(this);
 
+            // 设置寻路策略
             if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.Dijkstra)
                 PathFinder = new PathFinder(new DijkstraPathFinding());
             else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.ReverseDijkstra)
@@ -75,7 +80,7 @@ namespace TowerDefense
                 MapManager.CreateMap(20, 20, Utils.MAP_CELL_SIZE);
             }
 
-            UIManager.Instance.Open<UIGameScene>(new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = levelData.waveData.Length }, UILayer.Background);
+            UIManager.Instance.Open<UIGameScene>(new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = stageConfig.waveDatas.Length }, UILayer.Background);
         }
 
         private void Update()
@@ -92,30 +97,30 @@ namespace TowerDefense
 
         public void StartGame()
         {
-            if (state != State.Preparing)
+            if (state != GameState.Preparing)
             {
                 Debug.LogError("当前不处于准备状态" + state);
                 return;
             }
 
-            state = State.Playing;
+            state = GameState.Playing;
         }
 
         public void Pause()
         {
-            if (state == State.Paused)
+            if (state == GameState.Paused)
             {
                 Debug.LogError("已经处于暂停状态");
                 return;
             }
 
             stateTemp = state; // 保存原状态
-            state = State.Paused;
+            state = GameState.Paused;
         }
 
         public void Continue()
         {
-            if (state != State.Paused)
+            if (state != GameState.Paused)
             {
                 Debug.LogError("当前不处于暂停状态" + state);
                 return;
@@ -126,9 +131,9 @@ namespace TowerDefense
 
         public void Replay()
         {
-            state = State.Preparing;
-            hp = levelData.playerHp;
-            coins = levelData.coins;
+            state = GameState.Preparing;
+            hp = stageConfig.playerHp;
+            coins = stageConfig.coins;
 
             EnemyManager.Replay();
             TowerManager.Replay();
@@ -155,7 +160,7 @@ namespace TowerDefense
             List<MapObject> spawnPoints = MapManager.SpawnPoints.ToList();
 
             int spawnPointCount = spawnPoints.Count;
-            int enemyCount = includeEnemy ? EnemyManager.enemys.Count : 0;
+            int enemyCount = includeEnemy ? EnemyManager.Enemys.Count : 0;
             int totalCount = spawnPointCount + enemyCount;
 
             Vector2Int[] startPosArray = new Vector2Int[totalCount];
@@ -169,7 +174,7 @@ namespace TowerDefense
                 }
                 else
                 {
-                    if (MapManager.GetGridPosition(EnemyManager.enemys[i - spawnPointCount].NextWayPoint, out int x, out int y))
+                    if (MapManager.GetGridPosition(EnemyManager.Enemys[i - spawnPointCount].NextWayPoint, out int x, out int y))
                     {
                         startPosArray[i] = new Vector2Int(x, y);
                     }
@@ -214,7 +219,7 @@ namespace TowerDefense
             if (hp <= 0)
             {
                 Debug.Log("游戏结束");
-                state = State.GameOver;
+                state = GameState.GameOver;
             }
         }
 
