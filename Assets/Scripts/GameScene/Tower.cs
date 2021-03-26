@@ -73,7 +73,7 @@ namespace TowerDefense
         {
             if (Enemy.FindTargets(transform.localPosition, attackRange))
             {
-                target = Enemy.GetTarget(0);
+                target = Enemy.GetBestTarget(AttackType);
                 return target != null;
             }
             else

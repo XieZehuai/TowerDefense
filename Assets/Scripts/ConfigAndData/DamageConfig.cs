@@ -113,11 +113,11 @@ namespace TowerDefense
                 KeyValuePair<ArmorType, float>[] arr = item.Value.ToArray();
                 Array.Sort(arr, (a, b) =>
                 {
-                    if (a.Value > b.Value) return 1;
-                    if (a.Value < b.Value) return -1;
+                    if (a.Value > b.Value) return -1;
+                    if (a.Value < b.Value) return 1;
                     return 0;
                 });
-                
+
                 for (int i = 0; i < arr.Length; i++)
                 {
                     dic[item.Key].Add(arr[i].Key);

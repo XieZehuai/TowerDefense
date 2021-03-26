@@ -16,30 +16,32 @@ namespace TowerDefense
             UpdateTower();
         }
 
-        public bool CreateTower(Vector3 position)
+        public bool CreateTower(Vector3 position, int towerId)
         {
             if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
             {
-                int i = Random.Range(0, 2);
-                Tower tower;
-
-                if (i == 0)
-                {
-                    CannonTower cannonTower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos);
-                    cannonTower.SetWarEntityManager(manager.WarEntityManager);
-                    tower = cannonTower;
-                }
-                else
-                {
-                    tower = ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
-                }
-
+                Tower tower = CreateTower(towerId, towerPos);
                 tower.SetCoordinate(x, y);
                 towers.Add(tower);
                 return true;
             }
 
             return false;
+        }
+
+        private Tower CreateTower(int towerId, Vector3 towerPos)
+        {
+            switch (towerId)
+            {
+                case 0: return ObjectPool.Spawn<MachineGunTower>("MachineGunTower", towerPos);
+                case 1: return ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
+                case 2: return ObjectPool.Spawn<CannonTower>("CannonTower", towerPos).SetWarEntityManager(manager.WarEntityManager);
+                case 3: return ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
+
+                default: Debug.LogError("没有ID为" + towerId + "的炮塔"); break;
+            }
+
+            return null;
         }
 
         public void RemoveTower(Vector3 position)

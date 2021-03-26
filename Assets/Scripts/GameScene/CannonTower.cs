@@ -47,9 +47,10 @@ namespace TowerDefense
             warEntityManager = null;
         }
 
-        public void SetWarEntityManager(WarEntityManager warEntityManager)
+        public CannonTower SetWarEntityManager(WarEntityManager warEntityManager)
         {
             this.warEntityManager = warEntityManager;
+            return this;
         }
 
         private void Attack(Enemy target)

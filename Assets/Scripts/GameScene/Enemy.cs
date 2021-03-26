@@ -27,10 +27,30 @@ namespace TowerDefense
             return target;
         }
 
-        public static Enemy GetTarget(AttackType attackType)
+        public static Enemy GetBestTarget(AttackType attackType)
         {
-            // TODO: 寻找最合适的敌人
-            return null;
+            Enemy target = GetTarget(0);
+            if (attackType == AttackType.Special) return target;
+
+            DamageConfig damageConfig = ConfigManager.Instance.DamageConfig;
+            int priority = damageConfig.GetArmorPriority(attackType, target.ArmorType);
+            if (priority == 0) return target;
+
+            for (int i = 1; i < TargetCount; i++)
+            {
+                Enemy tempTarget = GetTarget(i);
+                int tempPriority = damageConfig.GetArmorPriority(attackType, tempTarget.ArmorType);
+
+                if (tempPriority < priority)
+                {
+                    if (tempPriority == 0) return tempTarget;
+
+                    target = tempTarget;
+                    priority = tempPriority;
+                }
+            }
+
+            return target;
         }
 
         public static void AttackAll(Vector3 pos, float range, Action<Enemy> action)
@@ -65,7 +85,7 @@ namespace TowerDefense
 
         public Vector3 NextWayPoint => path[curr];
 
-        public string Name => data.name;
+        public ArmorType ArmorType => data.armorType;
 
         public override void OnSpawn()
         {

@@ -4,7 +4,8 @@ namespace TowerDefense
 {
     public class InputManager : SubStageManager
     {
-        private MapObjectType selectedType = MapObjectType.Wall;
+        private MapObjectType selectedGridType = MapObjectType.Wall;
+        private int selectedTowerId = 0;
 
         public InputManager(StageManager stageManager) : base(stageManager)
         {
@@ -14,6 +15,7 @@ namespace TowerDefense
             TypeEventSystem.Register<ReplayGame>(Replay);
             TypeEventSystem.Register<SaveMap>(SaveMap);
             TypeEventSystem.Register<ChangeGridType>(ChangeGridType);
+            TypeEventSystem.Register<ChangeTowerType>(ChangeTowerType);
             TypeEventSystem.Register<TogglePathIndicator>(TogglePathIndicator);
         }
 
@@ -35,7 +37,7 @@ namespace TowerDefense
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3 pos = Utils.GetMousePosition();
-                manager.MapManager.ChangeGridType(pos, selectedType);
+                manager.MapManager.ChangeGridType(pos, selectedGridType);
             }
         }
 
@@ -43,7 +45,7 @@ namespace TowerDefense
         {
             if (Input.GetMouseButtonDown(1))
             {
-                manager.TowerManager.CreateTower(Utils.GetMousePosition());
+                manager.TowerManager.CreateTower(Utils.GetMousePosition(), selectedTowerId);
             }
         }
 
@@ -101,7 +103,12 @@ namespace TowerDefense
 
         private void ChangeGridType(ChangeGridType context)
         {
-            selectedType = context.type;
+            selectedGridType = context.type;
+        }
+
+        private void ChangeTowerType(ChangeTowerType context)
+        {
+            selectedTowerId = context.towerId;
         }
 
         private void TogglePathIndicator(TogglePathIndicator context)
@@ -120,6 +127,7 @@ namespace TowerDefense
             TypeEventSystem.UnRegister<ReplayGame>(Replay);
             TypeEventSystem.UnRegister<SaveMap>(SaveMap);
             TypeEventSystem.UnRegister<ChangeGridType>(ChangeGridType);
+            TypeEventSystem.UnRegister<ChangeTowerType>(ChangeTowerType);
             TypeEventSystem.UnRegister<TogglePathIndicator>(TogglePathIndicator);
         }
     }

@@ -11,8 +11,8 @@ namespace TowerDefense
     /// <summary>
     /// 自定义Button组件
     /// </summary>
-    [AddComponentMenu("UI/CustomButton", 30)]
-    public class CustomButton : Selectable, IPointerClickHandler, IEventSystemHandler, ISubmitHandler
+    [AddComponentMenu("UI/GridTypeButton", 30)]
+    public class GridTypeButton : Selectable, IPointerClickHandler, IEventSystemHandler, ISubmitHandler
     {
         [Header("点击按钮时选择的格子类型")]
         [SerializeField] private MapObjectType type = MapObjectType.Empty;
@@ -38,7 +38,7 @@ namespace TowerDefense
             }
         }
 
-        protected CustomButton()
+        protected GridTypeButton()
         {
         }
 

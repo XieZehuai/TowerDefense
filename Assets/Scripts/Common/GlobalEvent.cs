@@ -36,6 +36,11 @@ namespace TowerDefense
         public MapObjectType type;
     }
 
+    public struct ChangeTowerType
+    {
+        public int towerId;
+    }
+
     public struct SaveMap { }
 
     public struct TogglePathIndicator { }

@@ -24,11 +24,15 @@ namespace TowerDefense
             spawnBtn.onClick.AddListener(OnSpawnBtnClick);
             pauseBtn.onClick.AddListener(OnPauseBtnClick);
 
-            emptyBtn.OnClick.AddListener(OnGridTypeBtnClick);
-            roadBtn.OnClick.AddListener(OnGridTypeBtnClick);
-            wallBtn.OnClick.AddListener(OnGridTypeBtnClick);
-            spawnPointBtn.OnClick.AddListener(OnGridTypeBtnClick);
-            destinationBtn.OnClick.AddListener(OnGridTypeBtnClick);
+            for (int i = 0; i < gridTypeBtns.Length; i++)
+            {
+                gridTypeBtns[i].OnClick.AddListener(OnGridTypeBtnClick);
+            }
+            for (int i = 0; i < towerTypeBtns.Length; i++)
+            {
+                towerTypeBtns[i].OnClick.AddListener(OnTowerTypeBtnClick);
+            }
+
             saveBtn.onClick.AddListener(OnSaveBtnClick);
             pathToggleBtn.onClick.AddListener(OnPathToggleBtnClick);
 
@@ -44,11 +48,15 @@ namespace TowerDefense
             spawnBtn.onClick.RemoveAllListeners();
             pauseBtn.onClick.RemoveAllListeners();
 
-            emptyBtn.OnClick.RemoveAllListeners();
-            roadBtn.OnClick.RemoveAllListeners();
-            wallBtn.OnClick.RemoveAllListeners();
-            spawnPointBtn.OnClick.RemoveAllListeners();
-            destinationBtn.OnClick.RemoveAllListeners();
+            for (int i = 0; i < gridTypeBtns.Length; i++)
+            {
+                gridTypeBtns[i].OnClick.RemoveAllListeners();
+            }
+            for (int i = 0; i < towerTypeBtns.Length; i++)
+            {
+                towerTypeBtns[i].OnClick.RemoveAllListeners();
+            }
+
             saveBtn.onClick.RemoveAllListeners();
             pathToggleBtn.onClick.RemoveAllListeners();
 
@@ -84,6 +92,11 @@ namespace TowerDefense
         private void OnGridTypeBtnClick(MapObjectType type)
         {
             TypeEventSystem.Send(new ChangeGridType { type = type });
+        }
+
+        private void OnTowerTypeBtnClick(int towerId)
+        {
+            TypeEventSystem.Send(new ChangeTowerType { towerId = towerId });
         }
 
         private void OnSaveBtnClick()
@@ -155,12 +168,12 @@ namespace TowerDefense
         [SerializeField] private Text spawnText = default;
 
         [Header("格子类型选择按钮")]
-        [SerializeField] private CustomButton emptyBtn = default;
-        [SerializeField] private CustomButton roadBtn = default;
-        [SerializeField] private CustomButton wallBtn = default;
-        [SerializeField] private CustomButton spawnPointBtn = default;
-        [SerializeField] private CustomButton destinationBtn = default;
+        [SerializeField] private GridTypeButton[] gridTypeBtns = default;
+
         [SerializeField] private Button saveBtn = default;
         [SerializeField] private Button pathToggleBtn = default;
+
+        [Header("底部炮塔类型选择按钮")]
+        [SerializeField] private TowerTypeButton[] towerTypeBtns = default;
     }
 }
