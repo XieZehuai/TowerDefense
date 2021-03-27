@@ -95,8 +95,9 @@ namespace TowerDefense
 
             if (IsPlaying)
             {
-                TowerManager.OnUpdate(deltaTime);
                 EnemyManager.OnUpdate(deltaTime);
+                Physics.SyncTransforms();
+                TowerManager.OnUpdate(deltaTime);
                 WarEntityManager.OnUpdate(deltaTime);
             }
         }

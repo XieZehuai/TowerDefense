@@ -59,10 +59,9 @@ namespace TowerDefense
             Vector3 targetPos = target.LocalPosition;
             targetPos.y = 0f;
 
-            Vector2 dir;
-            dir.x = targetPos.x - shootPos.x;
-            dir.y = targetPos.z - shootPos.z;
-            float x = dir.magnitude;
+            // XZ平面上目标点的方向
+            Vector2 dir = new Vector2(targetPos.x - shootPos.x, targetPos.z - shootPos.z);
+            float x = dir.magnitude;　// 取模
             float y = -shootPos.y;
             dir /= x; // 目标方向的单位向量
 
