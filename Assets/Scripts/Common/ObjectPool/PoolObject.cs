@@ -16,14 +16,19 @@ namespace TowerDefense
         /// </summary>
         /// <param name="tag">对象所在池子标签</param>
         /// <param name="destroyOnLoad">是否在切换场景时销毁当前对象，默认为true</param>
-        public void OnInstantiate(string tag, bool destroyOnLoad = true)
+        public void Instantiate(string tag, bool destroyOnLoad = true)
         {
             Tag = tag;
+            OnInstantiate();
 
             if (!destroyOnLoad)
             {
                 DontDestroyOnLoad(gameObject);
             }
+        }
+
+        protected virtual void OnInstantiate()
+        {
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ MonoBehaviour:
   coins: 200
   waveInterval: 6
   waveDatas:
+  - {fileID: 11400000, guid: 30c04ac8e27d13347a4423aa4d38d79f, type: 2}
   - {fileID: 11400000, guid: 8aed25fc5a5ce7846b1f9257d5e64294, type: 2}
   - {fileID: 11400000, guid: 0ba770af81a2e44438e17bc3db076b68, type: 2}
   - {fileID: 11400000, guid: 409ddceb839f65b4393827cfe997ff5e, type: 2}

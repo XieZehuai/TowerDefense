@@ -46,7 +46,7 @@ namespace TowerDefense
             if (inactiveList.Count == 0 && activeList.Count < capacity)
             {
                 obj = Object.Instantiate(prefab, pos, rot, parent).GetComponent<T>();
-                obj.OnInstantiate(tag, true);
+                obj.Instantiate(tag, true);
             }
             else if (inactiveList.Count > 0)
             {

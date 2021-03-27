@@ -10,6 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0612da4ce3a8cf49813f7cdeea6606b, type: 3}
-  m_Name: TestingWaveData
+  m_Name: TestingWaveConfig
   m_EditorClassIdentifier: 
-  sequences: []
+  sequences:
+  - enemyType: 0
+    count: 1
+    interval: 0
