@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.VFX;
 
 namespace TowerDefense
 {
     public class Particle : PoolObject
     {
-        private GameObject vfxObj;
+        private VisualEffect vfx;
 
         private bool isFollowing = false;
         private Transform followTarget = null;
@@ -14,8 +15,8 @@ namespace TowerDefense
 
         private void Awake()
         {
-            vfxObj = transform.GetChild(0).gameObject;
-            if (vfxObj == null)
+            vfx = GetComponentInChildren<VisualEffect>();
+            if (vfx == null)
             {
                 Debug.LogError("没有对应的特效");
             }
@@ -37,24 +38,28 @@ namespace TowerDefense
             }
 
             IsPlaying = true;
-            vfxObj.SetActive(true);
+            vfx.Play();
         }
 
         public void Replay()
         {
             IsPlaying = true;
-            vfxObj.SetActive(false);
-            vfxObj.SetActive(true);
+            vfx.Play();
         }
 
         public void Stop()
         {
-            if (IsPlaying)
+            if (!IsPlaying)
             {
                 return;
             }
 
-            vfxObj.SetActive(false);
+            vfx.Stop();
+        }
+
+        public void SetFloat(string fieldName, float value)
+        {
+            vfx.SetFloat(fieldName, value);
         }
 
         public Particle Follow(Transform followTarget, Vector3 offset)
