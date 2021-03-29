@@ -168,7 +168,8 @@ namespace TowerDefense
         // 生成敌人
         private void CreateEnemy(int id)
         {
-            EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id); // 随机获取敌人数据
+            // EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id);
+            EnemyData enemyData = GameManager.Instance.EnemyConfig.GetEnemyData(id); // 获取敌人数据
             Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name);
             int random = Random.Range(0, spawnPointPaths.Length); // 随机设置路径
             enemy.SetData(enemyData).SetPath(spawnPointPaths[random], true);
@@ -195,10 +196,8 @@ namespace TowerDefense
             }
         }
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
-            base.Dispose();
-
             TypeEventSystem.UnRegister<NextWave>(SpawnNextWave);
         }
     }

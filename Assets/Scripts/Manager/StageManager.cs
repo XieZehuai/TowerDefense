@@ -44,7 +44,8 @@ namespace TowerDefense
         {
             // 设置关卡数据
             stage = GameManager.Instance.Stage;
-            stageConfig = ConfigManager.Instance.GetStageConfig(stage);
+            // stageConfig = ConfigManager.Instance.GetStageConfig(stage);
+            stageConfig = GameManager.Instance.GetStageConfig(stage); // 获取关卡数据
             hp = stageConfig.playerHp;
             coins = stageConfig.coins;
 
@@ -90,7 +91,7 @@ namespace TowerDefense
         {
             float deltaTime = Time.deltaTime;
             if (isSpeedUp) deltaTime *= 2f;
-            
+
             InputManager.OnUpdate(deltaTime);
 
             if (IsPlaying)

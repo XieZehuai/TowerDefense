@@ -23,7 +23,7 @@ namespace TowerDefense
         {
             ControlCamera(deltaTime);
 
-            if (manager.IsPreparing || manager.IsPlaying)
+            if (!UIManager.Instance.IsMouseOverUI && (manager.IsPreparing || manager.IsPlaying))
             {
                 ChangeMap();
                 PlaceTower();
@@ -126,10 +126,8 @@ namespace TowerDefense
         }
         #endregion
 
-        public override void Dispose()
+        protected override void OnDispose()
         {
-            base.Dispose();
-
             TypeEventSystem.UnRegister<StartGame>(StartGame);
             TypeEventSystem.UnRegister<PauseGame>(Pause);
             TypeEventSystem.UnRegister<ContinueGame>(Continue);

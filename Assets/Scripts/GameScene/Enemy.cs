@@ -7,10 +7,20 @@ namespace TowerDefense
     public class Enemy : PoolObject
     {
         #region 静态方法，用于寻找范围内的敌人
+        // 用一个静态的数组来保存射线检测的结果，避免每次检测都分配新内存
         private static readonly Collider[] targetBuffer = new Collider[100];
 
+        /// <summary>
+        /// 检测到的范围内的敌人数量
+        /// </summary>
         public static int TargetCount { get; private set; }
 
+        /// <summary>
+        /// 检测圆形范围内的敌人
+        /// </summary>
+        /// <param name="pos">原点</param>
+        /// <param name="range">半径</param>
+        /// <returns>检测到敌人返回true，检测不到返回false</returns>
         public static bool FindTargets(Vector3 pos, float range)
         {
             Vector3 top = pos;
@@ -21,18 +31,28 @@ namespace TowerDefense
             return TargetCount > 0;
         }
 
+        /// <summary>
+        /// 根据索引获取检测到的敌人
+        /// </summary>
+        /// <param name="index">敌人的索引</param>
         public static Enemy GetTarget(int index)
         {
             Enemy target = targetBuffer[index].GetComponent<Enemy>();
             return target;
         }
 
+        /// <summary>
+        /// 根据攻击类型获取范围内最佳的敌人
+        /// </summary>
+        /// <param name="attackType">炮塔的攻击类型</param>
         public static Enemy GetBestTarget(AttackType attackType)
         {
             Enemy target = GetTarget(0);
             if (attackType == AttackType.Special) return target;
 
-            DamageConfig damageConfig = ConfigManager.Instance.DamageConfig;
+            // DamageConfig damageConfig = ConfigManager.Instance.DamageConfig;
+            DamageConfig damageConfig = GameManager.Instance.DamageConfig;
+
             int priority = damageConfig.GetArmorPriority(attackType, target.ArmorType);
             if (priority == 0) return target;
 
@@ -53,6 +73,12 @@ namespace TowerDefense
             return target;
         }
 
+        /// <summary>
+        /// 对范围内的所有敌人执行相同的操作
+        /// </summary>
+        /// <param name="pos">原点</param>
+        /// <param name="range">半径</param>
+        /// <param name="action">要进行的操作</param>
         public static void AttackAll(Vector3 pos, float range, Action<Enemy> action)
         {
             FindTargets(pos, range);
@@ -81,19 +107,33 @@ namespace TowerDefense
         private float decelerateTimer;
         private bool isDecelerate;
 
+        /// <summary>
+        /// 敌人的本地坐标
+        /// </summary>
         public Vector3 LocalPosition => transform.localPosition;
 
+        /// <summary>
+        /// 敌人正在移动的路径点
+        /// </summary>
         public Vector3 NextWayPoint => path[curr];
 
+        /// <summary>
+        /// 敌人的护甲类型
+        /// </summary>
         public ArmorType ArmorType => data.armorType;
 
         public override void OnSpawn()
         {
+            // 让敌人移动时与路径点形成一定的偏移，避免全都沿着完全相同的路线走
             float x = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             offset = new Vector3(x, 0.3f, z);
         }
 
+        /// <summary>
+        /// 设置敌人的数据
+        /// </summary>
+        /// <param name="data">敌人的数据</param>
         public Enemy SetData(EnemyData data)
         {
             this.data = data;
@@ -103,6 +143,11 @@ namespace TowerDefense
             return this;
         }
 
+        /// <summary>
+        /// 设置敌人移动的路径
+        /// </summary>
+        /// <param name="path">由所有路径点组成的List</param>
+        /// <param name="moveToFirstWayPoint">是否直接移动到第一个路径点</param>
         public void SetPath(List<Vector3> path, bool moveToFirstWayPoint)
         {
             if (path.Count <= 1) Debug.LogError("路径长度太短");
@@ -157,31 +202,38 @@ namespace TowerDefense
             return Move(deltaTime);
         }
 
+        /// <summary>
+        /// 敌人受攻击
+        /// </summary>
+        /// <param name="damage">伤害</param>
+        /// <param name="attackType">攻击类型</param>
         public void GetDamage(float damage, AttackType attackType)
         {
-            float actualDamage = ConfigManager.Instance.DamageConfig.GetDamage(damage, attackType, data.armorType);
+            // 计算实际造成的伤害
+            // float actualDamage = ConfigManager.Instance.DamageConfig.GetDamage(damage, attackType, data.armorType);
+            float actualDamage = GameManager.Instance.DamageConfig.GetDamage(damage, attackType, ArmorType);
             currentHp -= actualDamage;
 
+            // 播放受击特效
             if (hitEffectTimer >= hitEffectDuration)
             {
                 hitEffectTimer = 0f;
-
                 ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f))
                     .DelayUnspawn(0.5f);
             }
         }
 
+        /// <summary>
+        /// 让敌人减速
+        /// </summary>
+        /// <param name="duration">减速时长</param>
+        /// <param name="rate">减速率</param>
         public void Decelerate(float duration, float rate)
         {
             isDecelerate = true;
             decelerateTimer = 0f;
             decelerateTime = duration;
             currentSpeed = Mathf.Min(data.speed * rate, currentSpeed);
-        }
-
-        public Vector3 GetNextWayPoint()
-        {
-            return path[curr];
         }
 
         private bool Move(float deltaTime)

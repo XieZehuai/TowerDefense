@@ -43,8 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d81d2dfbe269c442b1133b0478ad34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  mapSize: {x: 10, y: 10}
-  cellSize: 4
-  spawnInterval: 5
+  load: 1
+  fileName: MapData
+  pathFindingStrategy: 2
+  stage: 1
   damageConfig: {fileID: 11400000, guid: 02fa883da5d6d2a40a045344c67d4123, type: 2}
+  enemyConfig: {fileID: 11400000, guid: ef2b36c5a86ad1e4d8fc3337ab412356, type: 2}
+  stageConfigs:
+  - {fileID: 11400000, guid: 5ac3a083d2354b441a25f3d1f164958f, type: 2}
+  - {fileID: 11400000, guid: 64fa561af8297144e9401df26cd337b6, type: 2}

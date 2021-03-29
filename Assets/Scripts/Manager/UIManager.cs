@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace TowerDefense
 {
@@ -19,6 +20,16 @@ namespace TowerDefense
         [SerializeField] private Transform backgroundLayer = default;
         [SerializeField] private Transform commonLayer = default;
         [SerializeField] private Transform foregroundLayer = default;
+
+        /// <summary>
+        /// 当前鼠标是否处于UI上
+        /// </summary>
+        public bool IsMouseOverUI { get; private set; }
+
+        private void Update()
+        {
+            IsMouseOverUI = EventSystem.current.IsPointerOverGameObject();
+        }
 
         /// <summary>
         /// 根据类型打开UI

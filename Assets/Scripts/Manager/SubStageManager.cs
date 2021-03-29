@@ -10,14 +10,22 @@ namespace TowerDefense
         {
             manager = stageManager;
         }
-
+        
         public virtual void OnUpdate(float deltaTime)
         {
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
+            OnDispose();
             manager = null;
+        }
+
+        /// <summary>
+        /// 在手动释放资源时调用
+        /// </summary>
+        protected virtual void OnDispose()
+        {
         }
     }
 }
