@@ -43,7 +43,7 @@ namespace TowerDefense
         #region 玩家鼠标控制事件，通过鼠标点击地图触发
         private void ChangeMap()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
                 Vector3 pos = Utils.GetMousePosition();
                 manager.MapManager.ChangeGridType(pos, selectedGridType);
