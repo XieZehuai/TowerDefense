@@ -23,21 +23,33 @@ namespace TowerDefense
         {
             ControlCamera(deltaTime);
 
-            if (!UIManager.Instance.IsMouseOverUI && (manager.IsPreparing || manager.IsPlaying))
+            if (manager.IsPreparing || manager.IsPlaying)
             {
-                ChangeMap();
-                PlaceTower();
-                RemoveTower();
+                if (!UIManager.Instance.IsMouseOverUI)
+                {
+                    ChangeMap();
+                    PlaceTower();
+                    RemoveTower();
+                }
+
+                UndoChangeMap();
             }
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                manager.SpeedUp(true);
-            }
-            else if (Input.GetKeyDown(KeyCode.H))
-            {
-                manager.SpeedUp(false);
-            }
+            // if (!UIManager.Instance.IsMouseOverUI && (manager.IsPreparing || manager.IsPlaying))
+            // {
+            //     ChangeMap();
+            //     PlaceTower();
+            //     RemoveTower();
+            // }
+
+            // if (Input.GetKeyDown(KeyCode.G))
+            // {
+            //     manager.SpeedUp(true);
+            // }
+            // else if (Input.GetKeyDown(KeyCode.H))
+            // {
+            //     manager.SpeedUp(false);
+            // }
         }
 
         #region 玩家鼠标控制事件，通过鼠标点击地图触发
@@ -47,6 +59,14 @@ namespace TowerDefense
             {
                 Vector3 pos = Utils.GetMousePosition();
                 manager.MapManager.ChangeGridType(pos, selectedGridType);
+            }
+        }
+
+        private void UndoChangeMap()
+        {
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+            {
+                manager.MapManager.Undo();
             }
         }
 

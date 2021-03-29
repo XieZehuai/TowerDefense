@@ -204,7 +204,7 @@ namespace TowerDefense
             // 寻路并设置路径数据
             pathFinder.SetMapData(MapManager.Map.GridArray);
 
-            if (pathFinder.FindPaths(startPosArray, endPos, ref paths, true))
+            if (pathFinder.FindPaths(startPosArray, endPos, ref paths, false))
             {
                 List<Vector2Int>[] spawnPointPaths = paths.SubArray(0, spawnPointCount);
                 EnemyManager.SetSpawnPointPaths(spawnPointPaths);
@@ -222,7 +222,7 @@ namespace TowerDefense
         {
             pathFinder.SetMapData(MapManager.Map.GridArray);
 
-            return pathFinder.FindPaths(startPosArray, endPos, ref paths, true);
+            return pathFinder.FindPaths(startPosArray, endPos, ref paths, false);
         }
 
         private void OnEnemyReach(OnEnemyReach context)

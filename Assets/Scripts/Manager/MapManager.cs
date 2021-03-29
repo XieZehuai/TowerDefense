@@ -27,6 +27,8 @@ namespace TowerDefense
         private PoolObject[,] models; // 地图格子模型
         private MapObject destination; // 目标点
 
+        private Stack<System.Action> commandBuffer = new Stack<System.Action>();
+
         public MapManager(StageManager stageManager) : base(stageManager)
         {
             SpawnPoints = new HashSet<MapObject>();
@@ -256,6 +258,14 @@ namespace TowerDefense
             }
         }
 
+        public void Undo()
+        {
+            if (commandBuffer.Count > 0)
+            {
+                commandBuffer.Pop().Invoke();
+            }
+        }
+
         private void PlaceEmptyGrid(int x, int y)
         {
             MapObjectType originType = Map.GetGridType(x, y);
@@ -288,6 +298,7 @@ namespace TowerDefense
             LoadModel(x, y, MapObjectType.Road);
 
             FindPaths(destination);
+            commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
         private void PlaceWallGrid(int x, int y)
