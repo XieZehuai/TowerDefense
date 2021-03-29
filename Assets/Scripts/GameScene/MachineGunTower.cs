@@ -11,6 +11,7 @@ namespace TowerDefense
         [SerializeField] private Transform turret = default;
         [SerializeField] private Transform gun = default;
         [SerializeField] private Transform attackPoint = default;
+        [SerializeField] private LineRenderer lineRenderer = default;
 
         private Enemy target;
         private float attackTimer;
@@ -31,6 +32,7 @@ namespace TowerDefense
             if (attackTimer < attackDuration)
             {
                 attackTimer += deltaTime;
+                Idle();
             }
             else if (TrackTarget(ref target) || FindTarget(out target))
             {
@@ -55,16 +57,22 @@ namespace TowerDefense
             turret.LookAt(pos);
         }
 
+        private void Idle()
+        {
+            lineRenderer.SetPosition(1, Vector3.zero);
+        }
+
         private void Attack()
         {
             ShowAttackEffect();
 
             target.GetDamage(damage, AttackType);
+            lineRenderer.SetPosition(1, lineRenderer.transform.InverseTransformPoint(target.LocalPosition));
         }
 
         private void ShowAttackEffect()
         {
-            ObjectPool.Spawn<PoolObject>("MachineGunAttackEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(1.5f);
+            ObjectPool.Spawn<PoolObject>("MachineGunAttackEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(0.5f);
         }
     }
 }
