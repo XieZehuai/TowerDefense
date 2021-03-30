@@ -366,7 +366,7 @@ namespace TowerDefense
             Vector2Int endPos = new Vector2Int(destination.x, destination.y);
 
             SpawnPoints.Add(obj);
-            if (manager.FindPaths(endPos, false))
+            if (manager.SetPaths(endPos, false))
             {
                 UnloadModel(x, y);
                 Map.SetGridType(x, y, MapObjectType.SpawnPoint);
@@ -389,7 +389,7 @@ namespace TowerDefense
             if (obj == null) return false;
 
             SpawnPoints.Remove(obj);
-            manager.FindPaths(new Vector2Int(destination.x, destination.y), false);
+            manager.SetPaths(new Vector2Int(destination.x, destination.y), false);
 
             return true;
         }
@@ -415,7 +415,7 @@ namespace TowerDefense
 
         private bool FindPaths(MapObject target)
         {
-            return manager.FindPaths(new Vector2Int(target.x, target.y), true);
+            return manager.SetPaths(new Vector2Int(target.x, target.y), true);
         }
     }
 }

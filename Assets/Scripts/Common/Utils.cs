@@ -14,6 +14,8 @@ namespace TowerDefense
         public const int ENEMY_LAYER_MASK = 1 << 8;
         public const int MAP_CELL_SIZE = 1;
         public const float GRAVITY = 20f;
+        public const float UNDO_PRESS_DURATION = 0.5f;
+        public const string MAP_DATA_FILENAME_PREFIX = "MapData_";
         #endregion
 
         #region 各种常用方法

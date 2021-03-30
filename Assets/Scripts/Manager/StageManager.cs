@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 游戏关卡管理器，控制整个关卡的流程
+    /// </summary>
     public class StageManager : MonoBehaviour
     {
+        // 当前游戏的状态
         public enum GameState
         {
             Preparing,
@@ -14,15 +18,13 @@ namespace TowerDefense
             GameOver,
         }
 
-        [SerializeField] private CameraController cameraController = default;
-
         private int stage; // 当前关卡数
         private StageConfig stageConfig; // 当前关卡配置
         private int hp; // 当前生命
         private int coins; // 当前金币
         private GameState state = GameState.Preparing; // 当前游戏的状态
         private GameState stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
-        private bool isSpeedUp;
+        private bool isSpeedUp; // 当前是否处于加速模式
         private PathFinder pathFinder;
 
         #region 实现各种功能的子管理器
@@ -32,6 +34,7 @@ namespace TowerDefense
         public TowerManager TowerManager { get; private set; }
         public WarEntityManager WarEntityManager { get; private set; }
         public PathIndicator PathIndicator { get; private set; }
+        [SerializeField] private CameraController cameraController = default;
         public CameraController CameraController => cameraController;
         #endregion
 
@@ -44,13 +47,11 @@ namespace TowerDefense
         {
             // 设置关卡数据
             stage = GameManager.Instance.Stage;
-            // stageConfig = ConfigManager.Instance.GetStageConfig(stage);
             stageConfig = GameManager.Instance.GetStageConfig(stage); // 获取关卡数据
             hp = stageConfig.playerHp;
             coins = stageConfig.coins;
 
-            if (hp <= 0) Debug.LogError("玩家初始生命值必须大于0" + hp);
-
+            // 初始化子管理器
             InputManager = new InputManager(this);
             MapManager = new MapManager(this);
             EnemyManager = new EnemyManager(this, stageConfig.waveInterval, stageConfig.waveDatas);
@@ -59,15 +60,26 @@ namespace TowerDefense
             PathIndicator = new PathIndicator(this);
 
             // 设置寻路策略
-            if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.Dijkstra)
-                pathFinder = new PathFinder(new DijkstraPathFinding());
-            else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.ReverseDijkstra)
-                pathFinder = new PathFinder(new ReverseDijkstraPathFinding());
-            else if (GameManager.Instance.pathFindingStrategy == PathFindingStrategy.DOTS)
-                pathFinder = new PathFinder(new DOTSPathFinding());
+            PathFindingStrategy strategy = GameManager.Instance.pathFindingStrategy;
+            IPathFindingStrategy pathFindingStrategy = GetPathFindingStrategy(strategy);
+            pathFinder = new PathFinder(pathFindingStrategy);
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
+        }
+
+        private IPathFindingStrategy GetPathFindingStrategy(PathFindingStrategy strategy)
+        {
+            switch (strategy)
+            {
+                case PathFindingStrategy.Dijkstra: return new DijkstraPathFinding();
+                case PathFindingStrategy.ReverseDijkstra: return new ReverseDijkstraPathFinding();
+                case PathFindingStrategy.DOTS: return new DOTSPathFinding();
+
+                default: Debug.LogError("不支持的寻路策略" + strategy); break;
+            }
+
+            return null;
         }
 
         private void Start()
@@ -82,6 +94,7 @@ namespace TowerDefense
                 MapManager.CreateMap(20, 20, Utils.MAP_CELL_SIZE);
             }
 
+            // 打开游戏UI
             UIManager.Instance.Open<UIGameScene>(
                 new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = stageConfig.waveDatas.Length },
                 UILayer.Background);
@@ -97,12 +110,15 @@ namespace TowerDefense
             if (IsPlaying)
             {
                 EnemyManager.OnUpdate(deltaTime);
-                Physics.SyncTransforms();
+                Physics.SyncTransforms(); // 敌人移动后把Transform信息同步到物理引擎，避免炮塔检测敌人出错
                 TowerManager.OnUpdate(deltaTime);
                 WarEntityManager.OnUpdate(deltaTime);
             }
         }
 
+        /// <summary>
+        /// 开始游戏
+        /// </summary>
         public void StartGame()
         {
             if (state != GameState.Preparing)
@@ -114,6 +130,9 @@ namespace TowerDefense
             state = GameState.Playing;
         }
 
+        /// <summary>
+        /// 暂停
+        /// </summary>
         public void Pause()
         {
             if (state == GameState.Paused)
@@ -126,6 +145,9 @@ namespace TowerDefense
             state = GameState.Paused;
         }
 
+        /// <summary>
+        /// 继续
+        /// </summary>
         public void Continue()
         {
             if (state != GameState.Paused)
@@ -137,6 +159,9 @@ namespace TowerDefense
             state = stateTemp; // 恢复原状态
         }
 
+        /// <summary>
+        /// 重新开始
+        /// </summary>
         public void Replay()
         {
             state = GameState.Preparing;
@@ -150,24 +175,40 @@ namespace TowerDefense
             TypeEventSystem.Send(new OnReplay());
         }
 
+        /// <summary>
+        /// 进入或退出加速模式
+        /// </summary>
+        /// <param name="speedUp">是否加速</param>
         public void SpeedUp(bool speedUp)
         {
             isSpeedUp = speedUp;
         }
 
+        /// <summary>
+        /// 保存地图数据
+        /// </summary>
         public void SaveMapData()
         {
             Debug.Log("保存地图数据");
-            MapManager.SaveMapData(GameManager.Instance.fileName);
+            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + stage);
         }
 
+        /// <summary>
+        /// 加载地图数据
+        /// </summary>
         public void LoadMapData()
         {
             Debug.Log("加载地图数据");
-            MapManager.LoadMapData(GameManager.Instance.fileName);
+            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + stage);
         }
 
-        public bool FindPaths(Vector2Int endPos, bool includeEnemy)
+        /// <summary>
+        /// 设置出生点以及敌人的行动路径
+        /// </summary>
+        /// <param name="endPos">目标点</param>
+        /// <param name="includeEnemy">是否包含敌人</param>
+        /// <returns>设置成功或失败</returns>
+        public bool SetPaths(Vector2Int endPos, bool includeEnemy)
         {
             // 处理起始点数据
             List<MapObject> spawnPoints = MapManager.SpawnPoints.ToList();
@@ -204,6 +245,7 @@ namespace TowerDefense
             // 寻路并设置路径数据
             pathFinder.SetMapData(MapManager.Map.GridArray);
 
+            // 寻路，并在成功时设置所有出生点以及敌人的移动路径
             if (pathFinder.FindPaths(startPosArray, endPos, ref paths, false))
             {
                 List<Vector2Int>[] spawnPointPaths = paths.SubArray(0, spawnPointCount);
@@ -212,12 +254,21 @@ namespace TowerDefense
 
                 List<Vector2Int>[] enemyPaths = paths.SubArray(spawnPointCount, enemyCount);
                 EnemyManager.SetEnemyPaths(enemyPaths);
+
                 return true;
             }
 
             return false;
         }
 
+        /// <summary>
+        /// 自定义起始点的寻路，寻路成功时把路径保存到传入的数组里
+        /// </summary>
+        /// <param name="startPosArray">所有起点组成的数组</param>
+        /// <param name="endPos">目标点</param>
+        /// <param name="getPath">寻路成功时是否保存得到的路径</param>
+        /// <param name="paths">用于存储所有路径的容器</param>
+        /// <returns>成功或失败</returns>
         public bool FindPaths(Vector2Int[] startPosArray, Vector2Int endPos, bool getPath, ref List<Vector2Int>[] paths)
         {
             pathFinder.SetMapData(MapManager.Map.GridArray);

@@ -4,10 +4,10 @@ namespace TowerDefense
 {
     public class InputManager : SubStageManager
     {
-        private MapObjectType selectedGridType = MapObjectType.Wall;
-        private int selectedTowerId = 0;
-        private const float undoDuration = 0.5f;
-        private float undoTimer;
+        private MapObjectType selectedGridType = MapObjectType.Wall; // 当前选择的格子类型
+        private int selectedTowerId = 0; // 当前选择的塔的ID
+
+        private float undoTimer; // 连续撤销操作计时器
 
         public InputManager(StageManager stageManager) : base(stageManager)
         {
@@ -23,7 +23,7 @@ namespace TowerDefense
 
         public override void OnUpdate(float deltaTime)
         {
-            ControlCamera(deltaTime);
+            ControlCamera(Time.deltaTime); // 控制相机运动
 
             if (manager.IsPreparing || manager.IsPlaying)
             {
@@ -36,22 +36,6 @@ namespace TowerDefense
 
                 UndoChangeMap();
             }
-
-            // if (!UIManager.Instance.IsMouseOverUI && (manager.IsPreparing || manager.IsPlaying))
-            // {
-            //     ChangeMap();
-            //     PlaceTower();
-            //     RemoveTower();
-            // }
-
-            // if (Input.GetKeyDown(KeyCode.G))
-            // {
-            //     manager.SpeedUp(true);
-            // }
-            // else if (Input.GetKeyDown(KeyCode.H))
-            // {
-            //     manager.SpeedUp(false);
-            // }
         }
 
         #region 玩家鼠标控制事件，通过鼠标点击地图触发
@@ -75,7 +59,7 @@ namespace TowerDefense
                 }
                 else
                 {
-                    if (undoTimer < undoDuration)
+                    if (undoTimer < Utils.UNDO_PRESS_DURATION)
                     {
                         undoTimer += Time.deltaTime;
                     }
@@ -85,23 +69,6 @@ namespace TowerDefense
                     }
                 }
             }
-
-            // if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
-            // {
-            //     manager.MapManager.Undo();
-
-            //     if (Input.GetKey(KeyCode.Z))
-            //     {
-            //         if (undoTimer < undoDuration)
-            //         {
-            //             undoTimer += Time.deltaTime;
-            //         }
-            //         else
-            //         {
-
-            //         }
-            //     }
-            // }
         }
 
         private void PlaceTower()
