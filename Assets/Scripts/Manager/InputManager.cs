@@ -6,6 +6,8 @@ namespace TowerDefense
     {
         private MapObjectType selectedGridType = MapObjectType.Wall;
         private int selectedTowerId = 0;
+        private const float undoDuration = 0.5f;
+        private float undoTimer;
 
         public InputManager(StageManager stageManager) : base(stageManager)
         {
@@ -58,16 +60,48 @@ namespace TowerDefense
             if (Input.GetMouseButton(0))
             {
                 Vector3 pos = Utils.GetMousePosition();
-                manager.MapManager.ChangeGridType(pos, selectedGridType);
+                manager.MapManager.ChangeGridType(pos, selectedGridType, true);
             }
         }
 
         private void UndoChangeMap()
         {
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.Z))
             {
-                manager.MapManager.Undo();
+                if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    manager.MapManager.Undo();
+                    undoTimer = 0f;
+                }
+                else
+                {
+                    if (undoTimer < undoDuration)
+                    {
+                        undoTimer += Time.deltaTime;
+                    }
+                    else
+                    {
+                        manager.MapManager.Undo();
+                    }
+                }
             }
+
+            // if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+            // {
+            //     manager.MapManager.Undo();
+
+            //     if (Input.GetKey(KeyCode.Z))
+            //     {
+            //         if (undoTimer < undoDuration)
+            //         {
+            //             undoTimer += Time.deltaTime;
+            //         }
+            //         else
+            //         {
+
+            //         }
+            //     }
+            // }
         }
 
         private void PlaceTower()

@@ -27,6 +27,7 @@ namespace TowerDefense
         private PoolObject[,] models; // 地图格子模型
         private MapObject destination; // 目标点
 
+        // 记录摆放格子命令，实现撤销功能
         private Stack<System.Action> commandBuffer = new Stack<System.Action>();
 
         public MapManager(StageManager stageManager) : base(stageManager)
@@ -103,7 +104,7 @@ namespace TowerDefense
                 {
                     if (Map.GetGridType(x, y) == MapObjectType.SpawnPoint)
                     {
-                        PlaceSpawnPoint(x, y);
+                        PlaceSpawnPoint(x, y, false);
                     }
                 }
             }
@@ -218,15 +219,15 @@ namespace TowerDefense
             return Map.GetWorldPosition(x, y);
         }
 
-        public void ChangeGridType(Vector3 worldPosition, MapObjectType type)
+        public void ChangeGridType(Vector3 worldPosition, MapObjectType type, bool record)
         {
             if (Map.GetGridPosition(worldPosition, out int x, out int y))
             {
-                ChangeGridType(x, y, type);
+                ChangeGridType(x, y, type, record);
             }
         }
 
-        public void ChangeGridType(int x, int y, MapObjectType type)
+        public void ChangeGridType(int x, int y, MapObjectType type, bool record = false)
         {
             // 如果要替换的格子类型与当前格子类型相同或者当前格子是终点，直接返回
             if (Map.GetGridType(x, y) == type || Map.GetGridType(x, y) == MapObjectType.WallWithTower)
@@ -237,19 +238,19 @@ namespace TowerDefense
             switch (type)
             {
                 case MapObjectType.Empty:
-                    PlaceEmptyGrid(x, y);
+                    PlaceEmptyGrid(x, y, record);
                     break;
                 case MapObjectType.Road:
-                    PlaceRoadGrid(x, y);
+                    PlaceRoadGrid(x, y, record);
                     break;
                 case MapObjectType.Wall:
-                    PlaceWallGrid(x, y);
+                    PlaceWallGrid(x, y, record);
                     break;
                 case MapObjectType.SpawnPoint:
-                    PlaceSpawnPoint(x, y);
+                    PlaceSpawnPoint(x, y, record);
                     break;
                 case MapObjectType.Destination:
-                    PlaceDestination(x, y);
+                    PlaceDestination(x, y, record);
                     break;
 
                 default:
@@ -266,7 +267,7 @@ namespace TowerDefense
             }
         }
 
-        private void PlaceEmptyGrid(int x, int y)
+        private void PlaceEmptyGrid(int x, int y, bool record)
         {
             MapObjectType originType = Map.GetGridType(x, y);
 
@@ -285,9 +286,12 @@ namespace TowerDefense
             UnloadModel(x, y, originType);
             Map.SetGridType(x, y, MapObjectType.Empty);
             LoadModel(x, y, MapObjectType.Empty);
+
+            // 记录当前操作的方向操作
+            if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
-        private void PlaceRoadGrid(int x, int y)
+        private void PlaceRoadGrid(int x, int y, bool record)
         {
             MapObjectType originType = Map.GetGridType(x, y);
 
@@ -298,10 +302,12 @@ namespace TowerDefense
             LoadModel(x, y, MapObjectType.Road);
 
             FindPaths(destination);
-            commandBuffer.Push(() => ChangeGridType(x, y, originType));
+
+            // 记录当前操作的方向操作
+            if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
-        private void PlaceWallGrid(int x, int y)
+        private void PlaceWallGrid(int x, int y, bool record)
         {
             MapObjectType originType = Map.GetGridType(x, y);
 
@@ -320,9 +326,12 @@ namespace TowerDefense
             UnloadModel(x, y, originType);
             Map.SetGridType(x, y, MapObjectType.Wall);
             LoadModel(x, y, MapObjectType.Wall);
+
+            // 记录当前操作的方向操作
+            if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
-        private void PlaceDestination(int x, int y)
+        private void PlaceDestination(int x, int y, bool record)
         {
             MapObjectType originType = Map.GetGridType(x, y);
             if (originType == MapObjectType.SpawnPoint && !RemoveSpawnPoint(x, y)) return;
@@ -339,8 +348,10 @@ namespace TowerDefense
                 UnloadModel(xTemp, yTemp);
                 Map.SetGridType(xTemp, yTemp, MapObjectType.Road);
                 LoadModel(xTemp, yTemp, MapObjectType.Road);
-
                 LoadModel(x, y, MapObjectType.Destination);
+
+                // 记录当前操作的方向操作
+                if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
             }
             else
             {
@@ -348,8 +359,9 @@ namespace TowerDefense
             }
         }
 
-        private void PlaceSpawnPoint(int x, int y)
+        private void PlaceSpawnPoint(int x, int y, bool record)
         {
+            MapObjectType originType = Map.GetGridType(x, y);
             MapObject obj = Map.GetValue(x, y);
             Vector2Int endPos = new Vector2Int(destination.x, destination.y);
 
@@ -359,6 +371,9 @@ namespace TowerDefense
                 UnloadModel(x, y);
                 Map.SetGridType(x, y, MapObjectType.SpawnPoint);
                 LoadModel(x, y, MapObjectType.SpawnPoint);
+
+                // 记录当前操作的方向操作
+                if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
             }
             else
             {
