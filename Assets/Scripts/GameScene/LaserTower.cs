@@ -8,7 +8,7 @@ namespace TowerDefense
 
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
-        [SerializeField] private Transform upGun = default;
+        [SerializeField] private Transform shootPoint = default;
         [SerializeField] private Transform laser = default;
 
         private Enemy target; // 要攻击的目标敌人
@@ -45,7 +45,7 @@ namespace TowerDefense
             pos.y = 0f;
             turretBase.LookAt(pos);
 
-            pos = (target.LocalPosition - upGun.position).normalized;
+            pos = (target.LocalPosition - shootPoint.position).normalized;
             pos += turret.position;
             turret.LookAt(pos);
 

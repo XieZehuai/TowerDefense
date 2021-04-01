@@ -13,7 +13,7 @@ namespace TowerDefense
 
         public bool IsPlaying { get; private set; }
 
-        private void Awake()
+        protected override void OnInstantiate()
         {
             vfx = GetComponentInChildren<VisualEffect>();
             if (vfx == null)

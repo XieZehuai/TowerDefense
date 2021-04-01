@@ -93,6 +93,7 @@ namespace TowerDefense
         private EnemyData data;
         private float currentHp; // 当前生命值
         private float currentSpeed; // 当前移动速度
+        private HealthBar healthBar;
 
         private List<Vector3> path; // 移动路径
         private int curr; // 当前路径点的索引
@@ -128,6 +129,10 @@ namespace TowerDefense
             float x = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             offset = new Vector3(x, 0.3f, z);
+
+            healthBar = ObjectPool.Spawn<HealthBar>("HealthBar");
+            healthBar.Follow(transform, new Vector3(0f, 0.3f, 0f));
+            healthBar.SetValue(1f);
         }
 
         /// <summary>
@@ -221,6 +226,8 @@ namespace TowerDefense
                 ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f))
                     .DelayUnspawn(0.5f);
             }
+
+            healthBar.SetValue(currentHp / data.hp);
         }
 
         /// <summary>
@@ -268,6 +275,7 @@ namespace TowerDefense
             isDecelerate = false;
             decelerateTimer = 0f;
             decelerateTime = 0f;
+            ObjectPool.Unspawn(healthBar);
         }
     }
 }

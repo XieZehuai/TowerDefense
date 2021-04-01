@@ -57,6 +57,8 @@ namespace TowerDefense
         {
             Vector3 shootPos = attackPoint.position;
             Vector3 targetPos = target.LocalPosition;
+            Debug.Log("Attack Pos" + shootPos);
+            Debug.Log("Target Pos " + targetPos);
             targetPos.y = 0f;
 
             // XZ平面上目标点的方向
@@ -74,7 +76,9 @@ namespace TowerDefense
             float sinTheta = cosTheta * tanTheta;
 
             turretBase.localRotation = Quaternion.LookRotation(new Vector3(dir.x, 0f, dir.y));
-            turret.localRotation = Quaternion.LookRotation(new Vector3(0f, tanTheta, Mathf.Abs(dir.y)));
+            Vector3 rot = new Vector3(0f, tanTheta, Mathf.Abs(dir.y));
+            Debug.Log("Rot " + rot);
+            turret.localRotation = Quaternion.LookRotation(rot);
 
             Vector3 velocity = new Vector3(s * cosTheta * dir.x, s * sinTheta, s * cosTheta * dir.y);
             warEntityManager.LaunchShell(shellBlastRadius, shellDamage, shootPos, targetPos, velocity);
