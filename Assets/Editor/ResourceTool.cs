@@ -18,7 +18,7 @@ namespace TowerDefense
             {
                 resFiles[i] = AssetDatabase.GUIDToAssetPath(resFiles[i]);
                 string fileName = Path.GetFileNameWithoutExtension(resFiles[i]);
-                string filePath = resFiles[i].Replace("Assets/Resources/", string.Empty).Replace(".prefab", string.Empty);
+                string filePath = resFiles[i].Replace("Assets/Resources/", string.Empty).Split('.')[0];
                 resFiles[i] = fileName + "=" + filePath;
             }
 

@@ -93,7 +93,6 @@ namespace TowerDefense
         private EnemyData data;
         private float currentHp; // 当前生命值
         private float currentSpeed; // 当前移动速度
-        private HealthBar healthBar;
 
         private List<Vector3> path; // 移动路径
         private int curr; // 当前路径点的索引
@@ -107,6 +106,11 @@ namespace TowerDefense
         private float decelerateTime;
         private float decelerateTimer;
         private bool isDecelerate;
+
+        // 血量
+        private Camera mainCamera;
+        private Texture2D healthBarTexture;
+        private Texture2D healthTexture;
 
         /// <summary>
         /// 敌人的本地坐标
@@ -123,16 +127,21 @@ namespace TowerDefense
         /// </summary>
         public ArmorType ArmorType => data.armorType;
 
+        protected override void OnInstantiate()
+        {
+            mainCamera = Camera.main;
+            healthBarTexture = ResourceManager.Load<Texture2D>("HealthBarTexture");
+            healthTexture = ResourceManager.Load<Texture2D>("HealthTexture");
+            Debug.Assert(healthBarTexture != null, "HealthBarTexture is null");
+            Debug.Assert(healthTexture != null, "HealthTexture is null");
+        }
+
         public override void OnSpawn()
         {
             // 让敌人移动时与路径点形成一定的偏移，避免全都沿着完全相同的路线走
             float x = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             offset = new Vector3(x, 0.3f, z);
-
-            healthBar = ObjectPool.Spawn<HealthBar>("HealthBar");
-            healthBar.Follow(transform, new Vector3(0f, 0.3f, 0f));
-            healthBar.SetValue(1f);
         }
 
         /// <summary>
@@ -226,8 +235,6 @@ namespace TowerDefense
                 ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f))
                     .DelayUnspawn(0.5f);
             }
-
-            healthBar.SetValue(currentHp / data.hp);
         }
 
         /// <summary>
@@ -275,7 +282,20 @@ namespace TowerDefense
             isDecelerate = false;
             decelerateTimer = 0f;
             decelerateTime = 0f;
-            ObjectPool.Unspawn(healthBar);
+        }
+
+        private void OnGUI()
+        {
+            // 绘制血量
+            Vector2 healthBarSize = GUI.skin.label.CalcSize(new GUIContent(healthBarTexture)); // 计算图片尺寸
+            Vector3 worldPos = transform.localPosition;
+            worldPos.y += 0.5f; // 敌人头顶坐标
+            Vector2 screenPos = mainCamera.WorldToScreenPoint(worldPos); // 转化成屏幕坐标
+            screenPos.x -= healthBarSize.x * 0.5f;
+            screenPos.y = Screen.height - screenPos.y + healthBarSize.y;
+            float healthValue = healthTexture.width * currentHp / data.hp; // 计算生命条长度
+            GUI.DrawTexture(new Rect(screenPos, healthBarSize), healthBarTexture);
+            GUI.DrawTexture(new Rect(screenPos, new Vector2(healthValue, healthBarSize.y)), healthTexture);
         }
     }
 }

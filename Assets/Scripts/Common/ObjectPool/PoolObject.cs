@@ -7,6 +7,9 @@ namespace TowerDefense
     /// </summary>
     public class PoolObject : MonoBehaviour
     {
+        /// <summary>
+        /// 对象的标签，对应所在的池子
+        /// </summary>
         public string Tag { get; private set; }
 
         private bool isDestroy = false;
@@ -27,9 +30,25 @@ namespace TowerDefense
             }
         }
 
-        protected virtual void OnInstantiate()
-        {
-        }
+        /// <summary>
+        /// 实例化时调用
+        /// </summary>
+        protected virtual void OnInstantiate() { }
+
+        /// <summary>
+        /// 从对象池中取出时调用
+        /// </summary>
+        public virtual void OnSpawn() { }
+
+        /// <summary>
+        /// 回收进对象池时调用
+        /// </summary>
+        public virtual void OnUnspawn() { }
+
+        /// <summary>
+        /// 从对象池中移除时调用
+        /// </summary>
+        public virtual void OnReclaim() { }
 
         /// <summary>
         /// 延迟一段时间后回收当前对象
@@ -69,21 +88,6 @@ namespace TowerDefense
             isDestroy = true;
             ObjectPool.Clear(this);
         }
-
-        /// <summary>
-        /// 从对象池中取出时调用
-        /// </summary>
-        public virtual void OnSpawn() { }
-
-        /// <summary>
-        /// 回收进对象池时调用
-        /// </summary>
-        public virtual void OnUnspawn() { }
-
-        /// <summary>
-        /// 从对象池中移除时调用
-        /// </summary>
-        public virtual void OnReclaim() { }
 
         private void OnDestroy()
         {

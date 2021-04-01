@@ -18,7 +18,6 @@ namespace TowerDefense
             }
 
             Vector3 pos = Camera.main.WorldToScreenPoint(transform.localPosition);
-            Debug.Log(pos);
             transform.LookAt(pos);
         }
 

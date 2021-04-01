@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class ResourceManager
+    public static class ResourceManager
     {
         /// <summary>
         /// StreamingAssets文件夹在当前平台下的实际路径
@@ -72,7 +72,10 @@ namespace TowerDefense
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] values = line.Split('=');
-                    configMap.Add(values[0], values[1]);
+                    if (!configMap.ContainsKey(values[0]))
+                    {
+                        configMap.Add(values[0], values[1]);
+                    }
                 }
             }
         }

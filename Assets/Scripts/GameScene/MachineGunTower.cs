@@ -57,8 +57,17 @@ namespace TowerDefense
             turret.LookAt(pos);
         }
 
+        private int counter;
+
         private void Idle()
         {
+            if (counter < 1)
+            {
+                counter++;
+                return;
+            }
+
+            counter = 0;
             lineRenderer.SetPosition(1, Vector3.zero);
         }
 
