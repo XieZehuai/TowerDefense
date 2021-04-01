@@ -134,7 +134,7 @@ namespace TowerDefense
                     int currIndex = openList[0];
                     for (int i = 1; i < openList.Length; i++)
                     {
-                        if (nodes[openList[i]].costG < nodes[currIndex].costG)
+                        if (nodes[openList[i]].CostF < nodes[currIndex].CostF)
                         {
                             currIndex = openList[i];
                         }
@@ -165,13 +165,15 @@ namespace TowerDefense
 
                         int g = currNode.costG + GetDistance(new int2(currNode.x, currNode.y), new int2(neighbourNode.x, neighbourNode.y));
 
-                        if (g < neighbourNode.costG)
+                        bool hasSearch = openList.Contains(neighbourNode.index);
+                        if (g < neighbourNode.costG || !hasSearch)
                         {
                             neighbourNode.parentIndex = currIndex;
                             neighbourNode.costG = g;
+                            neighbourNode.costH = GetDistance(new int2(neighbourNode.x, neighbourNode.y), endPos);
                             nodes[neighbourNode.index] = neighbourNode;
 
-                            if (!openList.Contains(neighbourNode.index))
+                            if (!hasSearch)
                             {
                                 openList.Add(neighbourNode.index);
                             }

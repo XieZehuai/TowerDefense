@@ -75,6 +75,7 @@ namespace TowerDefense
                 case PathFindingStrategy.Dijkstra: return new DijkstraPathFinding();
                 case PathFindingStrategy.ReverseDijkstra: return new ReverseDijkstraPathFinding();
                 case PathFindingStrategy.DOTS: return new DOTSPathFinding();
+                case PathFindingStrategy.AStar: return new AStarPathFinding();
 
                 default: Debug.LogError("不支持的寻路策略" + strategy); break;
             }

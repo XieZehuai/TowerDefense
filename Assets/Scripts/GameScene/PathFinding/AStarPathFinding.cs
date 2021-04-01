@@ -1,41 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense
 {
-    /// <summary>
-    /// 单独计算每个起始点到目标点的最短路径，起始点较少时效率较高
-    /// </summary>
-    public class DijkstraPathFinding : ReverseDijkstraPathFinding
+    public class AStarPathFinding : DijkstraPathFinding
     {
-        public override bool FindPaths(Vector2Int[] startPositions, Vector2Int endPosition, ref List<Vector2Int>[] paths)
+        protected override bool FindPath(Vector2Int startPos, Vector2Int endPos, ref List<Vector2Int> path)
         {
-            for (int i = 0; i < startPositions.Length; i++)
-            {
-                if (!FindPath(startPositions[i], endPosition, ref paths[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        protected virtual bool FindPath(Vector2Int startPos, Vector2Int endPos, ref List<Vector2Int> path)
-        {
-            PriorityQueue<PathNode> openList = new PriorityQueue<PathNode>(new DijkstraPrioirtyComparer()); // 保存所有待寻路的节点（可用优先队列保存）
-            HashSet<PathNode> closeList = new HashSet<PathNode>(); // 保存所有已经寻路过的节点
+            int cnt = 0;
+            List<PathNode> openList = new List<PathNode>();
+            HashSet<PathNode> closeList = new HashSet<PathNode>();
 
             int endIndex = GetIndex(endPos);
             PathNode start = nodes[GetIndex(startPos)];
             start.costG = 0;
+            start.costH = GetDistance(startPos, endPos);
             nodes[GetIndex(startPos)] = start;
 
             openList.Add(start);
             while (openList.Count > 0)
             {
-                PathNode currentNode = openList.DeleteMax();
+                cnt++;
+                if (cnt > 10000)
+                {
+                    Debug.Log("cnt > 10000");
+                    break;
+                }
+
+                PathNode currentNode = openList[0];
+                for (int i = 1; i < openList.Count; i++)
+                {
+                    if (openList[i].CostF < currentNode.CostF)
+                    {
+                        currentNode = openList[i];
+                    }
+                }
+
+                openList.Remove(currentNode);
                 closeList.Add(currentNode);
 
                 if (currentNode.index == endIndex) break;
@@ -52,6 +54,7 @@ namespace TowerDefense
                     if (costG < neighbourNode.costG)
                     {
                         neighbourNode.costG = costG;
+                        neighbourNode.costH = GetDistance(neighbourNode, nodes[endIndex]);
                         neighbourNode.parentIndex = currentNode.index;
                         nodes[neighbourNode.index] = neighbourNode;
 
