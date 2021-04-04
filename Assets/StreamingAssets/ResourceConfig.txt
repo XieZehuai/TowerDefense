@@ -1,13 +1,3 @@
-Config=Config
-DamageConfig=Config/DamageConfig
-DefaultStageConfig=Config/DefaultStageConfig
-EnemyConfig=Config/EnemyConfig
-StageConfig_1=Config/StageConfig_1
-TestingWaveConfig=Config/TestingWaveConfig
-WaveConfig_0=Config/WaveConfig_0
-WaveConfig_1=Config/WaveConfig_1
-WaveConfig_2=Config/WaveConfig_2
-WaveConfig_3=Config/WaveConfig_3
 Prefab=Prefab
 Effect=Prefab/Effect
 DecelerateWave_1_EffectPrefab=Prefab/Effect/DecelerateWave_1_EffectPrefab

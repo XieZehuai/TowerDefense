@@ -2,21 +2,12 @@
 
 namespace TowerDefense
 {
-    #region 炮塔的攻击类型
-    public enum AttackType
-    {
-        MachineGun, // 普通机枪
-        Laser, // 激光
-        Cannon, // 加农炮
-        Special, // 特殊攻击类型，造成特殊效果，不造成伤害
-    }
-    #endregion
-
-
     [SelectionBase]
     public abstract class Tower : PoolObject
     {
         [SerializeField] protected float attackRange = 2f; // 攻击范围
+
+        public TowerData Data { get; set; }
 
         /// <summary>
         /// 炮塔在地图上的X轴坐标
@@ -70,15 +61,12 @@ namespace TowerDefense
         {
             if (Enemy.FindTargets(transform.localPosition, attackRange))
             {
-                //target = Enemy.GetBestTarget(AttackType);
                 target = Enemy.GetTarget(0);
                 return target != null;
             }
-            else
-            {
-                target = null;
-                return false;
-            }
+
+            target = null;
+            return false;
         }
 
         /// <summary>

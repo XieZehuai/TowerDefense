@@ -8,7 +8,7 @@ namespace TowerDefense
     public class DecelerationTower : Tower
     {
         [SerializeField] private float attackDuration = 2f; // 攻击间隔
-        [SerializeField] private float decelerateTime = 3f; // 减速时常
+        [SerializeField] private float decelerateTime = 3f; // 减速时长
         [SerializeField] private float decelerateRate = 0.8f; // 减速率
 
         [SerializeField] private Transform shootPoint = default;

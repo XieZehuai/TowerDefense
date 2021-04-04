@@ -1,8 +1,0 @@
-{
-  "playerHp": 10,
-  "coins": 200,
-  "mapWidth": 10,
-  "mapHeight": 10,
-  "waveInterval": 5.0,
-  "spawnInterval": 1.0
-}
