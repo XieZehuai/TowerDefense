@@ -5,7 +5,7 @@ namespace TowerDefense
     public class InputManager : SubStageManager
     {
         private MapObjectType selectedGridType = MapObjectType.Wall; // 当前选择的格子类型
-        private int selectedTowerId = 0; // 当前选择的塔的ID
+        private int selectedTowerId = -1; // 当前选择的塔的ID
 
         private float undoTimer; // 连续撤销操作计时器
 
@@ -73,9 +73,10 @@ namespace TowerDefense
 
         private void PlaceTower()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) && selectedTowerId != -1)
             {
                 manager.TowerManager.CreateTower(Utils.GetMousePosition(), selectedTowerId);
+                selectedTowerId = -1;
             }
         }
 
@@ -83,7 +84,8 @@ namespace TowerDefense
         {
             if (Input.GetMouseButtonDown(2))
             {
-                manager.TowerManager.RemoveTower(Utils.GetMousePosition());
+                //manager.TowerManager.RemoveTower(Utils.GetMousePosition());
+                manager.TowerManager.UpgradeTower(Utils.GetMousePosition());
             }
         }
 

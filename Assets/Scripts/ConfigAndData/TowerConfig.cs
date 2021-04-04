@@ -43,6 +43,18 @@ namespace TowerDefense
             level = 1;
             levelData = levelDatas[level - 1];
         }
+
+        public bool LevelUp()
+        {
+            if (level < levelDatas.Length)
+            {
+                levelData = levelDatas[level];
+                level++;
+                return true;
+            }
+
+            return false;
+        }
     }
 
 

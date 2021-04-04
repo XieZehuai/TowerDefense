@@ -54,6 +54,18 @@ namespace TowerDefense
         {
         }
 
+        public void LevelUp()
+        {
+            if (data.LevelUp())
+            {
+                Debug.Log("升级成功" + data.levelData.damage);
+            }
+            else
+            {
+                Debug.Log("升级失败");
+            }
+        }
+
         /// <summary>
         /// 寻找攻击范围内的敌人
         /// </summary>

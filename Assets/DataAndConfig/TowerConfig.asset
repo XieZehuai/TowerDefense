@@ -12,3 +12,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebe84b9432d81554991b0eee406627c5, type: 3}
   m_Name: TowerConfig
   m_EditorClassIdentifier: 
+  towerDatas:
+  - id: 0
+    name: MachineGunTower
+    attackType: 0
+    levelDatas:
+    - cost: 50
+      attackRange: 2.5
+      attackDuration: 0.1
+      damage: 7
+      shellBlastRadius: 0
+      decelerationDuration: 0
+      decelerationRate: 0
+    - cost: 70
+      attackRange: 2.7
+      attackDuration: 0.1
+      damage: 8.5
+      shellBlastRadius: 0
+      decelerationDuration: 0
+      decelerationRate: 0
+    - cost: 100
+      attackRange: 3
+      attackDuration: 0.1
+      damage: 10
+      shellBlastRadius: 0
+      decelerationDuration: 0
+      decelerationRate: 0
+  - id: 1
+    name: LaserTower
+    attackType: 1
+    levelDatas:
+    - cost: 60
+      attackRange: 0
+      attackDuration: 0
+      damage: 0
+      shellBlastRadius: 0
+      decelerationDuration: 0
+      decelerationRate: 0
+    - cost: 0
+      attackRange: 0
+      attackDuration: 0
+      damage: 0
+      shellBlastRadius: 0
+      decelerationDuration: 0
+      decelerationRate: 0
+    - cost: 0
+      attackRange: 0
+      attackDuration: 0
+      damage: 0
+      shellBlastRadius: 0
+      decelerationDuration: 0
+      decelerationRate: 0
+  - id: 2
+    name: CannonTower
+    attackType: 2
+    levelDatas: []
+  - id: 3
+    name: DecelerationTower
+    attackType: 3
+    levelDatas: []

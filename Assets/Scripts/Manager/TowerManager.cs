@@ -47,7 +47,7 @@ namespace TowerDefense
                     tower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos)
                         .SetWarEntityManager(manager.WarEntityManager);
                     break;
-                    
+
                 case 3:
                     tower = ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
                     break;
@@ -74,6 +74,21 @@ namespace TowerDefense
                         manager.MapManager.RemoveTower(x, y);
                         ObjectPool.Unspawn(towers[i]);
                         towers.QuickRemove(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void UpgradeTower(Vector3 position)
+        {
+            if (manager.MapManager.GetGridPosition(position, out int x, out int y))
+            {
+                for (int i = 0; i < towers.Count; i++)
+                {
+                    if (towers[i].X == x && towers[i].Y == y)
+                    {
+                        towers[i].LevelUp();
                         break;
                     }
                 }
