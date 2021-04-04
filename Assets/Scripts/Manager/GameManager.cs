@@ -21,6 +21,9 @@ namespace TowerDefense
         [Header("关卡配置表，0为默认关卡数据")]
         [SerializeField] private StageConfig[] stageConfigs = default;
 
+        [Header("炮塔配置表")]
+        [SerializeField] private TowerConfig towerConfig = default;
+
         public DamageConfig DamageConfig => damageConfig;
 
         public EnemyConfig EnemyConfig => enemyConfig;
@@ -28,6 +31,8 @@ namespace TowerDefense
         public StageConfig GetStageConfig(int stage) => stageConfigs[stage];
 
         public StageConfig DefaultStageConfig => stageConfigs[0];
+
+        public TowerConfig TowerConfig => towerConfig;
         #endregion
 
         protected override void OnInit()
@@ -37,9 +42,6 @@ namespace TowerDefense
 
         private void Start()
         {
-            // Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Heavy));
-            // Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Medium));
-            // Debug.Log(ConfigManager.Instance.DamageConfig.GetArmorPriority(AttackType.Laser, ArmorType.Light));
         }
 
         public void LoadGameScene()

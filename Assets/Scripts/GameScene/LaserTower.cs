@@ -4,8 +4,6 @@ namespace TowerDefense
 {
     public class LaserTower : Tower
     {
-        public float damagePerSecond = 100f; // 每秒钟造成的伤害
-
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
         [SerializeField] private Transform shootPoint = default;
@@ -14,8 +12,6 @@ namespace TowerDefense
         private Enemy target; // 要攻击的目标敌人
         private LineRenderer lineRenderer;
         private static readonly Vector3 laserOriginPos = new Vector3(0f, 0f, -0.5f); // 激光的发射点
-
-        public override AttackType AttackType => AttackType.Laser;
 
         private void Awake()
         {
@@ -51,8 +47,8 @@ namespace TowerDefense
 
             lineRenderer.SetPosition(1, laser.InverseTransformPoint(target.LocalPosition));
 
-            float deltaDamage = damagePerSecond * deltaTime;
-            target.GetDamage(deltaDamage, AttackType);
+            float deltaDamage = Data.levelData.damage * deltaTime;
+            target.GetDamage(deltaDamage, Data.attackType);
         }
 
         private void OnDrawGizmos()

@@ -5,9 +5,17 @@ namespace TowerDefense
     [SelectionBase]
     public abstract class Tower : PoolObject
     {
-        [SerializeField] protected float attackRange = 2f; // 攻击范围
+        private TowerData data;
 
-        public TowerData Data { get; set; }
+        public TowerData Data
+        {
+            get => data;
+            set
+            {
+                data = value;
+                OnInit();
+            }
+        }
 
         /// <summary>
         /// 炮塔在地图上的X轴坐标
@@ -18,16 +26,6 @@ namespace TowerDefense
         /// 炮塔在地图上的Y轴坐标
         /// </summary>
         public int Y { get; private set; }
-
-        /// <summary>
-        /// 炮塔的攻击范围
-        /// </summary>
-        public float AttackRange => attackRange;
-
-        /// <summary>
-        /// 炮塔的攻击类型
-        /// </summary>
-        public abstract AttackType AttackType { get; }
 
         /// <summary>
         /// 炮塔的本地坐标
@@ -45,6 +43,10 @@ namespace TowerDefense
             Y = y;
         }
 
+        protected virtual void OnInit()
+        {
+        }
+
         /// <summary>
         /// 炮塔更新逻辑，每帧调用
         /// </summary>
@@ -59,7 +61,7 @@ namespace TowerDefense
         /// <returns>找到返回true，失败返回false</returns>
         protected virtual bool FindTarget(out Enemy target)
         {
-            if (Enemy.FindTargets(transform.localPosition, attackRange))
+            if (Enemy.FindTargets(transform.localPosition, Data.levelData.attackRange))
             {
                 target = Enemy.GetTarget(0);
                 return target != null;
@@ -80,7 +82,7 @@ namespace TowerDefense
 
             Vector3 a = LocalPosition;
             Vector3 b = target.LocalPosition;
-            if (Vector3.Distance(a, b) > attackRange + 0.25f)
+            if (Vector3.Distance(a, b) > Data.levelData.attackRange + 0.25f)
             {
                 target = null;
                 return false;
@@ -93,7 +95,7 @@ namespace TowerDefense
         {
             // 显示塔的攻击范围
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.localPosition + new Vector3(0f, 0.01f, 0f), attackRange);
+            Gizmos.DrawWireSphere(transform.localPosition + new Vector3(0f, 0.01f, 0f), Data.levelData.attackRange);
         }
     }
 }

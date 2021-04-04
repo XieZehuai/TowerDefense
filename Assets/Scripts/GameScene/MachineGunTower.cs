@@ -4,9 +4,6 @@ namespace TowerDefense
 {
     public class MachineGunTower : Tower
     {
-        [SerializeField] private float damage = 7f;
-        [SerializeField] private float attackDuration = 0.1f; // 攻击间隔
-
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
         [SerializeField] private Transform gun = default;
@@ -16,20 +13,14 @@ namespace TowerDefense
         private Enemy target;
         private float attackTimer;
 
-        public float Damage => damage;
-
-        public float AttackDuration => AttackDuration;
-
-        public override AttackType AttackType => AttackType.MachineGun;
-
-        public override void OnSpawn()
+        protected override void OnInit()
         {
-            attackTimer = attackDuration;
+            attackTimer = Data.levelData.attackDuration;
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            if (attackTimer < attackDuration)
+            if (attackTimer < Data.levelData.attackDuration)
             {
                 attackTimer += deltaTime;
                 Idle();
@@ -38,7 +29,7 @@ namespace TowerDefense
             {
                 LookTarget();
 
-                if (attackTimer >= attackDuration)
+                if (attackTimer >= Data.levelData.attackDuration)
                 {
                     attackTimer = 0f;
                     Attack();
@@ -75,7 +66,7 @@ namespace TowerDefense
         {
             ShowAttackEffect();
 
-            target.GetDamage(damage, AttackType);
+            target.GetDamage(Data.levelData.damage, Data.attackType);
             lineRenderer.SetPosition(1, lineRenderer.transform.InverseTransformPoint(target.LocalPosition));
         }
 

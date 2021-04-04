@@ -7,30 +7,24 @@ namespace TowerDefense
      */
     public class DecelerationTower : Tower
     {
-        [SerializeField] private float attackDuration = 2f; // 攻击间隔
-        [SerializeField] private float decelerateTime = 3f; // 减速时长
-        [SerializeField] private float decelerateRate = 0.8f; // 减速率
-
         [SerializeField] private Transform shootPoint = default;
         private Vector3 shootPos;
 
         private float attackTimer;
 
-        public override AttackType AttackType => AttackType.Special;
-
-        public override void OnSpawn()
+        protected override void OnInit()
         {
             shootPos = shootPoint.position;
-            attackTimer = attackDuration;
+            attackTimer = Data.levelData.attackDuration;
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            if (attackTimer < attackDuration)
+            if (attackTimer < Data.levelData.attackDuration)
             {
                 attackTimer += deltaTime;
             }
-            else if (attackTimer >= attackDuration)
+            else if (attackTimer >= Data.levelData.attackDuration)
             {
                 if (FindTarget(out Enemy _))
                 {
@@ -42,13 +36,13 @@ namespace TowerDefense
 
         private void DecelerateEnemys()
         {
-            Enemy.AttackAll(transform.localPosition, attackRange, enemy =>
+            Enemy.AttackAll(transform.localPosition, Data.levelData.attackRange, enemy =>
             {
-                enemy.Decelerate(decelerateTime, decelerateRate);
+                enemy.Decelerate(Data.levelData.decelerationDuration, Data.levelData.decelerationRate);
             });
 
             Particle particle = ObjectPool.Spawn<Particle>("DecelerateWave_1_Effect", transform.localPosition);
-            particle.SetFloat("CircleSize", attackRange);
+            particle.SetFloat("CircleSize", Data.levelData.attackRange);
             particle.Play();
             particle.DelayUnspawn(0.5f);
         }

@@ -17,7 +17,6 @@ namespace TowerDefense
     [Serializable]
     public class TowerLevelData
     {
-        public int level;
         public int cost;
         public float attackRange;
         public float attackDuration;
@@ -35,7 +34,15 @@ namespace TowerDefense
         public string name;
         public AttackType attackType;
         public TowerLevelData[] levelDatas;
+
+        [NonSerialized] public int level;
         [NonSerialized] public TowerLevelData levelData;
+
+        public void Init()
+        {
+            level = 1;
+            levelData = levelDatas[level - 1];
+        }
     }
 
 
@@ -58,6 +65,7 @@ namespace TowerDefense
                 Debug.LogError("找不到炮塔数据" + id);
             }
 
+            config[id].Init();
             return config[id];
         }
 
@@ -68,7 +76,16 @@ namespace TowerDefense
                 config = GetTowerConfig();
             }
 
-            return config.Values.First(data => data.name == name);
+            return config.Values.First(data =>
+            {
+                if (data.name == name)
+                {
+                    data.Init();
+                    return true;
+                }
+
+                return false;
+            });
         }
 
         private Dictionary<int, TowerData> GetTowerConfig()

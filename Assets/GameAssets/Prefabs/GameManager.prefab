@@ -52,3 +52,4 @@ MonoBehaviour:
   stageConfigs:
   - {fileID: 11400000, guid: 5ac3a083d2354b441a25f3d1f164958f, type: 2}
   - {fileID: 11400000, guid: 64fa561af8297144e9401df26cd337b6, type: 2}
+  towerConfig: {fileID: 11400000, guid: d125ce670fd47bc41b165cb0ebf87e8d, type: 2}

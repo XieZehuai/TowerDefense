@@ -4,10 +4,6 @@ namespace TowerDefense
 {
     public class CannonTower : Tower
     {
-        [SerializeField] private float attackDuration = 1f;
-        [SerializeField] private float shellBlastRadius = 1f;
-        [SerializeField] private float shellDamage = 100f;
-
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
         [SerializeField] private Transform attackPoint = default;
@@ -16,23 +12,21 @@ namespace TowerDefense
         private float attackTimer;
         private float shootSpeed; // 炮弹初始发射速度
 
-        public override AttackType AttackType => AttackType.Cannon;
-
-        public override void OnSpawn()
+        protected override void OnInit()
         {
-            float x = attackRange + 0.3f;
+            float x = Data.levelData.attackRange + 0.3f;
             float y = -attackPoint.position.y;
             shootSpeed = Mathf.Sqrt(Utils.GRAVITY * (y + Mathf.Sqrt(x * x + y * y)));
-            attackTimer = attackDuration;
+            attackTimer = Data.levelData.attackDuration;
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            if (attackTimer < attackDuration)
+            if (attackTimer < Data.levelData.attackDuration)
             {
                 attackTimer += deltaTime;
             }
-            else if (attackTimer >= attackDuration)
+            else if (attackTimer >= Data.levelData.attackDuration)
             {
                 if (FindTarget(out Enemy target))
                 {
@@ -81,7 +75,7 @@ namespace TowerDefense
             turret.localRotation = Quaternion.LookRotation(rot);
 
             Vector3 velocity = new Vector3(s * cosTheta * dir.x, s * sinTheta, s * cosTheta * dir.y);
-            warEntityManager.LaunchShell(shellBlastRadius, shellDamage, shootPos, targetPos, velocity);
+            warEntityManager.LaunchShell(Data.levelData.shellBlastRadius, Data.levelData.damage, shootPos, targetPos, velocity);
         }
     }
 }
