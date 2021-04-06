@@ -47,7 +47,7 @@ namespace TowerDefense
 
             lineRenderer.SetPosition(1, laser.InverseTransformPoint(target.LocalPosition));
 
-            float deltaDamage = Data.levelData.damage * deltaTime;
+            float deltaDamage = Data.LevelData.damage * deltaTime;
             target.GetDamage(deltaDamage, Data.attackType);
         }
 

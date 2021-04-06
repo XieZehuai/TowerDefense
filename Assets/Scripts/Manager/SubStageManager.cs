@@ -11,6 +11,10 @@ namespace TowerDefense
             manager = stageManager;
         }
         
+        /// <summary>
+        /// 每帧调用
+        /// </summary>
+        /// <param name="deltaTime">每帧的时间</param>
         public virtual void OnUpdate(float deltaTime)
         {
         }

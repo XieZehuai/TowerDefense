@@ -12,19 +12,19 @@ namespace TowerDefense
 
         private float attackTimer;
 
-        protected override void OnInit()
+        protected override void OnSetData()
         {
             shootPos = shootPoint.position;
-            attackTimer = Data.levelData.attackDuration;
+            attackTimer = Data.LevelData.attackDuration;
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            if (attackTimer < Data.levelData.attackDuration)
+            if (attackTimer < Data.LevelData.attackDuration)
             {
                 attackTimer += deltaTime;
             }
-            else if (attackTimer >= Data.levelData.attackDuration)
+            else if (attackTimer >= Data.LevelData.attackDuration)
             {
                 if (FindTarget(out Enemy _))
                 {
@@ -36,13 +36,13 @@ namespace TowerDefense
 
         private void DecelerateEnemys()
         {
-            Enemy.AttackAll(transform.localPosition, Data.levelData.attackRange, enemy =>
+            Enemy.AttackAll(transform.localPosition, Data.LevelData.attackRange, enemy =>
             {
-                enemy.Decelerate(Data.levelData.decelerationDuration, Data.levelData.decelerationRate);
+                enemy.Decelerate(Data.LevelData.decelerationDuration, Data.LevelData.decelerationRate);
             });
 
             Particle particle = ObjectPool.Spawn<Particle>("DecelerateWave_1_Effect", transform.localPosition);
-            particle.SetFloat("CircleSize", Data.levelData.attackRange);
+            particle.SetFloat("CircleSize", Data.LevelData.attackRange);
             particle.Play();
             particle.DelayUnspawn(0.5f);
         }

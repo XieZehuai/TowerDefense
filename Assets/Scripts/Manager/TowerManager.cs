@@ -16,14 +16,27 @@ namespace TowerDefense
             UpdateTower(deltaTime);
         }
 
-        public bool CreateTower(Vector3 position, int towerId)
+        /// <summary>
+        /// 摆放炮塔
+        /// </summary>
+        /// <param name="position">摆放位置</param>
+        /// <param name="towerId">炮塔ID</param>
+        /// <returns>摆放成功或失败</returns>
+        public bool PlaceTower(Vector3 position, int towerId)
         {
-            if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
+            TowerData data = GameManager.Instance.TowerConfig.GetTowerData(towerId);
+
+            if (manager.Coins >= data.LevelData.cost)
             {
-                Tower tower = CreateTower(towerId, towerPos);
-                tower.SetCoordinate(x, y);
-                towers.Add(tower);
-                return true;
+                if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
+                {
+                    Tower tower = CreateTower(towerId, towerPos);
+                    tower.Data = data;
+                    tower.SetCoordinate(x, y);
+                    towers.Add(tower);
+                    manager.Coins -= data.LevelData.cost;
+                    return true;
+                }
             }
 
             return false;
@@ -57,12 +70,16 @@ namespace TowerDefense
                     break;
             }
 
-            tower.Data = GameManager.Instance.TowerConfig.GetTowerData(towerId);
-            tower.Data.Init();
+            //tower.Data = GameManager.Instance.TowerConfig.GetTowerData(towerId);
+            //tower.Data.Init();
 
             return tower;
         }
 
+        /// <summary>
+        /// 移除炮塔
+        /// </summary>
+        /// <param name="position">要移除的炮塔所处的位置</param>
         public void RemoveTower(Vector3 position)
         {
             if (manager.MapManager.GetGridPosition(position, out int x, out int y))
@@ -80,6 +97,10 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 升级炮塔
+        /// </summary>
+        /// <param name="position"></param>
         public void UpgradeTower(Vector3 position)
         {
             if (manager.MapManager.GetGridPosition(position, out int x, out int y))

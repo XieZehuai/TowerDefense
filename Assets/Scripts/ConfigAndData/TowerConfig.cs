@@ -35,21 +35,17 @@ namespace TowerDefense
         public AttackType attackType;
         public TowerLevelData[] levelDatas;
 
-        [NonSerialized] public int level;
-        [NonSerialized] public TowerLevelData levelData;
+        public int Level { get; private set; } = 1;
 
-        public void Init()
-        {
-            level = 1;
-            levelData = levelDatas[level - 1];
-        }
+        private TowerLevelData levelData;
+        public TowerLevelData LevelData => levelData ?? (levelData = levelDatas[0]);
 
         public bool LevelUp()
         {
-            if (level < levelDatas.Length)
+            if (Level < levelDatas.Length)
             {
-                levelData = levelDatas[level];
-                level++;
+                levelData = levelDatas[Level];
+                Level++;
                 return true;
             }
 
@@ -77,7 +73,6 @@ namespace TowerDefense
                 Debug.LogError("找不到炮塔数据" + id);
             }
 
-            config[id].Init();
             return config[id];
         }
 
@@ -92,7 +87,6 @@ namespace TowerDefense
             {
                 if (data.name == name)
                 {
-                    data.Init();
                     return true;
                 }
 

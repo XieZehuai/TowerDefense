@@ -5,6 +5,8 @@ namespace TowerDefense.Test
 {
     public class Testing : MonoBehaviour
     {
+        public bool test;
+        
         [SerializeField] private int mapWidth = 20;
         [SerializeField] private int mapHeight = 20;
         [SerializeField] private int startPointCount = 5;
@@ -43,6 +45,8 @@ namespace TowerDefense.Test
 
         private void Update()
         {
+            if (!test) return;
+            
             timer += Time.deltaTime;
             if (timer >= 1f)
             {

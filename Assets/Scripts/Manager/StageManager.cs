@@ -22,26 +22,47 @@ namespace TowerDefense
         private StageConfig stageConfig; // 当前关卡配置
         private int hp; // 当前生命
         private int coins; // 当前金币
+
         private GameState state = GameState.Preparing; // 当前游戏的状态
         private GameState stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
         private bool isSpeedUp; // 当前是否处于加速模式
         private PathFinder pathFinder;
 
         #region 实现各种功能的子管理器
+
         public InputManager InputManager { get; private set; }
         public MapManager MapManager { get; private set; }
         public EnemyManager EnemyManager { get; private set; }
         public TowerManager TowerManager { get; private set; }
         public WarEntityManager WarEntityManager { get; private set; }
         public PathIndicator PathIndicator { get; private set; }
-        [SerializeField] private CameraController cameraController = default;
-        public CameraController CameraController => cameraController;
+
         #endregion
 
         public bool IsPreparing => state == GameState.Preparing;
         public bool IsPlaying => state == GameState.Playing;
         public bool IsPaused => state == GameState.Paused;
         public bool IsGameOver => state == GameState.GameOver;
+
+        public int HP
+        {
+            get => hp;
+            set
+            {
+                hp = value;
+                TypeEventSystem.Send(new UpdateHp { hp = hp });
+            }
+        }
+
+        public int Coins
+        {
+            get => coins;
+            set
+            {
+                coins = value;
+                TypeEventSystem.Send(new UpdateCoins { coins = coins });
+            }
+        }
 
         private void Awake()
         {
@@ -77,7 +98,9 @@ namespace TowerDefense
                 case PathFindingStrategy.DOTS: return new DOTSPathFinding();
                 case PathFindingStrategy.AStar: return new AStarPathFinding();
 
-                default: Debug.LogError("不支持的寻路策略" + strategy); break;
+                default:
+                    Debug.LogError("不支持的寻路策略" + strategy);
+                    break;
             }
 
             return null;
@@ -96,9 +119,14 @@ namespace TowerDefense
             }
 
             // 打开游戏UI
-            UIManager.Instance.Open<UIGameScene>(
-                new UIGameSceneData { maxHp = hp, coins = coins, maxWaveCount = stageConfig.waveDatas.Length },
-                UILayer.Background);
+            UIManager.Instance.Open<UIGameScene>(new UIGameSceneData
+            {
+                maxHp = hp,
+                coins = coins,
+                maxWaveCount = stageConfig.waveDatas.Length
+            }, UILayer.Background);
+            
+            CameraController.Instance.ResetPosition();
         }
 
         private void Update()
@@ -166,8 +194,8 @@ namespace TowerDefense
         public void Replay()
         {
             state = GameState.Preparing;
-            hp = stageConfig.playerHp;
-            coins = stageConfig.coins;
+            HP = stageConfig.playerHp;
+            Coins = stageConfig.coins;
 
             EnemyManager.Replay();
             TowerManager.Replay();
@@ -279,8 +307,7 @@ namespace TowerDefense
 
         private void OnEnemyReach(OnEnemyReach context)
         {
-            hp--;
-            TypeEventSystem.Send(new UpdateHp { hp = hp });
+            HP--;
 
             if (hp <= 0)
             {

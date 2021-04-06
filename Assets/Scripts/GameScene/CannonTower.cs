@@ -12,21 +12,21 @@ namespace TowerDefense
         private float attackTimer;
         private float shootSpeed; // 炮弹初始发射速度
 
-        protected override void OnInit()
+        protected override void OnSetData()
         {
-            float x = Data.levelData.attackRange + 0.3f;
+            float x = Data.LevelData.attackRange + 0.3f;
             float y = -attackPoint.position.y;
             shootSpeed = Mathf.Sqrt(Utils.GRAVITY * (y + Mathf.Sqrt(x * x + y * y)));
-            attackTimer = Data.levelData.attackDuration;
+            attackTimer = Data.LevelData.attackDuration;
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            if (attackTimer < Data.levelData.attackDuration)
+            if (attackTimer < Data.LevelData.attackDuration)
             {
                 attackTimer += deltaTime;
             }
-            else if (attackTimer >= Data.levelData.attackDuration)
+            else if (attackTimer >= Data.LevelData.attackDuration)
             {
                 if (FindTarget(out Enemy target))
                 {
@@ -75,7 +75,7 @@ namespace TowerDefense
             turret.localRotation = Quaternion.LookRotation(rot);
 
             Vector3 velocity = new Vector3(s * cosTheta * dir.x, s * sinTheta, s * cosTheta * dir.y);
-            warEntityManager.LaunchShell(Data.levelData.shellBlastRadius, Data.levelData.damage, shootPos, targetPos, velocity);
+            warEntityManager.LaunchShell(Data.LevelData.shellBlastRadius, Data.LevelData.damage, shootPos, targetPos, velocity);
         }
     }
 }

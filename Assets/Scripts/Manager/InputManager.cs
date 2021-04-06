@@ -23,7 +23,7 @@ namespace TowerDefense
 
         public override void OnUpdate(float deltaTime)
         {
-            ControlCamera(Time.deltaTime); // 控制相机运动
+            ControlCamera(); // 控制相机运动
 
             if (manager.IsPreparing || manager.IsPlaying)
             {
@@ -39,6 +39,7 @@ namespace TowerDefense
         }
 
         #region 玩家鼠标控制事件，通过鼠标点击地图触发
+
         private void ChangeMap()
         {
             if (Input.GetMouseButton(0))
@@ -75,7 +76,7 @@ namespace TowerDefense
         {
             if (Input.GetMouseButtonDown(1) && selectedTowerId != -1)
             {
-                manager.TowerManager.CreateTower(Utils.GetMousePosition(), selectedTowerId);
+                manager.TowerManager.PlaceTower(Utils.GetMousePosition(), selectedTowerId);
                 selectedTowerId = -1;
             }
         }
@@ -89,25 +90,27 @@ namespace TowerDefense
             }
         }
 
-        private void ControlCamera(float deltaTime)
+        private void ControlCamera()
         {
-            manager.CameraController.Zoom(Input.GetAxis("Mouse ScrollWheel"));
+            CameraController.Instance.Zoom(Input.GetAxis("Mouse ScrollWheel"));
 
             if (Input.GetMouseButton(2))
             {
                 float x = Input.GetAxis("Mouse X");
                 float y = Input.GetAxis("Mouse Y");
-                manager.CameraController.Rotate(x, y, deltaTime);
+                CameraController.Instance.Rotate(x, y);
             }
 
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
             Vector2 movement = new Vector2(h, v).normalized;
-            manager.CameraController.Move(movement, deltaTime);
+            CameraController.Instance.Move(movement);
         }
+
         #endregion
 
         #region UI输入事件，全部通过发送消息触发
+
         private void StartGame(StartGame context)
         {
             manager.StartGame();
@@ -147,6 +150,7 @@ namespace TowerDefense
         {
             manager.PathIndicator.TogglePathIndicator();
         }
+
         #endregion
 
         protected override void OnDispose()

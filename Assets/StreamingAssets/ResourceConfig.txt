@@ -38,6 +38,7 @@ UI=Prefab/UI
 UIGameScene=Prefab/UI/UIGameScene
 UIMainScene=Prefab/UI/UIMainScene
 UIPausePanel=Prefab/UI/UIPausePanel
+UITowerOption=Prefab/UI/UITowerOption
 Texture=Texture
 HealthBarTexture=Texture/HealthBarTexture
 HealthTexture=Texture/HealthTexture

@@ -1,19 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace TowerDefense
 {
     [SelectionBase]
     public abstract class Tower : PoolObject
     {
-        private TowerData data;
+        private TowerData data; // 炮塔的数据
 
+        /// <summary>
+        /// 炮塔的数据
+        /// </summary>
         public TowerData Data
         {
             get => data;
             set
             {
                 data = value;
-                OnInit();
+                OnSetData();
             }
         }
 
@@ -43,7 +48,10 @@ namespace TowerDefense
             Y = y;
         }
 
-        protected virtual void OnInit()
+        /// <summary>
+        /// 设置炮塔数据时调用
+        /// </summary>
+        protected virtual void OnSetData()
         {
         }
 
@@ -58,7 +66,7 @@ namespace TowerDefense
         {
             if (data.LevelUp())
             {
-                Debug.Log("升级成功" + data.levelData.damage);
+                Debug.Log("升级成功" + data.LevelData.damage);
             }
             else
             {
@@ -73,7 +81,7 @@ namespace TowerDefense
         /// <returns>找到返回true，失败返回false</returns>
         protected virtual bool FindTarget(out Enemy target)
         {
-            if (Enemy.FindTargets(transform.localPosition, Data.levelData.attackRange))
+            if (Enemy.FindTargets(transform.localPosition, Data.LevelData.attackRange))
             {
                 target = Enemy.GetTarget(0);
                 return target != null;
@@ -94,7 +102,7 @@ namespace TowerDefense
 
             Vector3 a = LocalPosition;
             Vector3 b = target.LocalPosition;
-            if (Vector3.Distance(a, b) > Data.levelData.attackRange + 0.25f)
+            if (Vector3.Distance(a, b) > Data.LevelData.attackRange + 0.25f)
             {
                 target = null;
                 return false;
@@ -103,11 +111,28 @@ namespace TowerDefense
             return true;
         }
 
+        private void OnSelected()
+        {
+            UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
+            {
+                position = LocalPosition,
+                onUpgradeBtnClick = LevelUp
+            }, UILayer.Background);
+        }
+        
+        private void OnMouseDown()
+        {
+            OnSelected();
+        }
+
         private void OnDrawGizmosSelected()
         {
-            // 显示塔的攻击范围
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.localPosition + new Vector3(0f, 0.01f, 0f), Data.levelData.attackRange);
+            if (data != null)
+            {
+                // 显示塔的攻击范围
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(transform.localPosition + new Vector3(0f, 0.01f, 0f), data.LevelData.attackRange);
+            }
         }
     }
 }

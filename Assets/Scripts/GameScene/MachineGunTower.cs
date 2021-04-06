@@ -13,14 +13,14 @@ namespace TowerDefense
         private Enemy target;
         private float attackTimer;
 
-        protected override void OnInit()
+        protected override void OnSetData()
         {
-            attackTimer = Data.levelData.attackDuration;
+            attackTimer = Data.LevelData.attackDuration;
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            if (attackTimer < Data.levelData.attackDuration)
+            if (attackTimer < Data.LevelData.attackDuration)
             {
                 attackTimer += deltaTime;
                 Idle();
@@ -29,7 +29,7 @@ namespace TowerDefense
             {
                 LookTarget();
 
-                if (attackTimer >= Data.levelData.attackDuration)
+                if (attackTimer >= Data.LevelData.attackDuration)
                 {
                     attackTimer = 0f;
                     Attack();
@@ -66,7 +66,7 @@ namespace TowerDefense
         {
             ShowAttackEffect();
 
-            target.GetDamage(Data.levelData.damage, Data.attackType);
+            target.GetDamage(Data.LevelData.damage, Data.attackType);
             lineRenderer.SetPosition(1, lineRenderer.transform.InverseTransformPoint(target.LocalPosition));
         }
 
