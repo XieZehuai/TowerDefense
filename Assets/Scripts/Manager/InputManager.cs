@@ -85,8 +85,8 @@ namespace TowerDefense
         {
             if (Input.GetMouseButtonDown(2))
             {
-                //manager.TowerManager.RemoveTower(Utils.GetMousePosition());
-                manager.TowerManager.UpgradeTower(Utils.GetMousePosition());
+                manager.TowerManager.RemoveTower(Utils.GetMousePosition());
+                // manager.TowerManager.UpgradeTower(Utils.GetMousePosition());
             }
         }
 

@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 80, y: 40}
+  m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1875810834397975585
 CanvasRenderer:
@@ -196,7 +196,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u5356\u51FA"
+  m_Text: $(300)
 --- !u!1 &4803070633089040084
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u5347\u7EA7"
+  m_Text: "\u2191(300)"
 --- !u!1 &4803070633459291131
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +328,8 @@ MonoBehaviour:
   upgradeBtn: {fileID: 4803070634057631850}
   sellBtn: {fileID: 5430386844047759952}
   cancelBtn: {fileID: 6971871912640802677}
+  upgradeBtnText: {fileID: 4803070633089040086}
+  sellBtnText: {fileID: 6744031652588574554}
 --- !u!1 &4803070633686631730
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +405,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 40}
-  m_SizeDelta: {x: 80, y: 40}
+  m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4803070634057631852
 CanvasRenderer:
@@ -600,7 +602,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 40}
+  m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6574883698377839544
 CanvasRenderer:

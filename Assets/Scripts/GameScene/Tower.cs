@@ -22,6 +22,8 @@ namespace TowerDefense
             }
         }
 
+        public StageManager Manager { get; set; }
+
         /// <summary>
         /// 炮塔在地图上的X轴坐标
         /// </summary>
@@ -62,18 +64,6 @@ namespace TowerDefense
         {
         }
 
-        public void LevelUp()
-        {
-            if (data.LevelUp())
-            {
-                Debug.Log("升级成功" + data.LevelData.damage);
-            }
-            else
-            {
-                Debug.Log("升级失败");
-            }
-        }
-
         /// <summary>
         /// 寻找攻击范围内的敌人
         /// </summary>
@@ -111,23 +101,52 @@ namespace TowerDefense
             return true;
         }
 
-        private void OnSelected()
-        {
-            UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
-            {
-                position = LocalPosition,
-                onUpgradeBtnClick = LevelUp
-            }, UILayer.Background);
-        }
-        
         private void OnMouseDown()
         {
             OnSelected();
         }
 
+        private void OnSelected()
+        {
+            int cost = data.GetNextLevelCost();
+
+            UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
+            {
+                position = LocalPosition,
+                onUpgradeBtnClick = LevelUp,
+                onSellBtnClick = Sell,
+                upgradePrice = cost,
+                canUpgrade = cost != -1 && Manager.Coins >= cost,
+                sellPrice = data.GetTotalCost() / 2,
+            }, UILayer.Background);
+        }
+
+        private void LevelUp()
+        {
+            int cost = data.GetNextLevelCost();
+
+            if (cost != -1 && Manager.Coins >= cost)
+            {
+                data.LevelUp();
+                Manager.Coins -= cost;
+                Debug.Log("升级炮塔成功");
+            }
+        }
+
+        private void Sell()
+        {
+            Manager.Coins += data.GetTotalCost() / 2;
+            Manager.TowerManager.RemoveTower(this);
+        }
+
+        public override void OnUnspawn()
+        {
+            Manager = null;
+        }
+
         private void OnDrawGizmosSelected()
         {
-            if (data != null)
+            if (Data.Level > 0)
             {
                 // 显示塔的攻击范围
                 Gizmos.color = Color.green;

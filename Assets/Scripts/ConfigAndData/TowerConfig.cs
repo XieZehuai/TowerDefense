@@ -15,7 +15,7 @@ namespace TowerDefense
 
 
     [Serializable]
-    public class TowerLevelData
+    public struct TowerLevelData
     {
         public int cost;
         public float attackRange;
@@ -28,28 +28,62 @@ namespace TowerDefense
 
 
     [Serializable]
-    public class TowerData
+    public struct TowerData
     {
         public int id;
         public string name;
         public AttackType attackType;
         public TowerLevelData[] levelDatas;
 
-        public int Level { get; private set; } = 1;
+        public int Level { get; private set; }
 
-        private TowerLevelData levelData;
-        public TowerLevelData LevelData => levelData ?? (levelData = levelDatas[0]);
+        public TowerLevelData LevelData { get; private set; }
 
-        public bool LevelUp()
+        public void Init()
         {
-            if (Level < levelDatas.Length)
+            Level = 1;
+            LevelData = levelDatas[0];
+            Debug.Log("init");
+        }
+
+        /// <summary>
+        /// 获取下一级的花费
+        /// </summary>
+        public int GetNextLevelCost()
+        {
+            return !HasNextLevel() ? -1 : levelDatas[Level].cost;
+        }
+
+        /// <summary>
+        /// 是否能继续升级
+        /// </summary>
+        public bool HasNextLevel()
+        {
+            return Level < levelDatas.Length;
+        }
+
+        /// <summary>
+        /// 升级
+        /// </summary>
+        public void LevelUp()
+        {
+            Debug.Log("level up");
+            LevelData = levelDatas[Level++];
+        }
+
+        /// <summary>
+        /// 获取炮塔升级到当前等级的总花费
+        /// </summary>
+        public int GetTotalCost()
+        {
+            int cost = 0;
+
+            for (int i = 0; i < Level; i++)
             {
-                levelData = levelDatas[Level];
-                Level++;
-                return true;
+                cost += levelDatas[i].cost;
             }
 
-            return false;
+            return cost;
         }
     }
 
