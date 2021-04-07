@@ -11,7 +11,7 @@ namespace TowerDefense
 
         public Action onUpgradeBtnClick;
         public Action onSellBtnClick;
-        public Action onCancelBtnClick;
+        public Action onHide;
 
         public bool canUpgrade;
         public int upgradePrice;
@@ -39,6 +39,7 @@ namespace TowerDefense
 
         protected override void OnHide()
         {
+            data.onHide?.Invoke();
             data = null;
         }
 
@@ -82,7 +83,6 @@ namespace TowerDefense
 
         private void OnCancelBtnClick()
         {
-            data.onCancelBtnClick?.Invoke();
             Hide();
         }
     }

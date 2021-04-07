@@ -151,13 +151,9 @@ namespace TowerDefense
                     {
                         return;
                     }
-
-                    Hide();
                 }
-                else
-                {
-                    Hide();
-                }
+                
+                Hide();
             }
         }
 

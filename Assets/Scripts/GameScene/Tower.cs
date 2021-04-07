@@ -110,14 +110,18 @@ namespace TowerDefense
         {
             int cost = data.GetNextLevelCost();
 
+            Particle particle = ObjectPool.Spawn<Particle>("TowerAttackRangeEffect", transform.localPosition);
+            particle.SetFloat("AttackRange", data.LevelData.attackRange);
+
             UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
             {
                 position = LocalPosition,
                 onUpgradeBtnClick = LevelUp,
                 onSellBtnClick = Sell,
+                onHide = () => ObjectPool.Unspawn(particle),
                 upgradePrice = cost,
                 canUpgrade = cost != -1 && Manager.Coins >= cost,
-                sellPrice = data.GetTotalCost() / 2,
+                sellPrice = data.GetTotalCost() / 2
             }, UILayer.Background);
         }
 

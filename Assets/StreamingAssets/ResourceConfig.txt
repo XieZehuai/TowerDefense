@@ -1,3 +1,4 @@
+DOTweenSettings=DOTweenSettings
 Prefab=Prefab
 Effect=Prefab/Effect
 DecelerateWave_1_EffectPrefab=Prefab/Effect/DecelerateWave_1_EffectPrefab
@@ -6,6 +7,7 @@ EnemyDestroyEffectPrefab=Prefab/Effect/EnemyDestroyEffectPrefab
 EnemyHitEffectPrefab=Prefab/Effect/EnemyHitEffectPrefab
 MachineGunAttackEffectPrefab=Prefab/Effect/MachineGunAttackEffectPrefab
 ShellExplosionEffectPrefab=Prefab/Effect/ShellExplosionEffectPrefab
+TowerAttackRangeEffectPrefab=Prefab/Effect/TowerAttackRangeEffectPrefab
 Enemy=Prefab/Enemy
 Heavy=Prefab/Enemy/Heavy
 EnemyFlamerPrefab=Prefab/Enemy/Heavy/EnemyFlamerPrefab
