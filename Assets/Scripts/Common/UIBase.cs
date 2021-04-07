@@ -137,7 +137,7 @@ namespace TowerDefense
 
         private void HideSelf()
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
