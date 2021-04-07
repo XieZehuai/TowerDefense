@@ -51,5 +51,9 @@ namespace TowerDefense
         [SerializeField] private Button replayBtn = default;
         [SerializeField] private Button optionsBtn = default;
         [SerializeField] private Button exitBtn = default;
+        
+        protected override OpenAnim Anim => OpenAnim.Scale;
+
+        protected override float AnimDuration => 0.4f;
     }
 }

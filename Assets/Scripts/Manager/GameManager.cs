@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    // HUAI: 成功结算界面、失败结算界面、章节选择界面、音效管理、设置界面、加速模式
+    // HUAI: 多个关卡、炮塔数据、炮塔攻击范围显示、点击炮塔类型后显示炮塔模型
+    // BUG: 敌人血量显示在UI上
+    
     /// <summary>
     /// 控制游戏主流程
     /// </summary>

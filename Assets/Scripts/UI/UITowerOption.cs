@@ -66,9 +66,6 @@ namespace TowerDefense
             }
 
             sellBtnText.text = $"$({data.sellPrice})";
-
-            background.localScale = Vector3.zero;
-            background.DOScale(Vector3.one, 0.5f);
         }
 
         private void OnUpgradeBtnClick()
@@ -101,5 +98,13 @@ namespace TowerDefense
         [SerializeField] private Button cancelBtn = default;
         [SerializeField] private Text upgradeBtnText = default;
         [SerializeField] private Text sellBtnText = default;
+
+        protected override OpenAnim Anim => OpenAnim.Scale;
+
+        protected override Transform AnimTransform => background;
+
+        protected override float AnimDuration => 0.4f;
+
+        protected override bool HideWhenClickOtherPlace => true;
     }
 }
