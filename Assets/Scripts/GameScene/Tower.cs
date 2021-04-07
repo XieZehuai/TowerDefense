@@ -129,7 +129,6 @@ namespace TowerDefense
             {
                 data.LevelUp();
                 Manager.Coins -= cost;
-                Debug.Log("升级炮塔成功");
             }
         }
 

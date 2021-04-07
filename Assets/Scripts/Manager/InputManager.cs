@@ -7,7 +7,7 @@ namespace TowerDefense
         private MapObjectType selectedGridType = MapObjectType.Wall; // 当前选择的格子类型
         private int selectedTowerId = -1; // 当前选择的塔的ID
 
-        private float undoTimer; // 连续撤销操作计时器
+        private float undoTimer; // 连续撤销操作的计时器
 
         public InputManager(StageManager stageManager) : base(stageManager)
         {
@@ -31,7 +31,6 @@ namespace TowerDefense
                 {
                     ChangeMap();
                     PlaceTower();
-                    RemoveTower();
                 }
 
                 UndoChangeMap();
@@ -40,6 +39,7 @@ namespace TowerDefense
 
         #region 玩家鼠标控制事件，通过鼠标点击地图触发
 
+        // 修改地图
         private void ChangeMap()
         {
             if (Input.GetMouseButton(0))
@@ -49,6 +49,7 @@ namespace TowerDefense
             }
         }
 
+        // 撤销对地图的修改
         private void UndoChangeMap()
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.Z))
@@ -72,6 +73,7 @@ namespace TowerDefense
             }
         }
 
+        // 摆放炮塔
         private void PlaceTower()
         {
             if (Input.GetMouseButtonDown(1) && selectedTowerId != -1)
@@ -81,15 +83,7 @@ namespace TowerDefense
             }
         }
 
-        private void RemoveTower()
-        {
-            if (Input.GetMouseButtonDown(2))
-            {
-                manager.TowerManager.RemoveTower(Utils.GetMousePosition());
-                // manager.TowerManager.UpgradeTower(Utils.GetMousePosition());
-            }
-        }
-
+        // 控制相机运动
         private void ControlCamera()
         {
             CameraController.Instance.Zoom(Input.GetAxis("Mouse ScrollWheel"));

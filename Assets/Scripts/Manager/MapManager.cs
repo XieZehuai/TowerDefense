@@ -10,14 +10,17 @@ namespace TowerDefense
         /// 地图宽度
         /// </summary>
         public int Width { get; private set; }
+
         /// <summary>
         /// 地图高度
         /// </summary>
         public int Height { get; private set; }
+
         /// <summary>
         /// 地图数据
         /// </summary>
         public Map Map { get; private set; }
+
         /// <summary>
         /// 地图上所有出生点
         /// </summary>
@@ -28,7 +31,7 @@ namespace TowerDefense
         private MapObject destination; // 目标点
 
         // 记录摆放格子命令，实现撤销功能
-        private Stack<System.Action> commandBuffer = new Stack<System.Action>();
+        private readonly Stack<System.Action> commandBuffer = new Stack<System.Action>();
 
         public MapManager(StageManager stageManager) : base(stageManager)
         {
@@ -36,6 +39,7 @@ namespace TowerDefense
         }
 
         #region 创建以及加载地图
+
         // 创建默认地图数据
         public void CreateMap(int width, int height, int cellSize)
         {
@@ -79,6 +83,7 @@ namespace TowerDefense
             return mapData;
         }
 
+        // 加载地图模型以及设置出生点和目标点
         private void LoadMap()
         {
             for (int x = 0; x < Width; x++)
@@ -110,7 +115,10 @@ namespace TowerDefense
             }
         }
 
-        // 保存地图数据
+        /// <summary>
+        /// 保存地图数据
+        /// </summary>
+        /// <param name="fileName">文件名</param>
         public void SaveMapData(string fileName)
         {
             string path = Application.streamingAssetsPath;
@@ -119,34 +127,57 @@ namespace TowerDefense
             Map.Save(path);
         }
 
+        /// <summary>
+        /// 读取地图数据
+        /// </summary>
+        /// <param name="fileName">文件名</param>
         // 读取地图数据
         public void LoadMapData(string fileName)
         {
             string path = Application.streamingAssetsPath;
             path = Path.Combine(path, fileName);
 
-            using (var reader = new BinaryReader(File.Open(path, FileMode.Open)))
+            if (File.Exists(path))
             {
-                int width = reader.ReadInt32();
-                int height = reader.ReadInt32();
-                int cellSize = reader.ReadInt32();
-                MapObject[,] grids = new MapObject[width, height];
-
-                for (int x = 0; x < width; x++)
+                using (var reader = new BinaryReader(File.Open(path, FileMode.Open)))
                 {
-                    for (int y = 0; y < height; y++)
-                    {
-                        MapObjectType type = (MapObjectType)reader.ReadInt32();
-                        grids[x, y] = new MapObject(type, x, y);
-                    }
-                }
+                    int width = reader.ReadInt32();
+                    int height = reader.ReadInt32();
+                    int cellSize = reader.ReadInt32();
+                    MapObject[,] grids = new MapObject[width, height];
 
-                CreateMap(grids, cellSize);
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            MapObjectType type = (MapObjectType)reader.ReadInt32();
+                            grids[x, y] = new MapObject(type, x, y);
+                        }
+                    }
+
+                    CreateMap(grids, cellSize);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("没有地图数据" + fileName);
+                CreateMap(20, 20, Utils.MAP_CELL_SIZE);
+                SaveMapData(fileName);
             }
         }
+
         #endregion
 
         #region 摆放炮塔相关功能
+
+        /// <summary>
+        /// 尝试在目标位置摆放炮塔
+        /// </summary>
+        /// <param name="worldPosition">要摆放的目标位置</param>
+        /// <param name="x">成功时返回目标位置的X轴坐标</param>
+        /// <param name="y">成功时返回目标位置的Y轴坐标</param>
+        /// <param name="towerPosition">成功时保存返回炮塔的实际坐标</param>
+        /// <returns>成功或失败</returns>
         public bool TryPlaceTower(Vector3 worldPosition, out int x, out int y, out Vector3 towerPosition)
         {
             if (CanPlaceTower(worldPosition, out x, out y))
@@ -160,6 +191,13 @@ namespace TowerDefense
             return false;
         }
 
+        /// <summary>
+        /// 判断是否可以在目标位置摆放炮塔
+        /// </summary>
+        /// <param name="worldPosition">要摆放的目标位置</param>
+        /// <param name="x">成功时返回X轴坐标</param>
+        /// <param name="y">成功时返回Y轴坐标</param>
+        /// <returns>成功或失败</returns>
         public bool CanPlaceTower(Vector3 worldPosition, out int x, out int y)
         {
             if (GetGridPosition(worldPosition, out x, out y))
@@ -175,6 +213,12 @@ namespace TowerDefense
             return false;
         }
 
+        /// <summary>
+        /// 移除炮塔
+        /// </summary>
+        /// <param name="x">炮塔的X轴坐标</param>
+        /// <param name="y">炮塔的Y轴坐标</param>
+        /// <returns>移除成功或失败</returns>
         public bool RemoveTower(int x, int y)
         {
             if (Map.GetGridType(x, y) != MapObjectType.WallWithTower) return false;
@@ -183,6 +227,9 @@ namespace TowerDefense
             return true;
         }
 
+        /// <summary>
+        /// 移除所有炮塔
+        /// </summary>
         public void RemoveAllTower()
         {
             for (int x = 0; x < Width; x++)
@@ -196,9 +243,11 @@ namespace TowerDefense
                 }
             }
         }
+
         #endregion
 
         #region 格子相关功能
+
         public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
         {
             return Map.GetGridPosition(worldPosition, out x, out y);
@@ -227,6 +276,13 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 改变目标格子的类型
+        /// </summary>
+        /// <param name="x">格子的X轴坐标</param>
+        /// <param name="y">格子的Y轴坐标</param>
+        /// <param name="type">目标类型</param>
+        /// <param name="record">是否记录本次操作，记录后可以撤销该操作</param>
         public void ChangeGridType(int x, int y, MapObjectType type, bool record = false)
         {
             // 如果要替换的格子类型与当前格子类型相同或者当前格子是终点，直接返回
@@ -259,6 +315,9 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 撤销最后一次修改地图的操作
+        /// </summary>
         public void Undo()
         {
             if (commandBuffer.Count > 0)
@@ -283,11 +342,11 @@ namespace TowerDefense
                 }
             }
 
-            UnloadModel(x, y, originType);
+            UnloadModel(x, y);
             Map.SetGridType(x, y, MapObjectType.Empty);
             LoadModel(x, y, MapObjectType.Empty);
 
-            // 记录当前操作的方向操作
+            // 记录当前操作的反向操作
             if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
@@ -303,7 +362,7 @@ namespace TowerDefense
 
             FindPaths(destination);
 
-            // 记录当前操作的方向操作
+            // 记录当前操作的反向操作
             if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
@@ -323,11 +382,11 @@ namespace TowerDefense
                 }
             }
 
-            UnloadModel(x, y, originType);
+            UnloadModel(x, y);
             Map.SetGridType(x, y, MapObjectType.Wall);
             LoadModel(x, y, MapObjectType.Wall);
 
-            // 记录当前操作的方向操作
+            // 记录当前操作的反向操作
             if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
         }
 
@@ -340,7 +399,7 @@ namespace TowerDefense
 
             if (FindPaths(Map.GetValue(x, y)))
             {
-                UnloadModel(x, y, originType);
+                UnloadModel(x, y);
                 int xTemp = destination.x;
                 int yTemp = destination.y;
                 destination = Map.GetValue(x, y);
@@ -350,7 +409,7 @@ namespace TowerDefense
                 LoadModel(xTemp, yTemp, MapObjectType.Road);
                 LoadModel(x, y, MapObjectType.Destination);
 
-                // 记录当前操作的方向操作
+                // 记录当前操作的反向操作
                 if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
             }
             else
@@ -372,7 +431,7 @@ namespace TowerDefense
                 Map.SetGridType(x, y, MapObjectType.SpawnPoint);
                 LoadModel(x, y, MapObjectType.SpawnPoint);
 
-                // 记录当前操作的方向操作
+                // 记录当前操作的反向操作
                 if (record) commandBuffer.Push(() => ChangeGridType(x, y, originType));
             }
             else
@@ -397,20 +456,16 @@ namespace TowerDefense
         private void LoadModel(int x, int y, MapObjectType type)
         {
             Vector3 pos = Map.GetWorldPosition(x, y);
-            PoolObject obj = ObjectPool.Spawn<PoolObject>(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
+            PoolObject obj =
+                ObjectPool.Spawn<PoolObject>(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
             models[x, y] = obj;
         }
 
         private void UnloadModel(int x, int y)
         {
-            UnloadModel(x, y, Map.GetGridType(x, y));
+            ObjectPool.Unspawn(models[x, y]);
         }
 
-        private void UnloadModel(int x, int y, MapObjectType type)
-        {
-            ObjectPool.Unspawn(models[x, y]);
-            // ObjectPool.Unspawn(type.ToString(), models[x, y]);
-        }
         #endregion
 
         private bool FindPaths(MapObject target)

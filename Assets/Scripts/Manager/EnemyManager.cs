@@ -3,11 +3,14 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 管理所有敌人
+    /// </summary>
     public class EnemyManager : SubStageManager
     {
         // 关卡敌人数据
         private readonly float waveInterval; // 每一波的间隔
-        private readonly WaveConfig[] waveDatas;
+        private readonly WaveConfig[] waveDatas; // 每一波的数据
 
         private float spawnTimer = 0f; // 敌人生成计时器
         private float spawnInterval; // 下一个敌人的生成间隔
@@ -182,7 +185,13 @@ namespace TowerDefense
             // 场景中敌人数量为空，判断是否需要生成下一波敌人并返回
             if (Enemys.Count == 0)
             {
-                isNextWave = !isSpawning && currentWaveIndex < waveDatas.Length;
+                isNextWave = !isSpawning && currentWaveIndex + 1 < waveDatas.Length;
+
+                if (!isSpawning && currentWaveIndex + 1 >= waveDatas.Length)
+                {
+                    manager.GameOver();
+                }
+
                 return;
             }
 

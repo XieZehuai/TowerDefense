@@ -27,7 +27,6 @@ namespace TowerDefense
         {
             TowerData data = GameManager.Instance.TowerConfig.GetTowerData(towerId);
             data.Init();
-            Debug.Log(data.Level + " " + data.LevelData.cost);
 
             if (manager.Coins >= data.LevelData.cost)
             {
@@ -78,52 +77,12 @@ namespace TowerDefense
             return tower;
         }
 
-        /// <summary>
-        /// 移除炮塔
-        /// </summary>
-        /// <param name="position">要移除的炮塔所处的位置</param>
-        public void RemoveTower(Vector3 position)
-        {
-            if (manager.MapManager.GetGridPosition(position, out int x, out int y))
-            {
-                for (int i = 0; i < towers.Count; i++)
-                {
-                    if (towers[i].X == x && towers[i].Y == y)
-                    {
-                        manager.MapManager.RemoveTower(x, y);
-                        ObjectPool.Unspawn(towers[i]);
-                        towers.QuickRemove(i);
-                        break;
-                    }
-                }
-            }
-        }
-
         public void RemoveTower(Tower tower)
         {
             manager.MapManager.RemoveTower(tower.X, tower.Y);
             ObjectPool.Unspawn(tower);
             towers.Remove(tower);
         }
-        
-        // /// <summary>
-        // /// 升级炮塔
-        // /// </summary>
-        // /// <param name="position"></param>
-        // public void UpgradeTower(Vector3 position)
-        // {
-        //     if (manager.MapManager.GetGridPosition(position, out int x, out int y))
-        //     {
-        //         for (int i = 0; i < towers.Count; i++)
-        //         {
-        //             if (towers[i].X == x && towers[i].Y == y)
-        //             {
-        //                 towers[i].LevelUp();
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
 
         public void Replay()
         {

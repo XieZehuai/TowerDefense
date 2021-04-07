@@ -13,6 +13,7 @@ namespace TowerDefense
 
         private static Dictionary<string, string> configMap; // 保存资源名到路径的映射
 
+        // 静态类，所以在静态构造函数里初始化
         static ResourceManager()
         {
             streamingAssetsPath = GetStreamingAssetsPath();

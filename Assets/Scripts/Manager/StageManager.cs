@@ -10,12 +10,12 @@ namespace TowerDefense
     public class StageManager : MonoBehaviour
     {
         // 当前游戏的状态
-        public enum GameState
+        private enum State
         {
-            Preparing,
-            Playing,
-            Paused,
-            GameOver,
+            Preparing, // 准备阶段，敌人还没开始进攻
+            Playing, // 敌人正在进攻
+            Paused, // 暂停
+            GameOver, // 游戏结束
         }
 
         private int stage; // 当前关卡数
@@ -23,8 +23,8 @@ namespace TowerDefense
         private int hp; // 当前生命
         private int coins; // 当前金币
 
-        private GameState state = GameState.Preparing; // 当前游戏的状态
-        private GameState stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
+        private State state = State.Preparing; // 当前游戏的状态
+        private State stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
         private bool isSpeedUp; // 当前是否处于加速模式
         private PathFinder pathFinder;
 
@@ -39,11 +39,14 @@ namespace TowerDefense
 
         #endregion
 
-        public bool IsPreparing => state == GameState.Preparing;
-        public bool IsPlaying => state == GameState.Playing;
-        public bool IsPaused => state == GameState.Paused;
-        public bool IsGameOver => state == GameState.GameOver;
+        public bool IsPreparing => state == State.Preparing;
+        public bool IsPlaying => state == State.Playing;
+        public bool IsPaused => state == State.Paused;
+        public bool IsGameOver => state == State.GameOver;
 
+        /// <summary>
+        /// 当前玩家的生命值
+        /// </summary>
         public int HP
         {
             get => hp;
@@ -54,6 +57,9 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 当前玩家的金币
+        /// </summary>
         public int Coins
         {
             get => coins;
@@ -108,15 +114,7 @@ namespace TowerDefense
 
         private void Start()
         {
-            // 生成地图
-            if (GameManager.Instance.load)
-            {
-                LoadMapData();
-            }
-            else
-            {
-                MapManager.CreateMap(20, 20, Utils.MAP_CELL_SIZE);
-            }
+            LoadMapData();
 
             // 打开游戏UI
             UIManager.Instance.Open<UIGameScene>(new UIGameSceneData
@@ -125,7 +123,8 @@ namespace TowerDefense
                 coins = coins,
                 maxWaveCount = stageConfig.waveDatas.Length
             }, UILayer.Background);
-            
+
+            // 设置相机的初始位置
             CameraController.Instance.ResetPosition();
         }
 
@@ -150,13 +149,13 @@ namespace TowerDefense
         /// </summary>
         public void StartGame()
         {
-            if (state != GameState.Preparing)
+            if (state != State.Preparing)
             {
                 Debug.LogError("当前不处于准备状态" + state);
                 return;
             }
 
-            state = GameState.Playing;
+            state = State.Playing;
         }
 
         /// <summary>
@@ -164,14 +163,14 @@ namespace TowerDefense
         /// </summary>
         public void Pause()
         {
-            if (state == GameState.Paused)
+            if (state == State.Paused)
             {
                 Debug.LogError("已经处于暂停状态");
                 return;
             }
 
             stateTemp = state; // 保存原状态
-            state = GameState.Paused;
+            state = State.Paused;
         }
 
         /// <summary>
@@ -179,7 +178,7 @@ namespace TowerDefense
         /// </summary>
         public void Continue()
         {
-            if (state != GameState.Paused)
+            if (state != State.Paused)
             {
                 Debug.LogError("当前不处于暂停状态" + state);
                 return;
@@ -193,7 +192,7 @@ namespace TowerDefense
         /// </summary>
         public void Replay()
         {
-            state = GameState.Preparing;
+            state = State.Preparing;
             HP = stageConfig.playerHp;
             Coins = stageConfig.coins;
 
@@ -202,6 +201,20 @@ namespace TowerDefense
             WarEntityManager.Replay();
 
             TypeEventSystem.Send(new OnReplay());
+        }
+
+        public void GameOver()
+        {
+            state = State.GameOver;
+
+            if (hp > 0)
+            {
+                Debug.Log("游戏胜利");
+            }
+            else
+            {
+                Debug.Log("游戏失败");
+            }
         }
 
         /// <summary>
@@ -227,7 +240,6 @@ namespace TowerDefense
         /// </summary>
         public void LoadMapData()
         {
-            Debug.Log("加载地图数据");
             MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + stage);
         }
 
@@ -239,7 +251,7 @@ namespace TowerDefense
         /// <returns>设置成功或失败</returns>
         public bool SetPaths(Vector2Int endPos, bool includeEnemy)
         {
-            // 处理起始点数据
+            // // 处理起始点数据
             List<MapObject> spawnPoints = MapManager.SpawnPoints.ToList();
 
             int spawnPointCount = spawnPoints.Count;
@@ -311,8 +323,7 @@ namespace TowerDefense
 
             if (hp <= 0)
             {
-                Debug.Log("游戏结束");
-                state = GameState.GameOver;
+                GameOver();
             }
         }
 

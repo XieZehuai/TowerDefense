@@ -43,7 +43,6 @@ namespace TowerDefense
         {
             Level = 1;
             LevelData = levelDatas[0];
-            Debug.Log("init");
         }
 
         /// <summary>
@@ -67,7 +66,6 @@ namespace TowerDefense
         /// </summary>
         public void LevelUp()
         {
-            Debug.Log("level up");
             LevelData = levelDatas[Level++];
         }
 
