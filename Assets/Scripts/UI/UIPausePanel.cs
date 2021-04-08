@@ -35,12 +35,11 @@ namespace TowerDefense
 
         private void OnOptionsBtnClick()
         {
-
+            // TODO: 设置界面
         }
 
         private void OnExitBtnClick()
         {
-            UIManager.Instance.CloseAll();
             GameManager.Instance.LoadMainScene();
         }
     }

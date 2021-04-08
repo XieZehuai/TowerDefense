@@ -18,7 +18,6 @@ namespace TowerDefense
             GameOver, // 游戏结束
         }
 
-        private int stage; // 当前关卡数
         private StageConfig stageConfig; // 当前关卡配置
         private int hp; // 当前生命
         private int coins; // 当前金币
@@ -73,8 +72,7 @@ namespace TowerDefense
         private void Awake()
         {
             // 设置关卡数据
-            stage = GameManager.Instance.Stage;
-            stageConfig = GameManager.Instance.GetStageConfig(stage); // 获取关卡数据
+            stageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Data.Stage); // 获取关卡数据
             hp = stageConfig.playerHp;
             coins = stageConfig.coins;
 
@@ -209,7 +207,8 @@ namespace TowerDefense
 
             if (hp > 0)
             {
-                Debug.Log("游戏胜利");
+                PlayerManager.StageSuccess();
+                UIManager.Instance.Open<UIStageSuccess>();
             }
             else
             {
@@ -232,7 +231,7 @@ namespace TowerDefense
         public void SaveMapData()
         {
             Debug.Log("保存地图数据");
-            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + stage);
+            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.Stage);
         }
 
         /// <summary>
@@ -240,7 +239,7 @@ namespace TowerDefense
         /// </summary>
         public void LoadMapData()
         {
-            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + stage);
+            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.Stage);
         }
 
         /// <summary>

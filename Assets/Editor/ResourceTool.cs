@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace TowerDefense
 {
@@ -9,7 +10,7 @@ namespace TowerDefense
         /// 读取所有Resources文件夹下的资源信息，提取出资源名以及路径生成配置
         /// 表，保存到StreamingAssets文件夹下
         /// </summary>
-        [MenuItem("Tool/Resource/Generate Resource Config")]
+        [MenuItem("Tool/Generate Resource Config")]
         public static void GenerateResourceConfig()
         {
             string[] resFiles = AssetDatabase.FindAssets("t:object", new string[] { "Assets/Resources" });
@@ -24,6 +25,21 @@ namespace TowerDefense
 
             File.WriteAllLines("Assets/StreamingAssets/ResourceConfig.txt", resFiles);
             AssetDatabase.Refresh();
+        }
+
+        [MenuItem("Tool/Reset Player Data")]
+        public static void ResetPlayerData()
+        {
+            Debug.Log("重置玩家数据");
+
+            string path = Application.streamingAssetsPath;
+            path = Path.Combine(path, Utils.PLAYER_DATA_FILENAME);
+
+            using (var writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                writer.Write(1);
+                writer.Write(1);
+            }
         }
     }
 }

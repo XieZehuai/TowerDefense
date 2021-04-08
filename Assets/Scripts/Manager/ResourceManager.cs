@@ -29,7 +29,7 @@ namespace TowerDefense
         /// <typeparam name="T">资源的类型</typeparam>
         /// <param name="name">资源名称</param>
         /// <returns>加载成功返回资源文件，失败返回null</returns>
-        public static T Load<T>(string name) where T : UnityEngine.Object
+        public static T Load<T>(string name) where T : Object
         {
             if (!configMap.ContainsKey(name))
             {

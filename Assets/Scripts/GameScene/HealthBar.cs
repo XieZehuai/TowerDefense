@@ -19,6 +19,11 @@ namespace TowerDefense
             }
         }
 
+        public override void OnSpawn()
+        {
+            health.localScale = Vector3.one;
+        }
+
         /// <summary>
         /// 设置血条的值
         /// </summary>

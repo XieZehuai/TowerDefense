@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ns
 {
-	public class CloseSelf : MonoBehaviour
+	public class UIStageFailed : MonoBehaviour
 	{
 	}
 }

@@ -16,6 +16,7 @@ namespace TowerDefense
         public const float GRAVITY = 20f;
         public const float UNDO_PRESS_DURATION = 0.5f;
         public const string MAP_DATA_FILENAME_PREFIX = "MapData_";
+        public const string PLAYER_DATA_FILENAME = "PlayerData";
         #endregion
 
         #region 各种常用方法
