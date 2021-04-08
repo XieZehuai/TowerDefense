@@ -14,13 +14,15 @@ namespace TowerDefense
         {
             if (isFollowing)
             {
-                transform.localPosition = followTarget.localPosition + offset;
+                transform.localPosition = followTarget.localPosition + offset; // 跟随目标移动
+                transform.localRotation = CameraController.Instance.transform.localRotation; // 面向相机
             }
-
-            Vector3 pos = CameraController.Instance.Camera.WorldToViewportPoint(transform.localPosition);
-            transform.LookAt(pos);
         }
 
+        /// <summary>
+        /// 设置血条的值
+        /// </summary>
+        /// <param name="value">范围0 ~ 1</param>
         public void SetValue(float value)
         {
             Vector3 scale = health.localScale;

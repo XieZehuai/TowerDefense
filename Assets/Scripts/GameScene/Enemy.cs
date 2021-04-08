@@ -107,10 +107,7 @@ namespace TowerDefense
         private float decelerateTimer;
         private bool isDecelerate;
 
-        // 血量
-        private Camera mainCamera;
-        private Texture2D healthBarTexture;
-        private Texture2D healthTexture;
+        // 血条
         private HealthBar healthBar;
 
         public EnemyData Data
@@ -140,13 +137,6 @@ namespace TowerDefense
         /// 敌人的护甲类型
         /// </summary>
         public ArmorType ArmorType => data.armorType;
-
-        protected override void OnInstantiate()
-        {
-            mainCamera = Camera.main;
-            healthBarTexture = ResourceManager.Load<Texture2D>("HealthBarTexture");
-            healthTexture = ResourceManager.Load<Texture2D>("HealthTexture");
-        }
 
         public override void OnSpawn()
         {
@@ -287,25 +277,6 @@ namespace TowerDefense
             decelerateTime = 0f;
 
             ObjectPool.Unspawn(healthBar);
-        }
-
-        private void OnGUI()
-        {
-            return;
-
-            // 绘制血量
-            Vector2 healthBarSize = GUI.skin.label.CalcSize(new GUIContent(healthBarTexture)); // 计算图片尺寸
-            Vector3 worldPos = transform.localPosition;
-            worldPos.y += 0.5f; // 敌人头顶坐标
-            Vector2 screenPos = mainCamera.WorldToScreenPoint(worldPos); // 转化成屏幕坐标
-            screenPos.x -= healthBarSize.x * 0.5f;
-            screenPos.y = Screen.height - screenPos.y + healthBarSize.y;
-            float healthValue = healthTexture.width * currentHp / data.hp; // 计算生命条长度
-
-            GUI.depth = 0;
-            GUI.DrawTexture(new Rect(screenPos, healthBarSize), healthBarTexture);
-            GUI.depth = 1;
-            GUI.DrawTexture(new Rect(screenPos, new Vector2(healthValue, healthBarSize.y - 2)), healthTexture);
         }
     }
 }
