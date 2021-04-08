@@ -10,6 +10,8 @@ namespace TowerDefense
         private TowerData data; // 炮塔的数据
         private Particle attackRangeEffect;
 
+        [SerializeField] private Transform model;
+
         #region 属性
         /// <summary>
         /// 炮塔的数据
@@ -20,6 +22,7 @@ namespace TowerDefense
             set
             {
                 data = value;
+                SetModelScale();
                 OnSetData();
             }
         }
@@ -77,6 +80,7 @@ namespace TowerDefense
             {
                 data.LevelUp();
                 Manager.Coins -= result.Item2;
+                SetModelScale();
             }
         }
 
@@ -145,6 +149,11 @@ namespace TowerDefense
             return true;
         }
 
+        private void SetModelScale()
+        {
+            model.localScale = (0.2f * data.Level + 0.4f) * Vector3.one;
+        }
+
         private void OnMouseDown()
         {
             OnSelected();
@@ -154,18 +163,6 @@ namespace TowerDefense
         {
             ShowAttackRange(data.LevelData.attackRange);
             UIManager.Instance.Open<UITowerOption>(new UITowerOptionData { tower = this }, UILayer.Background);
-
-            //int cost = data.GetNextLevelCost();
-            //UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
-            //{
-            //    position = LocalPosition,
-            //    onUpgradeBtnClick = Upgrade,
-            //    onSellBtnClick = Sell,
-            //    onHide = HideAttackRange,
-            //    upgradePrice = cost,
-            //    canUpgrade = cost != -1 && Manager.Coins >= cost,
-            //    sellPrice = data.GetTotalCost() / 2
-            //}, UILayer.Background);
         }
 
         public override void OnUnspawn()

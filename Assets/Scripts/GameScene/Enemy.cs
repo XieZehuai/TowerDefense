@@ -111,6 +111,20 @@ namespace TowerDefense
         private Camera mainCamera;
         private Texture2D healthBarTexture;
         private Texture2D healthTexture;
+        private HealthBar healthBar;
+
+        public EnemyData Data
+        {
+            get => data;
+            set
+            {
+                data = value;
+                currentHp = data.hp;
+                currentSpeed = data.speed;
+            }
+        }
+
+        public float Hp => currentHp;
 
         /// <summary>
         /// 敌人的本地坐标
@@ -132,8 +146,6 @@ namespace TowerDefense
             mainCamera = Camera.main;
             healthBarTexture = ResourceManager.Load<Texture2D>("HealthBarTexture");
             healthTexture = ResourceManager.Load<Texture2D>("HealthTexture");
-            Debug.Assert(healthBarTexture != null, "HealthBarTexture is null");
-            Debug.Assert(healthTexture != null, "HealthTexture is null");
         }
 
         public override void OnSpawn()
@@ -142,19 +154,9 @@ namespace TowerDefense
             float x = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             offset = new Vector3(x, 0.3f, z);
-        }
 
-        /// <summary>
-        /// 设置敌人的数据
-        /// </summary>
-        /// <param name="data">敌人的数据</param>
-        public Enemy SetData(EnemyData data)
-        {
-            this.data = data;
-            currentHp = data.hp;
-            currentSpeed = data.speed;
-
-            return this;
+            healthBar = ObjectPool.Spawn<HealthBar>("HealthBar");
+            healthBar.Follow(transform, new Vector3(0f, 0.3f, 0f));
         }
 
         /// <summary>
@@ -224,9 +226,10 @@ namespace TowerDefense
         public void GetDamage(float damage, AttackType attackType)
         {
             // 计算实际造成的伤害
-            // float actualDamage = ConfigManager.Instance.DamageConfig.GetDamage(damage, attackType, data.armorType);
             float actualDamage = GameManager.Instance.DamageConfig.GetDamage(damage, attackType, ArmorType);
             currentHp -= actualDamage;
+
+            healthBar.SetValue(currentHp / data.hp);
 
             // 播放受击特效
             if (hitEffectTimer >= hitEffectDuration)
@@ -282,10 +285,14 @@ namespace TowerDefense
             isDecelerate = false;
             decelerateTimer = 0f;
             decelerateTime = 0f;
+
+            ObjectPool.Unspawn(healthBar);
         }
 
         private void OnGUI()
         {
+            return;
+
             // 绘制血量
             Vector2 healthBarSize = GUI.skin.label.CalcSize(new GUIContent(healthBarTexture)); // 计算图片尺寸
             Vector3 worldPos = transform.localPosition;
@@ -294,8 +301,11 @@ namespace TowerDefense
             screenPos.x -= healthBarSize.x * 0.5f;
             screenPos.y = Screen.height - screenPos.y + healthBarSize.y;
             float healthValue = healthTexture.width * currentHp / data.hp; // 计算生命条长度
+
+            GUI.depth = 0;
             GUI.DrawTexture(new Rect(screenPos, healthBarSize), healthBarTexture);
-            GUI.DrawTexture(new Rect(screenPos, new Vector2(healthValue, healthBarSize.y)), healthTexture);
+            GUI.depth = 1;
+            GUI.DrawTexture(new Rect(screenPos, new Vector2(healthValue, healthBarSize.y - 2)), healthTexture);
         }
     }
 }

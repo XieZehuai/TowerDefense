@@ -728,9 +728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5797133eabc5b3745bffaafe0819cbd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 3
-  damage: 7
-  attackDuration: 0.1
+  model: {fileID: 6584415131147702009}
   turretBase: {fileID: 920016587461301666}
   turret: {fileID: 920016587461338892}
   gun: {fileID: 920016587461348018}

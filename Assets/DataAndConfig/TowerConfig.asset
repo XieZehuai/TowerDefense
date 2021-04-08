@@ -25,16 +25,16 @@ MonoBehaviour:
       decelerationDuration: 0
       decelerationRate: 0
     - cost: 70
-      attackRange: 2.7
+      attackRange: 3
       attackDuration: 0.1
-      damage: 8.5
+      damage: 10
       shellBlastRadius: 0
       decelerationDuration: 0
       decelerationRate: 0
     - cost: 100
-      attackRange: 3
+      attackRange: 3.5
       attackDuration: 0.1
-      damage: 10
+      damage: 14
       shellBlastRadius: 0
       decelerationDuration: 0
       decelerationRate: 0

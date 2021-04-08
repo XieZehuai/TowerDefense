@@ -88,10 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d282998b45bff41b7c74a24d87bc0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 2.6
-  attackDuration: 2
-  decelerateTime: 3
-  decelerateRate: 0.5
+  model: {fileID: 7787850066806866495}
   shootPoint: {fileID: 3562758542076479515}
 --- !u!1 &7787850066806866494
 GameObject:

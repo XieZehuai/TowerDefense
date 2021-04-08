@@ -6,13 +6,16 @@ using UnityEngine.EventSystems;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 传递给UI的参数的基类
+    /// </summary>
     public abstract class UIDataBase
     {
     }
 
 
     /// <summary>
-    /// UI的基类
+    /// 所有UI的基类
     /// </summary>
     public abstract class UIBase : MonoBehaviour
     {
@@ -82,28 +85,6 @@ namespace TowerDefense
         /// </summary>
         protected virtual void OnClose()
         {
-        }
-
-        private void HideSelf()
-        {
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-            {
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    PointerEventData eventData = new PointerEventData(EventSystem.current)
-                    {
-                        position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
-                    };
-                    EventSystem.current.RaycastAll(eventData, raycastResult);
-
-                    if (raycastResult.Exists(item => item.gameObject == gameObject))
-                    {
-                        return;
-                    }
-                }
-
-                Hide();
-            }
         }
     }
 }

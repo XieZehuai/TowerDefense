@@ -171,11 +171,13 @@ namespace TowerDefense
         // 生成敌人
         private void CreateEnemy(int id)
         {
-            // EnemyData enemyData = ConfigManager.Instance.EnemyConfig.GetEnemyData(id);
             EnemyData enemyData = GameManager.Instance.EnemyConfig.GetEnemyData(id); // 获取敌人数据
             Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name);
+
+            enemy.Data = enemyData;
             int random = Random.Range(0, spawnPointPaths.Length); // 随机设置路径
-            enemy.SetData(enemyData).SetPath(spawnPointPaths[random], true);
+            enemy.SetPath(spawnPointPaths[random], true);
+
             Enemys.Add(enemy);
         }
 

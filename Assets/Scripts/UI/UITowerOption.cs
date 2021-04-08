@@ -20,6 +20,8 @@ namespace TowerDefense
             upgradeBtn.onClick.AddListener(OnUpgradeBtnClick);
             sellBtn.onClick.AddListener(OnSellBtnClick);
             cancelBtn.onClick.AddListener(OnCancelBtnClick);
+
+            TypeEventSystem.Register<OnReplay>(OnReplay);
         }
 
         protected override void OnOpen(UIDataBase uiData)
@@ -44,11 +46,16 @@ namespace TowerDefense
             upgradeBtn.onClick.RemoveAllListeners();
             sellBtn.onClick.RemoveAllListeners();
             cancelBtn.onClick.RemoveAllListeners();
+
+            TypeEventSystem.UnRegister<OnReplay>(OnReplay);
         }
 
         private void Update()
         {
-            SetPosition();
+            if (trackTower)
+            {
+                SetPosition();
+            }
         }
 
         private void SetPosition()
@@ -93,6 +100,11 @@ namespace TowerDefense
         {
             data.tower.HideAttackRange();
             background.DOScale(Vector3.zero, 0.2f).OnComplete(Hide);
+        }
+
+        private void OnReplay(OnReplay context)
+        {
+            Hide();
         }
     }
 

@@ -89,10 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c91c7081b7cf44783af06a9eaacef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 3.5
-  attackDuration: 2
-  shellBlastRadius: 1
-  shellDamage: 100
+  model: {fileID: 3373975322541275826}
   turretBase: {fileID: 3373975324279599059}
   turret: {fileID: 3373975324279685679}
   attackPoint: {fileID: 4272621383322796013}

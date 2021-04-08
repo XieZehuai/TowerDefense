@@ -17,7 +17,7 @@ namespace TowerDefense
                 transform.localPosition = followTarget.localPosition + offset;
             }
 
-            Vector3 pos = Camera.main.WorldToScreenPoint(transform.localPosition);
+            Vector3 pos = CameraController.Instance.Camera.WorldToViewportPoint(transform.localPosition);
             transform.LookAt(pos);
         }
 
