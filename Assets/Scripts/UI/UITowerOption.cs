@@ -7,24 +7,16 @@ namespace TowerDefense
 {
     public class UITowerOptionData : UIDataBase
     {
-        public Vector3 position; // 炮塔的位置
-
-        public Action onUpgradeBtnClick;
-        public Action onSellBtnClick;
-        public Action onHide;
-
-        public bool canUpgrade;
-        public int upgradePrice;
-        public int sellPrice;
+        public Tower tower;
     }
 
 
     public partial class UITowerOption : UIBase
     {
+        private bool trackTower;
+
         protected override void OnInit(UIDataBase uiData)
         {
-            data = uiData as UITowerOptionData ?? new UITowerOptionData();
-
             upgradeBtn.onClick.AddListener(OnUpgradeBtnClick);
             sellBtn.onClick.AddListener(OnSellBtnClick);
             cancelBtn.onClick.AddListener(OnCancelBtnClick);
@@ -34,13 +26,17 @@ namespace TowerDefense
         {
             data = uiData as UITowerOptionData ?? new UITowerOptionData();
 
+            SetPosition();
             InitPanelInfo();
+            background.localScale = Vector3.zero;
+            background.DOScale(Vector3.one, 0.2f);
+            trackTower = true;
         }
 
         protected override void OnHide()
         {
-            data.onHide?.Invoke();
             data = null;
+            trackTower = false;
         }
 
         protected override void OnClose()
@@ -50,40 +46,53 @@ namespace TowerDefense
             cancelBtn.onClick.RemoveAllListeners();
         }
 
+        private void Update()
+        {
+            SetPosition();
+        }
+
+        private void SetPosition()
+        {
+            Vector2 pos = CameraController.Instance.Camera.WorldToScreenPoint(data.tower.LocalPosition);
+            background.position = pos;
+        }
+
         private void InitPanelInfo()
         {
-            Vector2 pos = CameraController.Instance.Camera.WorldToScreenPoint(data.position);
-            background.position = pos;
+            Tower tower = data.tower;
 
-            upgradeBtn.interactable = data.canUpgrade;
+            var result = tower.CanUpgrade();
+            upgradeBtn.interactable = result.Item1;
 
-            if (!data.canUpgrade && data.upgradePrice == -1)
+            if (!result.Item1 && result.Item2 == -1)
             {
                 upgradeBtnText.text = "满级";
             }
             else
             {
-                upgradeBtnText.text = $"↑({data.upgradePrice})";
+                upgradeBtnText.text = $"↑({result.Item2})";
             }
 
-            sellBtnText.text = $"$({data.sellPrice})";
+            sellBtnText.text = $"$({tower.GetSellPrice()})";
         }
 
         private void OnUpgradeBtnClick()
         {
-            data.onUpgradeBtnClick?.Invoke();
-            Hide();
+            data.tower.Upgrade();
+            data.tower.ShowAttackRange(data.tower.Data.LevelData.attackRange);
+            InitPanelInfo();
         }
 
         private void OnSellBtnClick()
         {
-            data.onSellBtnClick?.Invoke();
+            data.tower.Sell();
             Hide();
         }
 
         private void OnCancelBtnClick()
         {
-            Hide();
+            data.tower.HideAttackRange();
+            background.DOScale(Vector3.zero, 0.2f).OnComplete(Hide);
         }
     }
 
@@ -98,13 +107,5 @@ namespace TowerDefense
         [SerializeField] private Button cancelBtn = default;
         [SerializeField] private Text upgradeBtnText = default;
         [SerializeField] private Text sellBtnText = default;
-
-        protected override OpenAnim Anim => OpenAnim.Scale;
-
-        protected override Transform AnimTransform => background;
-
-        protected override float AnimDuration => 0.4f;
-
-        protected override bool HideWhenClickOtherPlace => true;
     }
 }

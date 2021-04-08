@@ -122,7 +122,7 @@ namespace TowerDefense
                 maxHp = hp,
                 coins = coins,
                 maxWaveCount = stageConfig.waveDatas.Length
-            }, UILayer.Background);
+            });
 
             // 设置相机的初始位置
             CameraController.Instance.ResetPosition();

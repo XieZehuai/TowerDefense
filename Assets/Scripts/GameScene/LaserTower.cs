@@ -13,7 +13,7 @@ namespace TowerDefense
         private LineRenderer lineRenderer;
         private static readonly Vector3 laserOriginPos = new Vector3(0f, 0f, -0.5f); // 激光的发射点
 
-        private void Awake()
+        protected override void OnInstantiate()
         {
             lineRenderer = laser.GetComponent<LineRenderer>();
         }
@@ -49,14 +49,6 @@ namespace TowerDefense
 
             float deltaDamage = Data.LevelData.damage * deltaTime;
             target.GetDamage(deltaDamage, Data.attackType);
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (target != null)
-            {
-                Gizmos.DrawLine(transform.localPosition, target.LocalPosition);
-            }
         }
     }
 }

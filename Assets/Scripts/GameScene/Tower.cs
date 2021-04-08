@@ -8,7 +8,9 @@ namespace TowerDefense
     public abstract class Tower : PoolObject
     {
         private TowerData data; // 炮塔的数据
+        private Particle attackRangeEffect;
 
+        #region 属性
         /// <summary>
         /// 炮塔的数据
         /// </summary>
@@ -38,6 +40,13 @@ namespace TowerDefense
         /// 炮塔的本地坐标
         /// </summary>
         public Vector3 LocalPosition => transform.localPosition;
+        #endregion
+
+        public override void OnSpawn()
+        {
+            attackRangeEffect = ObjectPool.Spawn<Particle>("TowerAttackRangeEffect", transform.localPosition);
+            attackRangeEffect.Stop();
+        }
 
         /// <summary>
         /// 设置炮塔坐标
@@ -50,19 +59,54 @@ namespace TowerDefense
             Y = y;
         }
 
+        public void ShowAttackRange(float attackRange)
+        {
+            attackRangeEffect.SetFloat("AttackRange", attackRange);
+            attackRangeEffect.Replay();
+        }
+
+        public void HideAttackRange()
+        {
+            attackRangeEffect.Stop();
+        }
+
+        public void Upgrade()
+        {
+            var result = CanUpgrade();
+            if (result.Item1)
+            {
+                data.LevelUp();
+                Manager.Coins -= result.Item2;
+            }
+        }
+
+        public (bool, int) CanUpgrade()
+        {
+            int cost = data.GetNextLevelCost();
+
+            return (cost != -1 && Manager.Coins >= cost, cost);
+        }
+
+        public void Sell()
+        {
+            Manager.Coins += GetSellPrice();
+            Manager.TowerManager.RemoveTower(this);
+        }
+
+        public int GetSellPrice()
+        {
+            return data.GetTotalCost() / 2;
+        }
+
         /// <summary>
         /// 设置炮塔数据时调用
         /// </summary>
-        protected virtual void OnSetData()
-        {
-        }
+        protected virtual void OnSetData() { }
 
         /// <summary>
         /// 炮塔更新逻辑，每帧调用
         /// </summary>
-        public virtual void OnUpdate(float deltaTime)
-        {
-        }
+        public virtual void OnUpdate(float deltaTime) { }
 
         /// <summary>
         /// 寻找攻击范围内的敌人
@@ -108,43 +152,27 @@ namespace TowerDefense
 
         private void OnSelected()
         {
-            int cost = data.GetNextLevelCost();
+            ShowAttackRange(data.LevelData.attackRange);
+            UIManager.Instance.Open<UITowerOption>(new UITowerOptionData { tower = this }, UILayer.Background);
 
-            Particle particle = ObjectPool.Spawn<Particle>("TowerAttackRangeEffect", transform.localPosition);
-            particle.SetFloat("AttackRange", data.LevelData.attackRange);
-
-            UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
-            {
-                position = LocalPosition,
-                onUpgradeBtnClick = LevelUp,
-                onSellBtnClick = Sell,
-                onHide = () => ObjectPool.Unspawn(particle),
-                upgradePrice = cost,
-                canUpgrade = cost != -1 && Manager.Coins >= cost,
-                sellPrice = data.GetTotalCost() / 2
-            }, UILayer.Background);
-        }
-
-        private void LevelUp()
-        {
-            int cost = data.GetNextLevelCost();
-
-            if (cost != -1 && Manager.Coins >= cost)
-            {
-                data.LevelUp();
-                Manager.Coins -= cost;
-            }
-        }
-
-        private void Sell()
-        {
-            Manager.Coins += data.GetTotalCost() / 2;
-            Manager.TowerManager.RemoveTower(this);
+            //int cost = data.GetNextLevelCost();
+            //UIManager.Instance.Open<UITowerOption>(new UITowerOptionData
+            //{
+            //    position = LocalPosition,
+            //    onUpgradeBtnClick = Upgrade,
+            //    onSellBtnClick = Sell,
+            //    onHide = HideAttackRange,
+            //    upgradePrice = cost,
+            //    canUpgrade = cost != -1 && Manager.Coins >= cost,
+            //    sellPrice = data.GetTotalCost() / 2
+            //}, UILayer.Background);
         }
 
         public override void OnUnspawn()
         {
             Manager = null;
+            ObjectPool.Unspawn(attackRangeEffect);
+            attackRangeEffect = null;
         }
 
         private void OnDrawGizmosSelected()

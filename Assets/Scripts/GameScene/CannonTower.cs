@@ -38,6 +38,7 @@ namespace TowerDefense
 
         public override void OnUnspawn()
         {
+            base.OnUnspawn();
             warEntityManager = null;
         }
 

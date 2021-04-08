@@ -18,27 +18,7 @@ namespace TowerDefense
     {
         private static readonly List<RaycastResult> raycastResult = new List<RaycastResult>();
 
-        /// <summary>
-        /// UI打开和关闭的动画
-        /// </summary>
-        protected enum OpenAnim
-        {
-            None,
-            Scale,
-        }
-
-
         public bool IsOpen { get; private set; }
-
-        protected virtual OpenAnim Anim => OpenAnim.None;
-
-        protected virtual Transform AnimTransform => transform.GetChild(0);
-
-        protected virtual float AnimDuration => 0.5f;
-
-        protected virtual bool HideWhenClickOtherPlace => false;
-
-        private bool canHideSelf;
 
         public void Init(UIDataBase uiData)
         {
@@ -53,33 +33,15 @@ namespace TowerDefense
             IsOpen = true;
             gameObject.SetActive(true);
             OnOpen(uiData);
-
-            if (Anim == OpenAnim.Scale)
-            {
-                AnimTransform.localScale = Vector3.zero;
-                AnimTransform.DOScale(Vector3.one, AnimDuration).OnComplete(() => { canHideSelf = true; });
-            }
-            else
-            {
-                this.Invoke(() => canHideSelf = true, null);
-            }
         }
 
         public void Hide()
         {
             if (!IsOpen) return;
 
-            canHideSelf = false;
-
-            if (Anim == OpenAnim.Scale)
-            {
-                AnimTransform.DOScale(Vector3.zero, AnimDuration).OnComplete(() =>
-                {
-                    OnHide();
-                    gameObject.SetActive(false);
-                    IsOpen = false;
-                });
-            }
+            OnHide();
+            gameObject.SetActive(false);
+            IsOpen = false;
         }
 
         public void Close()
@@ -122,19 +84,6 @@ namespace TowerDefense
         {
         }
 
-        private void Update()
-        {
-            if (HideWhenClickOtherPlace && canHideSelf)
-            {
-                HideSelf();
-            }
-
-            if (IsOpen)
-            {
-                OnUpdate();
-            }
-        }
-
         private void HideSelf()
         {
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
@@ -152,13 +101,9 @@ namespace TowerDefense
                         return;
                     }
                 }
-                
+
                 Hide();
             }
-        }
-
-        protected virtual void OnUpdate()
-        {
         }
     }
 }
