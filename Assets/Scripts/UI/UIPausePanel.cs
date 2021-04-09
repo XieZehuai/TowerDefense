@@ -3,10 +3,21 @@ using UnityEngine.UI;
 
 namespace TowerDefense
 {
+    public class UIPausePanelData : UIDataBase
+    {
+        public StageManager manager;
+    }
+
+
     public partial class UIPausePanel : UIBase
     {
+        private StageManager manager;
+
         protected override void OnInit(UIDataBase uiData)
         {
+            var data = uiData as UIPausePanelData ?? new UIPausePanelData();
+            manager = data.manager;
+
             resumeBtn.onClick.AddListener(OnResumeBtnClick);
             replayBtn.onClick.AddListener(OnReplayBtnClick);
             optionsBtn.onClick.AddListener(OnOptionsBtnClick);
@@ -23,13 +34,13 @@ namespace TowerDefense
 
         private void OnResumeBtnClick()
         {
-            TypeEventSystem.Send(new ContinueGame());
+            manager.Continue();
             Hide();
         }
 
         private void OnReplayBtnClick()
         {
-            TypeEventSystem.Send(new ReplayGame());
+            manager.Replay();
             Hide();
         }
 

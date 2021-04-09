@@ -4,21 +4,14 @@ namespace TowerDefense
 {
     public class InputManager : SubStageManager
     {
-        private MapObjectType selectedGridType = MapObjectType.Wall; // 当前选择的格子类型
-        private int selectedTowerId = -1; // 当前选择的塔的ID
+        public MapObjectType GridType { get; set; } = MapObjectType.Wall; // 当前选择的格子类型
+
+        public int TowerId { get; set; } = -1; // 当前选择的塔的ID
 
         private float undoTimer; // 连续撤销操作的计时器
 
         public InputManager(StageManager stageManager) : base(stageManager)
         {
-            TypeEventSystem.Register<StartGame>(StartGame);
-            TypeEventSystem.Register<PauseGame>(Pause);
-            TypeEventSystem.Register<ContinueGame>(Continue);
-            TypeEventSystem.Register<ReplayGame>(Replay);
-            TypeEventSystem.Register<SaveMap>(SaveMap);
-            TypeEventSystem.Register<ChangeGridType>(ChangeGridType);
-            TypeEventSystem.Register<ChangeTowerType>(ChangeTowerType);
-            TypeEventSystem.Register<TogglePathIndicator>(TogglePathIndicator);
         }
 
         public override void OnUpdate(float deltaTime)
@@ -45,7 +38,7 @@ namespace TowerDefense
             if (Input.GetMouseButton(0))
             {
                 Vector3 pos = Utils.GetMousePosition();
-                manager.MapManager.ChangeGridType(pos, selectedGridType, true);
+                manager.MapManager.ChangeGridType(pos, GridType, true);
             }
         }
 
@@ -76,10 +69,10 @@ namespace TowerDefense
         // 摆放炮塔
         private void PlaceTower()
         {
-            if (Input.GetMouseButtonDown(1) && selectedTowerId != -1)
+            if (Input.GetMouseButtonDown(1) && TowerId != -1)
             {
-                manager.TowerManager.PlaceTower(Utils.GetMousePosition(), selectedTowerId);
-                selectedTowerId = -1;
+                manager.TowerManager.PlaceTower(Utils.GetMousePosition(), TowerId);
+                TowerId = -1;
             }
         }
 
@@ -102,61 +95,5 @@ namespace TowerDefense
         }
 
         #endregion
-
-        #region UI输入事件，全部通过发送消息触发
-
-        private void StartGame(StartGame context)
-        {
-            manager.StartGame();
-        }
-
-        private void Pause(PauseGame context)
-        {
-            manager.Pause();
-        }
-
-        private void Continue(ContinueGame context)
-        {
-            manager.Continue();
-        }
-
-        private void Replay(ReplayGame context)
-        {
-            manager.Replay();
-        }
-
-        private void SaveMap(SaveMap context)
-        {
-            manager.SaveMapData();
-        }
-
-        private void ChangeGridType(ChangeGridType context)
-        {
-            selectedGridType = context.type;
-        }
-
-        private void ChangeTowerType(ChangeTowerType context)
-        {
-            selectedTowerId = context.towerId;
-        }
-
-        private void TogglePathIndicator(TogglePathIndicator context)
-        {
-            manager.PathIndicator.TogglePathIndicator();
-        }
-
-        #endregion
-
-        protected override void OnDispose()
-        {
-            TypeEventSystem.UnRegister<StartGame>(StartGame);
-            TypeEventSystem.UnRegister<PauseGame>(Pause);
-            TypeEventSystem.UnRegister<ContinueGame>(Continue);
-            TypeEventSystem.UnRegister<ReplayGame>(Replay);
-            TypeEventSystem.UnRegister<SaveMap>(SaveMap);
-            TypeEventSystem.UnRegister<ChangeGridType>(ChangeGridType);
-            TypeEventSystem.UnRegister<ChangeTowerType>(ChangeTowerType);
-            TypeEventSystem.UnRegister<TogglePathIndicator>(TogglePathIndicator);
-        }
     }
 }

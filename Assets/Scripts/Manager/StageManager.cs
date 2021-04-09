@@ -18,17 +18,16 @@ namespace TowerDefense
             GameOver, // 游戏结束
         }
 
-        private StageConfig stageConfig; // 当前关卡配置
+
         private int hp; // 当前生命
         private int coins; // 当前金币
 
         private State state = State.Preparing; // 当前游戏的状态
         private State stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
-        private bool isSpeedUp; // 当前是否处于加速模式
-        private PathFinder pathFinder;
 
         #region 实现各种功能的子管理器
 
+        private PathFinder pathFinder;
         public InputManager InputManager { get; private set; }
         public MapManager MapManager { get; private set; }
         public EnemyManager EnemyManager { get; private set; }
@@ -42,6 +41,8 @@ namespace TowerDefense
         public bool IsPlaying => state == State.Playing;
         public bool IsPaused => state == State.Paused;
         public bool IsGameOver => state == State.GameOver;
+        public bool IsSpeedUp { get; private set; }
+        public StageConfig StageConfig { get; private set; }
 
         /// <summary>
         /// 当前玩家的生命值
@@ -72,14 +73,14 @@ namespace TowerDefense
         private void Awake()
         {
             // 设置关卡数据
-            stageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Data.Stage); // 获取关卡数据
-            hp = stageConfig.playerHp;
-            coins = stageConfig.coins;
+            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Data.Stage); // 获取关卡数据
+            hp = StageConfig.playerHp;
+            coins = StageConfig.coins;
 
             // 初始化子管理器
             InputManager = new InputManager(this);
             MapManager = new MapManager(this);
-            EnemyManager = new EnemyManager(this, stageConfig.waveInterval, stageConfig.waveDatas);
+            EnemyManager = new EnemyManager(this, StageConfig.waveInterval, StageConfig.waveDatas);
             TowerManager = new TowerManager(this);
             WarEntityManager = new WarEntityManager(this);
             PathIndicator = new PathIndicator(this);
@@ -117,9 +118,7 @@ namespace TowerDefense
             // 打开游戏UI
             UIManager.Instance.Open<UIGameScene>(new UIGameSceneData
             {
-                maxHp = hp,
-                coins = coins,
-                maxWaveCount = stageConfig.waveDatas.Length
+                manager = this
             });
 
             // 设置相机的初始位置
@@ -129,7 +128,7 @@ namespace TowerDefense
         private void Update()
         {
             float deltaTime = Time.deltaTime;
-            if (isSpeedUp) deltaTime *= 2f;
+            if (IsSpeedUp) deltaTime *= 2f;
 
             InputManager.OnUpdate(deltaTime);
 
@@ -169,6 +168,8 @@ namespace TowerDefense
 
             stateTemp = state; // 保存原状态
             state = State.Paused;
+
+            UIManager.Instance.Open<UIPausePanel>(new UIPausePanelData { manager = this }, UILayer.Foreground);
         }
 
         /// <summary>
@@ -191,8 +192,9 @@ namespace TowerDefense
         public void Replay()
         {
             state = State.Preparing;
-            HP = stageConfig.playerHp;
-            Coins = stageConfig.coins;
+            HP = StageConfig.playerHp;
+            Coins = StageConfig.coins;
+            IsSpeedUp = false;
 
             EnemyManager.Replay();
             TowerManager.Replay();
@@ -201,6 +203,9 @@ namespace TowerDefense
             TypeEventSystem.Send(new OnReplay());
         }
 
+        /// <summary>
+        /// 游戏结束，进行结算
+        /// </summary>
         public void GameOver()
         {
             state = State.GameOver;
@@ -212,7 +217,7 @@ namespace TowerDefense
             }
             else
             {
-                Debug.Log("游戏失败");
+                UIManager.Instance.Open<UIStageFailed>(new UIStageFailedData { onReplayBtnClick = Replay });
             }
         }
 
@@ -222,7 +227,7 @@ namespace TowerDefense
         /// <param name="speedUp">是否加速</param>
         public void SpeedUp(bool speedUp)
         {
-            isSpeedUp = speedUp;
+            IsSpeedUp = speedUp;
         }
 
         /// <summary>

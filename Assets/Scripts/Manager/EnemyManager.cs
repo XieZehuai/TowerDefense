@@ -29,8 +29,6 @@ namespace TowerDefense
             this.waveDatas = waveDatas;
 
             Replay(); // Replay方法重置场景物体并重新开始游戏，也可用于第一次开始游戏
-
-            TypeEventSystem.Register<NextWave>(SpawnNextWave);
         }
 
         /// <summary>
@@ -154,7 +152,7 @@ namespace TowerDefense
         }
 
         // 生成下一波
-        private void SpawnNextWave(NextWave context = default)
+        public void SpawnNextWave()
         {
             if (!isNextWave) return;
 
@@ -205,11 +203,6 @@ namespace TowerDefense
                     Enemys.QuickRemove(i--);
                 }
             }
-        }
-
-        protected override void OnDispose()
-        {
-            TypeEventSystem.UnRegister<NextWave>(SpawnNextWave);
         }
     }
 }

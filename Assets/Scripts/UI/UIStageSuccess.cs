@@ -27,7 +27,7 @@ namespace TowerDefense
         {
             continueBtn.onClick.RemoveAllListeners();
             exitBtn.onClick.RemoveAllListeners();
-            transform.DOKill();
+            background.DOKill();
         }
 
         private void OnContinueBtnClick()
