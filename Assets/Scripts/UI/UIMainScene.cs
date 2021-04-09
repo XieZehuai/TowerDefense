@@ -3,11 +3,6 @@ using UnityEngine.UI;
 
 namespace TowerDefense
 {
-    public class UIMainSceneData : UIDataBase
-    {
-    }
-
-
     public partial class UIMainScene : UIBase
     {
         protected override void OnInit(UIDataBase uiData)
@@ -26,11 +21,13 @@ namespace TowerDefense
 
         private void OnStartBtnClick()
         {
-            GameManager.Instance.LoadGameScene();
+            //GameManager.Instance.LoadGameScene();
+            UIManager.Instance.Open<UISelectStage>(layer: UILayer.Foreground);
         }
 
         private void OnSettingBtnClick()
         {
+            // TODO: 打开设置界面
         }
 
         private void OnExitBtnClick()

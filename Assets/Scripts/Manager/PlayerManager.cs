@@ -37,6 +37,18 @@ namespace TowerDefense
             Save();
         }
 
+        public static void ChangeStage(int stage)
+        {
+            if (stage > data.MaxStage)
+            {
+                Debug.LogError("当前关卡还没解锁: " + stage);
+            }
+            else
+            {
+                data.Stage = stage;
+            }
+        }
+
         public static void NextStage()
         {
             if (data.Stage >= data.MaxStage)
