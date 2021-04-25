@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TowerDefense
 {
@@ -17,7 +15,7 @@ namespace TowerDefense
 
         public void Play(AudioClip audioClip, float duration)
         {
-            Play(audioClip, false, 1f, true);
+            Play(audioClip, duration, false, 1f, true);
         }
 
         public void Play(AudioClip audioClip, bool repeat, float volume, bool replay)

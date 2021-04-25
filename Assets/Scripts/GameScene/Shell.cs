@@ -49,6 +49,7 @@ namespace TowerDefense
             });
 
             ObjectPool.Spawn("ShellExplosionEffect", transform.localPosition, Quaternion.identity, Vector3.one).DelayUnspawn(5f);
+            AudioManager.Instance.Play(AudioType.ShellExplode, 1f, transform.localPosition);
         }
     }
 }

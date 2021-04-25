@@ -1,3 +1,5 @@
+Audio=Audio
+ShellExplodeAudio=Audio/ShellExplodeAudio
 DOTweenSettings=DOTweenSettings
 Prefab=Prefab
 Effect=Prefab/Effect
