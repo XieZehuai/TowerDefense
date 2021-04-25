@@ -41,7 +41,15 @@ namespace TowerDefense
         public bool IsPlaying => state == State.Playing;
         public bool IsPaused => state == State.Paused;
         public bool IsGameOver => state == State.GameOver;
+
+        /// <summary>
+        /// 当前是否处于加速模式
+        /// </summary>
         public bool IsSpeedUp { get; private set; }
+
+        /// <summary>
+        /// 当前关卡的配置
+        /// </summary>
         public StageConfig StageConfig { get; private set; }
 
         /// <summary>
@@ -73,7 +81,7 @@ namespace TowerDefense
         private void Awake()
         {
             // 设置关卡数据
-            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Data.Stage); // 获取关卡数据
+            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Data.CurrentStage); // 获取关卡数据
             hp = StageConfig.playerHp;
             coins = StageConfig.coins;
 
@@ -212,8 +220,28 @@ namespace TowerDefense
 
             if (hp > 0)
             {
-                PlayerManager.StageSuccess();
-                UIManager.Instance.Open<UIStageSuccess>();
+                int starCount = 0;
+                int maxHp = StageConfig.playerHp;
+
+                if (hp == maxHp)
+                {
+                    starCount = 3;
+                }
+                else if (hp >= maxHp * 0.6f)
+                {
+                    starCount = 2;
+                }
+                else if (hp >= maxHp * 0.3f)
+                {
+                    starCount = 1;
+                }
+
+                PlayerManager.StageSuccess(starCount);
+                UIManager.Instance.Open<UIStageSuccess>(new UIStageSuccessData
+                {
+                    stage = PlayerManager.Data.CurrentStage,
+                    starCount = starCount
+                });
             }
             else
             {
@@ -236,7 +264,7 @@ namespace TowerDefense
         public void SaveMapData()
         {
             Debug.Log("保存地图数据");
-            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.Stage);
+            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.CurrentStage);
         }
 
         /// <summary>
@@ -244,7 +272,7 @@ namespace TowerDefense
         /// </summary>
         public void LoadMapData()
         {
-            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.Stage);
+            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.CurrentStage);
         }
 
         /// <summary>

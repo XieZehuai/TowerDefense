@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace TowerDefense
@@ -7,27 +6,32 @@ namespace TowerDefense
     [RequireComponent(typeof(Button))]
     public class UIStageBtn : PoolObject
     {
-        private Button button;
-        private Text text;
-        private int stage;
+        [SerializeField] private Button button = default;
+        [SerializeField] private Text text = default;
+        [SerializeField] private Image[] starImages = default;
 
-        public int Stage
-        {
-            get => stage;
-            set
-            {
-                stage = value;
-                text.text = $"第 {stage} 关";
-                button.interactable = stage <= PlayerManager.Data.MaxStage;
-            }
-        }
+        private int stage;
 
         protected override void OnInstantiate()
         {
-            button = GetComponent<Button>();
-            text = GetComponentInChildren<Text>();
-
             button.onClick.AddListener(ChangeStage);
+        }
+        
+        /// <summary>
+        /// 设置数据
+        /// </summary>
+        /// <param name="stage">关卡数</param>
+        /// <param name="starCount">关卡评分</param>
+        public void SetData(int stage, int starCount)
+        {
+            this.stage = stage;
+            text.text = $"第 {stage} 关";
+            button.interactable = stage <= PlayerManager.Data.ReachStage;
+
+            for (int i = 0; i < starImages.Length; i++)
+            {
+                starImages[i].color = i < starCount ? Color.yellow : Color.gray;
+            }
         }
 
         public override void OnReclaim()
@@ -37,7 +41,7 @@ namespace TowerDefense
 
         private void ChangeStage()
         {
-            PlayerManager.ChangeStage(stage);
+            PlayerManager.ChangeCurrentStage(stage);
             GameManager.Instance.LoadGameScene();
         }
     }

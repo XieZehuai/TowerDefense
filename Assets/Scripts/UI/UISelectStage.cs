@@ -16,7 +16,8 @@ namespace TowerDefense
             {
                 UIStageBtn btn = ObjectPool.Spawn<UIStageBtn>("UIStageBtn");
                 btn.transform.SetParent(content);
-                btn.Stage = i + 1;
+                int stage = i + 1;
+                btn.SetData(stage, PlayerManager.GetStageStar(stage));
 
                 btns[i] = btn;
             }

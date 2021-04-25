@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    // TODO:    音效管理、设置界面
+    // TODO:    音效管理、设置界面、玩家数据增加每关的评分
     // TODO:    多个关卡、所有炮塔数据、点击炮塔类型后显示炮塔模型
     // BUG:     
     // DOING:   成功结算界面，玩家数据管理、失败结算界面、章节选择界面、加速模式
@@ -35,10 +35,13 @@ namespace TowerDefense
 
         public StageConfig DefaultStageConfig => stageConfigs[0];
 
+        public int MaxStageCount => stageConfigs.Length - 1;
+
         public TowerConfig TowerConfig => towerConfig;
 
         protected override void OnInit()
         {
+            PlayerManager.LoadPlayerData();
             UIManager.Instance.Open<UIMainScene>();
         }
 

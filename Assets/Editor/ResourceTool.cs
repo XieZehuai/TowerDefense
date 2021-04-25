@@ -39,6 +39,14 @@ namespace TowerDefense
             {
                 writer.Write(1);
                 writer.Write(1);
+
+                int maxStage = 1;
+                writer.Write(maxStage);
+
+                for (int i = 0; i < maxStage; i++)
+                {
+                    writer.Write(0);
+                }
             }
         }
     }

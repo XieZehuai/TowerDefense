@@ -4,6 +4,13 @@ using DG.Tweening;
 
 namespace TowerDefense
 {
+    public class UIStageSuccessData : UIDataBase
+    {
+        public int stage;
+        public int starCount;
+    }
+
+
     public partial class UIStageSuccess : UIBase
     {
         protected override void OnInit(UIDataBase uiData)
@@ -14,6 +21,13 @@ namespace TowerDefense
 
         protected override void OnOpen(UIDataBase uiData)
         {
+            data = uiData as UIStageSuccessData ?? new UIStageSuccessData();
+
+            for (int i = 0; i < starImages.Length; i++)
+            {
+                starImages[i].color = i < data.starCount ? Color.yellow : Color.gray;
+            }
+
             background.localScale = Vector3.zero;
             background.DOScale(Vector3.one, 0.5f);
         }
@@ -45,8 +59,10 @@ namespace TowerDefense
 
     public partial class UIStageSuccess
     {
-        [SerializeField] private Transform background = default;
+        private UIStageSuccessData data;
 
+        [SerializeField] private Transform background = default;
+        [SerializeField] private Image[] starImages = default;
         [SerializeField] private Button continueBtn = default;
         [SerializeField] private Button exitBtn = default;
     }
