@@ -170,7 +170,7 @@ namespace TowerDefense
         private void CreateEnemy(int id)
         {
             EnemyData enemyData = GameManager.Instance.EnemyConfig.GetEnemyData(id); // 获取敌人数据
-            Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name);
+            Enemy enemy = ObjectPool.Spawn<Enemy>(enemyData.name + "Prefab");
 
             enemy.Data = enemyData;
             int random = Random.Range(0, spawnPointPaths.Length); // 随机设置路径

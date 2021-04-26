@@ -51,20 +51,25 @@ namespace TowerDefense
             switch (towerId)
             {
                 case 0:
-                    tower = ObjectPool.Spawn<MachineGunTower>("MachineGunTower", towerPos);
+                    //tower = ObjectPool.Spawn<MachineGunTower>("MachineGunTower", towerPos);
+                    tower = ObjectPool.Spawn<MachineGunTower>(Res.MachineGunTowerPrefab, towerPos);
                     break;
 
                 case 1:
-                    tower = ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
+                    //tower = ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
+                    tower = ObjectPool.Spawn<LaserTower>(Res.LaserTowerPrefab, towerPos);
                     break;
 
                 case 2:
-                    tower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos)
+                    //tower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos)
+                    //    .SetWarEntityManager(manager.WarEntityManager);
+                    tower = ObjectPool.Spawn<CannonTower>(Res.CannonTowerPrefab, towerPos)
                         .SetWarEntityManager(manager.WarEntityManager);
                     break;
 
                 case 3:
-                    tower = ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
+                    //tower = ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
+                    tower = ObjectPool.Spawn<DecelerationTower>(Res.DecelerationTowerPrefab, towerPos);
                     break;
 
                 default:

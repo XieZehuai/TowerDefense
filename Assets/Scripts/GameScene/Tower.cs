@@ -47,7 +47,8 @@ namespace TowerDefense
 
         public override void OnSpawn()
         {
-            attackRangeEffect = ObjectPool.Spawn<Particle>("TowerAttackRangeEffect", transform.localPosition);
+            //attackRangeEffect = ObjectPool.Spawn<Particle>("TowerAttackRangeEffect", transform.localPosition);
+            attackRangeEffect = ObjectPool.Spawn<Particle>(Res.TowerAttackRangeEffectPrefab, transform.localPosition);
             attackRangeEffect.Stop();
         }
 

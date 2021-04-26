@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,15 +16,30 @@ namespace TowerDefense
         {
             string[] resFiles = AssetDatabase.FindAssets("t:object", new string[] { "Assets/Resources" });
 
+            // 根据资源名生成代码
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(@"namespace TowerDefense
+{
+    public static class Res
+    {");
+
             for (int i = 0; i < resFiles.Length; i++)
             {
                 resFiles[i] = AssetDatabase.GUIDToAssetPath(resFiles[i]);
                 string fileName = Path.GetFileNameWithoutExtension(resFiles[i]);
+
+                sb.AppendLine($@"        public const string " + fileName + " = " + '"' + fileName + '"' + ';');
+
                 string filePath = resFiles[i].Replace("Assets/Resources/", string.Empty).Split('.')[0];
                 resFiles[i] = fileName + "=" + filePath;
             }
 
+            sb.AppendLine(@"    }
+}");
+
             File.WriteAllLines("Assets/StreamingAssets/ResourceConfig.txt", resFiles);
+            File.WriteAllText("Assets/Scripts/ConfigAndData/Res.cs", sb.ToString());
+
             AssetDatabase.Refresh();
         }
 

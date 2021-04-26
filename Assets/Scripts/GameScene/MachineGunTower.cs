@@ -72,7 +72,9 @@ namespace TowerDefense
 
         private void ShowAttackEffect()
         {
-            ObjectPool.Spawn<PoolObject>("MachineGunAttackEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(0.5f);
+            //ObjectPool.Spawn<PoolObject>("MachineGunAttackEffect", attackPoint.position, attackPoint.rotation, Vector3.one).DelayUnspawn(0.5f);
+            ObjectPool.Spawn<PoolObject>(Res.MachineGunAttackEffectPrefab, attackPoint.position,
+                attackPoint.rotation, Vector3.one).DelayUnspawn(0.5f);
         }
     }
 }

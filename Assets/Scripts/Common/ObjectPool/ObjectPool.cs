@@ -39,7 +39,8 @@ namespace TowerDefense
         {
             if (!ContainsPool(tag))
             {
-                GameObject prefab = ResourceManager.Load<GameObject>(tag + "Prefab");
+                //GameObject prefab = ResourceManager.Load<GameObject>(tag + "Prefab");
+                GameObject prefab = ResourceManager.Load<GameObject>(tag);
                 CreatePool(tag, prefab);
             }
 
@@ -104,13 +105,18 @@ namespace TowerDefense
         {
             if (!ContainsPool(tag))
             {
-                GameObject prefab = ResourceManager.Load<GameObject>(tag + "Prefab");
+                //GameObject prefab = ResourceManager.Load<GameObject>(tag + "Prefab");
+                GameObject prefab = ResourceManager.Load<GameObject>(tag);
                 CreatePool(tag, prefab);
             }
 
             return pools[tag].Spawn<T>(pos, rot, scale, parent);
         }
 
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        /// <param name="obj">要回收的对象</param>
         public static void Unspawn(PoolObject obj)
         {
             Unspawn(obj.Tag, obj);

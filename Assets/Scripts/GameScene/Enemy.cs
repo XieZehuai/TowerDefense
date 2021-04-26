@@ -145,7 +145,8 @@ namespace TowerDefense
             float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             offset = new Vector3(x, 0.3f, z);
 
-            healthBar = ObjectPool.Spawn<HealthBar>("HealthBar");
+            //healthBar = ObjectPool.Spawn<HealthBar>("HealthBar");
+            healthBar = ObjectPool.Spawn<HealthBar>(Res.HealthBarPrefab);
             healthBar.Follow(transform, new Vector3(0f, 0.3f, 0f));
         }
 
@@ -187,7 +188,9 @@ namespace TowerDefense
             if (currentHp <= 0)
             {
                 TypeEventSystem.Send(new OnEnemyDestroy { reward = data.reward });
-                ObjectPool.Spawn("EnemyDestroyEffect", transform.localPosition, Quaternion.identity, Vector3.one)
+                //ObjectPool.Spawn("EnemyDestroyEffect", transform.localPosition, Quaternion.identity, Vector3.one)
+                //    .DelayUnspawn(1.5f);
+                ObjectPool.Spawn(Res.EnemyDestroyEffectPrefab, transform.localPosition, Quaternion.identity, Vector3.one)
                     .DelayUnspawn(1.5f);
                 return false;
             }
@@ -225,7 +228,9 @@ namespace TowerDefense
             if (hitEffectTimer >= hitEffectDuration)
             {
                 hitEffectTimer = 0f;
-                ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f))
+                //ObjectPool.Spawn<Particle>("EnemyHitEffect").Follow(transform, new Vector3(0f, 0.2f, 0f))
+                //    .DelayUnspawn(0.5f);                
+                ObjectPool.Spawn<Particle>(Res.EnemyHitEffectPrefab).Follow(transform, new Vector3(0f, 0.2f, 0f))
                     .DelayUnspawn(0.5f);
             }
         }

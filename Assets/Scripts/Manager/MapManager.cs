@@ -456,8 +456,7 @@ namespace TowerDefense
         private void LoadModel(int x, int y, MapObjectType type)
         {
             Vector3 pos = Map.GetWorldPosition(x, y);
-            PoolObject obj =
-                ObjectPool.Spawn<PoolObject>(type.ToString(), pos, Quaternion.identity, Vector3.one * cellSize);
+            PoolObject obj = ObjectPool.Spawn<PoolObject>(type.ToString() + "Prefab", pos, Quaternion.identity, Vector3.one * cellSize);
             models[x, y] = obj;
         }
 

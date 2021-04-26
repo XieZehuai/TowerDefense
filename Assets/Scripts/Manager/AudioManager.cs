@@ -18,19 +18,22 @@ namespace TowerDefense
         {
 			if (!audioClipDic.ContainsKey(audioType))
             {
-				string clipName = audioType.ToString() + "Audio";
-				AudioClip clip = ResourceManager.Load<AudioClip>(clipName);
+				//string clipName = audioType.ToString() + "Audio";
+				//AudioClip clip = ResourceManager.Load<AudioClip>(clipName);
+				AudioClip clip = ResourceManager.Load<AudioClip>(Res.ShellExplodeAudio);
 
 				if (clip == null)
                 {
-					Debug.LogError("找不到音效文件：" + clipName);
+					//Debug.LogError("找不到音效文件：" + clipName);
+					Debug.LogError("找不到音效文件：" + Res.ShellExplodeAudio);
 					return;
                 }
 
 				audioClipDic.Add(audioType, clip);
             }
 
-			ObjectPool.Spawn<AudioPlayer>("AudioPlayer", pos).Play(audioClipDic[audioType], duration);
-        }
+			//ObjectPool.Spawn<AudioPlayer>("AudioPlayer", pos).Play(audioClipDic[audioType], duration);
+			ObjectPool.Spawn<AudioPlayer>(Res.AudioPlayerPrefab, pos).Play(audioClipDic[audioType], duration);
+		}
 	}
 }

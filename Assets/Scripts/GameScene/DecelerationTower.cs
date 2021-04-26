@@ -41,7 +41,8 @@ namespace TowerDefense
                 enemy.Decelerate(Data.LevelData.decelerationDuration, Data.LevelData.decelerationRate);
             });
 
-            Particle particle = ObjectPool.Spawn<Particle>("DecelerateWave_1_Effect", transform.localPosition);
+            //Particle particle = ObjectPool.Spawn<Particle>("DecelerateWave_1_Effect", transform.localPosition);
+            Particle particle = ObjectPool.Spawn<Particle>(Res.DecelerateWave_1_EffectPrefab, transform.localPosition);
             particle.SetFloat("CircleSize", Data.LevelData.attackRange);
             particle.Play();
             particle.DelayUnspawn(0.5f);

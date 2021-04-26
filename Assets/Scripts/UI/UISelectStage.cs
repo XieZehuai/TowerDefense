@@ -14,7 +14,8 @@ namespace TowerDefense
             Debug.Log(stageCount);
             for (int i = 0; i < stageCount; i++)
             {
-                UIStageBtn btn = ObjectPool.Spawn<UIStageBtn>("UIStageBtn");
+                //UIStageBtn btn = ObjectPool.Spawn<UIStageBtn>("UIStageBtn");
+                UIStageBtn btn = ObjectPool.Spawn<UIStageBtn>(Res.UIStageBtnPrefab);
                 btn.transform.SetParent(content);
                 int stage = i + 1;
                 btn.SetData(stage, PlayerManager.GetStageStar(stage));

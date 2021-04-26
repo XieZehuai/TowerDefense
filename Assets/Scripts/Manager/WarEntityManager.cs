@@ -13,7 +13,8 @@ namespace TowerDefense
 
         public void LaunchShell(float blastRadius, float damage, Vector3 attackPos, Vector3 targetPos, Vector3 velocity)
         {
-            Shell shell = ObjectPool.Spawn<Shell>("Shell", attackPos);
+            //Shell shell = ObjectPool.Spawn<Shell>("Shell", attackPos);
+            Shell shell = ObjectPool.Spawn<Shell>(Res.ShellPrefab, attackPos);
             shell.Init(blastRadius, damage, attackPos, targetPos, velocity);
             entities.Add(shell);
         }

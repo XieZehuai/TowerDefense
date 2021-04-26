@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 路径指示器，显示所有从出生点到目标点的移动路径
+    /// </summary>
     public class PathIndicator : SubStageManager
     {
         private List<Vector3>[] paths;
@@ -14,6 +17,10 @@ namespace TowerDefense
         {
         }
 
+        /// <summary>
+        /// 设置路径数据
+        /// </summary>
+        /// <param name="paths"></param>
         public void SetPath(List<Vector2Int>[] paths)
         {
             this.paths = new List<Vector3>[paths.Length];
@@ -35,6 +42,9 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 显示或隐藏路径
+        /// </summary>
         public void TogglePathIndicator()
         {
             showPath = !showPath;
@@ -46,6 +56,9 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 显示路径
+        /// </summary>
         private void ShowPath()
         {
             for (int i = 0; i < paths.Length; i++)
@@ -56,18 +69,28 @@ namespace TowerDefense
                     Vector3 pos = paths[i][j] + height;
                     float dir = GetDirection(paths[i][j], paths[i][j + 1]);
                     Quaternion rot = Quaternion.Euler(new Vector3(90f, dir, 0f));
-                    PoolObject arrow = ObjectPool.Spawn<PoolObject>("Arrow", pos, rot);
+                    //PoolObject arrow = ObjectPool.Spawn<PoolObject>("Arrow", pos, rot);
+                    PoolObject arrow = ObjectPool.Spawn<PoolObject>(Res.ArrowPrefab, pos, rot);
                     arrows.Add(arrow);
                 }
             }
         }
 
+        /// <summary>
+        /// 隐藏路径
+        /// </summary>
         private void HidePath()
         {
-            ObjectPool.UnspawnAll("Arrow");
+            ObjectPool.UnspawnAll(Res.ArrowPrefab);
             arrows.Clear();
         }
 
+        /// <summary>
+        /// 获取箭头的方向
+        /// </summary>
+        /// <param name="from">当前路径点</param>
+        /// <param name="to">下一个路径点</param>
+        /// <returns>旋转角度</returns>
         private static float GetDirection(Vector3 from, Vector3 to)
         {
             float x = to.x - from.x;
