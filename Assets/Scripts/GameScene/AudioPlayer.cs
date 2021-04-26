@@ -13,35 +13,19 @@ namespace TowerDefense
             audioSource = GetComponent<AudioSource>();
         }
 
-        public void Play(AudioClip audioClip, float duration)
+        public void Play(AudioClip clip, float volume, float duration = -1f, bool replay = false, bool loop = false)
         {
-            Play(audioClip, duration, false, 1f, true);
-        }
-
-        public void Play(AudioClip audioClip, bool repeat, float volume, bool replay)
-        {
-            if (!replay && isPlaying) return;
+            if (isPlaying && !replay) return;
 
             isPlaying = true;
-            audioSource.clip = audioClip;
+            audioSource.clip = clip;
             audioSource.volume = volume;
-            audioSource.loop = repeat;
-            audioSource.Play();
-        }
-
-        public void Play(AudioClip audioClip, float duration, bool repeat, float volume, bool replay)
-        {
-            if (!replay && isPlaying) return;
-
-            isPlaying = true;
-            audioSource.clip = audioClip;
-            audioSource.volume = volume;
-            audioSource.loop = repeat;
+            audioSource.loop = loop;
             audioSource.Play();
 
-            if (!repeat)
+            if (duration > 0f)
             {
-                DelayUnspawn(duration);
+                this.Invoke(Stop, duration);
             }
         }
 
@@ -51,11 +35,7 @@ namespace TowerDefense
 
             isPlaying = false;
             audioSource.Stop();
-        }
-
-        public override void OnUnspawn()
-        {
-            Stop();
+            UnspawnSelf();
         }
     }
 }

@@ -51,6 +51,14 @@ namespace TowerDefense
         public virtual void OnReclaim() { }
 
         /// <summary>
+        /// 让对象池回收当前对象
+        /// </summary>
+        public void UnspawnSelf()
+        {
+            ObjectPool.Unspawn(this);
+        }
+
+        /// <summary>
         /// 延迟一段时间后回收当前对象
         /// </summary>
         /// <param name="delay">延迟时间</param>
