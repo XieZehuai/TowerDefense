@@ -5,7 +5,8 @@ namespace TowerDefense.Test
 {
     public class Testing : MonoBehaviour
     {
-        public bool test;
+        [Header("是否测试寻路算法")]
+        public bool testPathFindingStrategy;
         
         [SerializeField] private int mapWidth = 20;
         [SerializeField] private int mapHeight = 20;
@@ -13,10 +14,10 @@ namespace TowerDefense.Test
         [SerializeField] private Vector2Int startPoint;
         [SerializeField] private Vector2Int endPoint;
 
-        private PathFinder dijkstra = new PathFinder(new DijkstraPathFinding());
-        private PathFinder reverseDijkstra = new PathFinder(new ReverseDijkstraPathFinding());
-        private PathFinder dots = new PathFinder(new DOTSPathFinding());
-        private PathFinder aStar = new PathFinder(new AStarPathFinding());
+        private PathFinder dijkstra = new PathFinder(PathFindingStrategy.Dijkstra);
+        private PathFinder flowField = new PathFinder(PathFindingStrategy.FlowField);
+        private PathFinder dots = new PathFinder(PathFindingStrategy.DOTS);
+        private PathFinder aStar = new PathFinder(PathFindingStrategy.AStar);
 
         private float timer;
         private MapObject[,] mapDatas;
@@ -33,6 +34,7 @@ namespace TowerDefense.Test
                     mapDatas[x, y] = new MapObject(MapObjectType.Road, x, y);
                 }
             }
+            //SetWall();
 
             startPoints = new Vector2Int[startPointCount];
             for (int i = 0; i < startPointCount; i++)
@@ -45,7 +47,7 @@ namespace TowerDefense.Test
 
         private void Update()
         {
-            if (!test) return;
+            if (!testPathFindingStrategy) return;
             
             timer += Time.deltaTime;
             if (timer >= 1f)
@@ -54,14 +56,33 @@ namespace TowerDefense.Test
 
                 Debug.Log("================================");
                 dijkstra.SetMapData(mapDatas);
-                reverseDijkstra.SetMapData(mapDatas);
+                flowField.SetMapData(mapDatas);
                 dots.SetMapData(mapDatas);
                 aStar.SetMapData(mapDatas);
 
                 dijkstra.FindPaths(startPoints, endPoint, ref paths, true);
-                reverseDijkstra.FindPaths(startPoints, endPoint, ref paths, true);
+                flowField.FindPaths(startPoints, endPoint, ref paths, true);
                 dots.FindPaths(startPoints, endPoint, ref paths, true);
                 aStar.FindPaths(startPoints, endPoint, ref paths, true);
+            }
+        }
+
+        private void SetWall()
+        {
+            for (int i = 0; i < mapWidth - 1; i++)
+            {
+                mapDatas[i, 1].type = MapObjectType.Wall;
+                mapDatas[i, 5].type = MapObjectType.Wall;
+                mapDatas[i, 9].type = MapObjectType.Wall;
+                mapDatas[i, 13].type = MapObjectType.Wall;
+                mapDatas[i, 17].type = MapObjectType.Wall;
+            }
+            for (int i = 1; i < mapWidth; i++)
+            {
+                mapDatas[i, 3].type = MapObjectType.Wall;
+                mapDatas[i, 7].type = MapObjectType.Wall;
+                mapDatas[i, 11].type = MapObjectType.Wall;
+                mapDatas[i, 15].type = MapObjectType.Wall;
             }
         }
     }

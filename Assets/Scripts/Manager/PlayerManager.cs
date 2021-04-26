@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public static class PlayerManager
+    public class PlayerManager : Singleton<PlayerManager>
     {
         #region 玩家数据类
         /// <summary>
@@ -42,14 +42,19 @@ namespace TowerDefense
         #endregion
 
 
-        private static PlayerData data;
-        public static PlayerData Data => data;
+        private PlayerData data;
+        public PlayerData Data => data;
+
+        protected override void OnInit()
+        {
+            LoadPlayerData();
+        }
 
         /// <summary>
         /// 关卡成功结算，判断是否解锁新关卡以及更新关卡评分等
         /// </summary>
         /// <param name="starCount">关卡评分</param>
-        public static void StageSuccess(int starCount)
+        public void StageSuccess(int starCount)
         {
             if (starCount > GetStageStar(data.CurrentStage))
             {
@@ -77,7 +82,7 @@ namespace TowerDefense
         /// 改变当前正在玩的关卡数
         /// </summary>
         /// <param name="stage">目标关卡数</param>
-        public static void ChangeCurrentStage(int stage)
+        public void ChangeCurrentStage(int stage)
         {
             if (stage > data.ReachStage)
             {
@@ -92,7 +97,7 @@ namespace TowerDefense
         /// <summary>
         /// 进入下一关，更新当前关卡、解锁关卡以及最大关卡等数据
         /// </summary>
-        public static void NextStage()
+        public void NextStage()
         {
             data.CurrentStage++;
             SavePlayerData();
@@ -103,7 +108,7 @@ namespace TowerDefense
         /// </summary>
         /// <param name="stage">关卡数</param>
         /// <returns>关卡评分</returns>
-        public static int GetStageStar(int stage)
+        public int GetStageStar(int stage)
         {
             return data.StageData[stage - 1];
         }
@@ -113,7 +118,7 @@ namespace TowerDefense
         /// </summary>
         /// <param name="stage">关卡数</param>
         /// <param name="starCount">关卡评分</param>
-        public static void SetStageStar(int stage, int starCount)
+        public void SetStageStar(int stage, int starCount)
         {
             data.StageData[stage - 1] = starCount;
         }
@@ -121,7 +126,7 @@ namespace TowerDefense
         /// <summary>
         /// 保存玩家数据，将数据写入存档文件中
         /// </summary>
-        public static void SavePlayerData()
+        public void SavePlayerData()
         {
             Debug.Log("保存玩家数据");
 
@@ -145,7 +150,7 @@ namespace TowerDefense
         /// <summary>
         /// 加载玩家存档数据，如果没有存档，则新建一个存档并保存
         /// </summary>
-        public static void LoadPlayerData()
+        public void LoadPlayerData()
         {
             Debug.Log("加载玩家数据");
 
@@ -183,7 +188,7 @@ namespace TowerDefense
         /// <summary>
         /// 创建新的玩家数据
         /// </summary>
-        private static PlayerData CreateNewData()
+        private PlayerData CreateNewData()
         {
             int currentStage = 1;
             int reachStage = 1;

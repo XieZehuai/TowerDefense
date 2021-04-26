@@ -15,7 +15,7 @@ namespace TowerDefense
 
     public class UIManager : MonoSingleton<UIManager>
     {
-        private Dictionary<Type, UIBase> uiDic = new Dictionary<Type, UIBase>();
+        private readonly Dictionary<Type, UIBase> uiDic = new Dictionary<Type, UIBase>();
 
         [SerializeField] private Transform backgroundLayer = default;
         [SerializeField] private Transform commonLayer = default;

@@ -7,11 +7,13 @@ namespace TowerDefense
     /// 直接从目标点开始，遍历所有可以行走的节点，一次获得所有节点到目标点的最短路径，
     /// 在起始点较多的时候效率较高，起始点少效率较低
     /// </summary>
-    public class ReverseDijkstraPathFinding : IPathFindingStrategy
+    public class FlowFieldPathFinding : IPathFindingStrategy
     {
         protected int width;
         protected int height;
         protected PathNode[] nodes;
+
+        public virtual string Name => "流场";
 
         public virtual void SetMapData(MapObject[,] datas)
         {

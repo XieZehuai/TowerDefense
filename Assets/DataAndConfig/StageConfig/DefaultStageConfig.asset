@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultStageConfig
   m_EditorClassIdentifier: 
   stage: 0
-  playerHp: 10
+  maxHp: 10
   coins: 200
   waveInterval: 6
   waveDatas:
@@ -21,3 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0ba770af81a2e44438e17bc3db076b68, type: 2}
   - {fileID: 11400000, guid: 409ddceb839f65b4393827cfe997ff5e, type: 2}
   - {fileID: 11400000, guid: da5a28d4937659b4b8b13e44efad19c2, type: 2}
+  oneStarHp: 3
+  twoStarHp: 6
+  threeStarHp: 10

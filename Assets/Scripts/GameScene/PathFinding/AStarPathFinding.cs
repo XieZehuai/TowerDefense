@@ -6,6 +6,8 @@ namespace TowerDefense
 {
     public class AStarPathFinding : DijkstraPathFinding
     {
+        public override string Name => "A星算法";
+
         protected override bool FindPath(Vector2Int startPos, Vector2Int endPos, ref List<Vector2Int> path)
         {
             int cnt = 0;

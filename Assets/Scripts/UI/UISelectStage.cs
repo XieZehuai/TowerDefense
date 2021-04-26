@@ -8,17 +8,15 @@ namespace TowerDefense
 
         protected override void OnInit(UIDataBase uiData)
         {
-            int stageCount = PlayerManager.Data.MaxStage;
+            int stageCount = PlayerManager.Instance.Data.MaxStage;
             btns = new UIStageBtn[stageCount];
 
-            Debug.Log(stageCount);
             for (int i = 0; i < stageCount; i++)
             {
-                //UIStageBtn btn = ObjectPool.Spawn<UIStageBtn>("UIStageBtn");
                 UIStageBtn btn = ObjectPool.Spawn<UIStageBtn>(Res.UIStageBtnPrefab);
                 btn.transform.SetParent(content);
                 int stage = i + 1;
-                btn.SetData(stage, PlayerManager.GetStageStar(stage));
+                btn.SetData(stage, PlayerManager.Instance.GetStageStar(stage));
 
                 btns[i] = btn;
             }

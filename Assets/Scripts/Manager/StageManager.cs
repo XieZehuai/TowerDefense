@@ -9,7 +9,10 @@ namespace TowerDefense
     /// </summary>
     public class StageManager : MonoBehaviour
     {
-        // 当前游戏的状态
+        #region 关卡的状态
+        /// <summary>
+        /// 关卡的状态
+        /// </summary>
         private enum State
         {
             Preparing, // 准备阶段，敌人还没开始进攻
@@ -17,6 +20,7 @@ namespace TowerDefense
             Paused, // 暂停
             GameOver, // 游戏结束
         }
+        #endregion
 
 
         private int hp; // 当前生命
@@ -81,8 +85,8 @@ namespace TowerDefense
         private void Awake()
         {
             // 设置关卡数据
-            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Data.CurrentStage); // 获取关卡数据
-            hp = StageConfig.playerHp;
+            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Instance.Data.CurrentStage); // 获取关卡数据
+            hp = StageConfig.maxHp;
             coins = StageConfig.coins;
 
             // 初始化子管理器
@@ -92,31 +96,10 @@ namespace TowerDefense
             TowerManager = new TowerManager(this);
             WarEntityManager = new WarEntityManager(this);
             PathIndicator = new PathIndicator(this);
-
-            // 设置寻路策略
-            PathFindingStrategy strategy = GameManager.Instance.pathFindingStrategy;
-            IPathFindingStrategy pathFindingStrategy = GetPathFindingStrategy(strategy);
-            pathFinder = new PathFinder(pathFindingStrategy);
+            pathFinder = new PathFinder();
 
             TypeEventSystem.Register<OnEnemyReach>(OnEnemyReach);
             TypeEventSystem.Register<OnEnemyDestroy>(OnEnemyDestroy);
-        }
-
-        private IPathFindingStrategy GetPathFindingStrategy(PathFindingStrategy strategy)
-        {
-            switch (strategy)
-            {
-                case PathFindingStrategy.Dijkstra: return new DijkstraPathFinding();
-                case PathFindingStrategy.ReverseDijkstra: return new ReverseDijkstraPathFinding();
-                case PathFindingStrategy.DOTS: return new DOTSPathFinding();
-                case PathFindingStrategy.AStar: return new AStarPathFinding();
-
-                default:
-                    Debug.LogError("不支持的寻路策略" + strategy);
-                    break;
-            }
-
-            return null;
         }
 
         private void Start()
@@ -200,7 +183,7 @@ namespace TowerDefense
         public void Replay()
         {
             state = State.Preparing;
-            HP = StageConfig.playerHp;
+            HP = StageConfig.maxHp;
             Coins = StageConfig.coins;
             IsSpeedUp = false;
 
@@ -220,26 +203,11 @@ namespace TowerDefense
 
             if (hp > 0)
             {
-                int starCount = 0;
-                int maxHp = StageConfig.playerHp;
-
-                if (hp == maxHp)
-                {
-                    starCount = 3;
-                }
-                else if (hp >= maxHp * 0.6f)
-                {
-                    starCount = 2;
-                }
-                else if (hp >= maxHp * 0.3f)
-                {
-                    starCount = 1;
-                }
-
-                PlayerManager.StageSuccess(starCount);
+                int starCount = StageConfig.GetScore(hp); // 获取关卡评分
+                PlayerManager.Instance.StageSuccess(starCount);
                 UIManager.Instance.Open<UIStageSuccess>(new UIStageSuccessData
                 {
-                    stage = PlayerManager.Data.CurrentStage,
+                    stage = PlayerManager.Instance.Data.CurrentStage,
                     starCount = starCount
                 });
             }
@@ -264,7 +232,7 @@ namespace TowerDefense
         public void SaveMapData()
         {
             Debug.Log("保存地图数据");
-            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.CurrentStage);
+            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Instance.Data.CurrentStage);
         }
 
         /// <summary>
@@ -272,7 +240,7 @@ namespace TowerDefense
         /// </summary>
         public void LoadMapData()
         {
-            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Data.CurrentStage);
+            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Instance.Data.CurrentStage);
         }
 
         /// <summary>
@@ -315,6 +283,15 @@ namespace TowerDefense
                 paths[i] = new List<Vector2Int>();
             }
 
+            if (totalCount >= 20)
+            {
+                pathFinder.SetPathFindingStrategy(PathFindingStrategy.FlowField);
+            }
+            else
+            {
+                pathFinder.SetPathFindingStrategy(PathFindingStrategy.DOTS);
+            }
+
             // 寻路并设置路径数据
             pathFinder.SetMapData(MapManager.Map.GridArray);
 
@@ -349,20 +326,27 @@ namespace TowerDefense
             return pathFinder.FindPaths(startPosArray, endPos, ref paths, false);
         }
 
+        /// <summary>
+        /// 敌人抵达终点时由事件系统触发
+        /// </summary>
         private void OnEnemyReach(OnEnemyReach context)
         {
             HP--;
 
-            if (hp <= 0)
+            if (HP <= 0)
             {
                 GameOver();
             }
         }
 
+        /// <summary>
+        /// 敌人被消灭时由事件系统出发
+        /// </summary>
+        /// <param name="context">事件参数，包含消灭敌人后获得的奖励金币</param>
         private void OnEnemyDestroy(OnEnemyDestroy context)
         {
-            coins += context.reward;
-            TypeEventSystem.Send(new UpdateCoins { coins = coins });
+            Coins += context.reward;
+            //TypeEventSystem.Send(new UpdateCoins { coins = coins });
         }
 
         private void OnDestroy()

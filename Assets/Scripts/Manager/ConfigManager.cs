@@ -2,6 +2,9 @@
 
 namespace TowerDefense
 {
+    /*
+     * 没有用到，所有数值配置放在GameManager里
+     */
     public class ConfigManager : MonoSingleton<ConfigManager>
     {
         [Header("攻击类型以及护甲类型的伤害配置表")]

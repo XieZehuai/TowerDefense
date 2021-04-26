@@ -350,9 +350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33c41c10c58105a41b56e4912535fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: 0
+  testPathFindingStrategy: 1
   mapWidth: 20
   mapHeight: 20
-  startPointCount: 5
+  startPointCount: 10
   startPoint: {x: 0, y: 0}
   endPoint: {x: 19, y: 19}

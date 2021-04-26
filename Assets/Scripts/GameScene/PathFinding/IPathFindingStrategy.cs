@@ -4,10 +4,15 @@ using UnityEngine;
 namespace TowerDefense
 {
     /// <summary>
-    /// 寻路策略接口
+    /// 寻路算法接口
     /// </summary>
     public interface IPathFindingStrategy
     {
+        /// <summary>
+        /// 算法的名称
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         /// 设置地图数据
         /// </summary>

@@ -13,6 +13,8 @@ namespace TowerDefense
         private int height;
         private NativeArray<PathNode> mapData;
 
+        public string Name => "DOTS";
+
         public void SetMapData(MapObject[,] datas)
         {
             width = datas.GetLength(0);

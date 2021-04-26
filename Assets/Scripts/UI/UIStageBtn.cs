@@ -26,7 +26,7 @@ namespace TowerDefense
         {
             this.stage = stage;
             text.text = $"第 {stage} 关";
-            button.interactable = stage <= PlayerManager.Data.ReachStage;
+            button.interactable = stage <= PlayerManager.Instance.Data.ReachStage;
 
             for (int i = 0; i < starImages.Length; i++)
             {
@@ -41,7 +41,7 @@ namespace TowerDefense
 
         private void ChangeStage()
         {
-            PlayerManager.ChangeCurrentStage(stage);
+            PlayerManager.Instance.ChangeCurrentStage(stage);
             GameManager.Instance.LoadGameScene();
         }
     }

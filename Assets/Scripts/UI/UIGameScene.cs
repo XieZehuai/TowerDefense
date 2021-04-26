@@ -21,7 +21,7 @@ namespace TowerDefense
         {
             var data = uiData as UIGameSceneData ?? new UIGameSceneData();
             manager = data.manager;
-            maxHp = manager.StageConfig.playerHp;
+            maxHp = manager.StageConfig.maxHp;
             coins = manager.StageConfig.coins;
             maxWaves = manager.StageConfig.waveDatas.Length;
 

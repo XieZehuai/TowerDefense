@@ -7,8 +7,10 @@ namespace TowerDefense
     /// <summary>
     /// 单独计算每个起始点到目标点的最短路径，起始点较少时效率较高
     /// </summary>
-    public class DijkstraPathFinding : ReverseDijkstraPathFinding
+    public class DijkstraPathFinding : FlowFieldPathFinding
     {
+        public override string Name => "迪杰斯特拉算法";
+
         public override bool FindPaths(Vector2Int[] startPositions, Vector2Int endPosition, ref List<Vector2Int>[] paths)
         {
             for (int i = 0; i < startPositions.Length; i++)

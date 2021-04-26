@@ -1,39 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense
 {
-	public enum AudioType
-    {
-		ShellExplode,
-    }
-
-
-	public class AudioManager : MonoSingleton<AudioManager>
+	public class AudioManager : Singleton<AudioManager>
 	{
-		private readonly Dictionary<AudioType, AudioClip> audioClipDic = new Dictionary<AudioType, AudioClip>();
+		private readonly Dictionary<string, AudioClip> audioClipDic = new Dictionary<string, AudioClip>();
 
-		public void Play(AudioType audioType, float duration, Vector3 pos)
+		public void Play(string clipName, float duration, Vector3 pos)
         {
-			if (!audioClipDic.ContainsKey(audioType))
+			if (!audioClipDic.ContainsKey(clipName))
             {
-				//string clipName = audioType.ToString() + "Audio";
-				//AudioClip clip = ResourceManager.Load<AudioClip>(clipName);
-				AudioClip clip = ResourceManager.Load<AudioClip>(Res.ShellExplodeAudio);
+				AudioClip clip = ResourceManager.Load<AudioClip>(clipName);
 
 				if (clip == null)
                 {
-					//Debug.LogError("找不到音效文件：" + clipName);
-					Debug.LogError("找不到音效文件：" + Res.ShellExplodeAudio);
+					Debug.LogError("找不到音效文件：" + clipName);
 					return;
                 }
 
-				audioClipDic.Add(audioType, clip);
+				audioClipDic.Add(clipName, clip);
             }
 
-			//ObjectPool.Spawn<AudioPlayer>("AudioPlayer", pos).Play(audioClipDic[audioType], duration);
-			ObjectPool.Spawn<AudioPlayer>(Res.AudioPlayerPrefab, pos).Play(audioClipDic[audioType], duration);
+			ObjectPool.Spawn<AudioPlayer>(Res.AudioPlayerPrefab, pos).Play(audioClipDic[clipName], duration);
 		}
 	}
 }

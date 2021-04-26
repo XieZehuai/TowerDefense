@@ -13,8 +13,6 @@ namespace TowerDefense
     /// </summary>
     public class GameManager : MonoSingleton<GameManager>
     {
-        public PathFindingStrategy pathFindingStrategy;
-
         #region 游戏数值配置
         [Header("攻击类型以及护甲类型的伤害配置表")]
         [SerializeField] private DamageConfig damageConfig = default;
@@ -41,7 +39,6 @@ namespace TowerDefense
 
         protected override void OnInit()
         {
-            PlayerManager.LoadPlayerData();
             UIManager.Instance.Open<UIMainScene>();
         }
 
