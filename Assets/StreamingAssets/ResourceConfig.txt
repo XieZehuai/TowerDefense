@@ -1,4 +1,6 @@
 Audio=Audio
+LaserTowerAttackAudio=Audio/LaserTowerAttackAudio
+MachineGunTowerAttackAudio=Audio/MachineGunTowerAttackAudio
 ShellExplodeAudio=Audio/ShellExplodeAudio
 DOTweenSettings=DOTweenSettings
 Prefab=Prefab
@@ -43,6 +45,7 @@ UIGameScene=Prefab/UI/UIGameScene
 UIMainScene=Prefab/UI/UIMainScene
 UIPausePanel=Prefab/UI/UIPausePanel
 UISelectStage=Prefab/UI/UISelectStage
+UISettingPanel=Prefab/UI/UISettingPanel
 UIStageBtnPrefab=Prefab/UI/UIStageBtnPrefab
 UIStageFailed=Prefab/UI/UIStageFailed
 UIStageSuccess=Prefab/UI/UIStageSuccess

@@ -21,13 +21,12 @@ namespace TowerDefense
 
         private void OnStartBtnClick()
         {
-            //GameManager.Instance.LoadGameScene();
             UIManager.Instance.Open<UISelectStage>(layer: UILayer.Foreground);
         }
 
         private void OnSettingBtnClick()
         {
-            // TODO: 打开设置界面
+            UIManager.Instance.Open<UISettingPanel>();
         }
 
         private void OnExitBtnClick()

@@ -68,6 +68,8 @@ namespace TowerDefense
 
             target.GetDamage(Data.LevelData.damage, Data.attackType);
             lineRenderer.SetPosition(1, lineRenderer.transform.InverseTransformPoint(target.LocalPosition));
+
+            AudioManager.Instance.Play(transform.localPosition, Res.MachineGunTowerAttackAudio);
         }
 
         private void ShowAttackEffect()

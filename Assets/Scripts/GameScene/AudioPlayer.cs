@@ -5,8 +5,8 @@ namespace TowerDefense
     [RequireComponent(typeof(AudioSource))]
     public class AudioPlayer : PoolObject
     {
-        private bool isPlaying;
         private AudioSource audioSource;
+        private bool isPlaying;
 
         protected override void OnInstantiate()
         {
@@ -36,6 +36,11 @@ namespace TowerDefense
             isPlaying = false;
             audioSource.Stop();
             UnspawnSelf();
+        }
+
+        public override void OnUnspawn()
+        {
+            Stop();
         }
     }
 }

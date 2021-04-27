@@ -3,68 +3,86 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class AudioManager : Singleton<AudioManager>
+    public class AudioManager : MonoSingleton<AudioManager>
     {
         private readonly Dictionary<string, AudioClip> audioClipDic = new Dictionary<string, AudioClip>();
 
-        [SerializeField] private AudioSource bgmPlayer = default;
+        [SerializeField] private AudioSource bgmPlayer;
 
-        private bool audioOn;
-        private bool musicOn;
-        private float volume;
+        public bool IsAudioOn { get; private set; }
+
+        public bool IsMusicOn { get; private set; }
+
+        public float AudioVolume { get; private set; }
+
+        public float MusicVolume { get; private set; }
+
+        protected override void OnInit()
+        {
+            IsAudioOn = true;
+            IsMusicOn = true;
+            AudioVolume = 1f;
+        }
 
         public void TurnOnAudio()
         {
-
+            IsAudioOn = true;
         }
 
         public void TurnOffAudio()
         {
-
+            IsAudioOn = false;
+            ObjectPool.UnspawnAll(Res.AudioPlayerPrefab);
         }
 
-        public void ToggleAudio()
+        public void TurnOnMusic()
         {
-            audioOn = !audioOn;
-        }
+            IsMusicOn = true;
 
-        public void ToggleMusic()
-        {
-            musicOn = !musicOn;
-
-            if (musicOn && !bgmPlayer.isPlaying)
+            if (!bgmPlayer.isPlaying)
             {
                 bgmPlayer.Play();
             }
-            else if (!musicOn && bgmPlayer.isPlaying)
+        }
+
+        public void TurnOffMusic()
+        {
+            IsMusicOn = false;
+
+            if (bgmPlayer.isPlaying)
             {
                 bgmPlayer.Stop();
             }
         }
 
-        public void SetVolume(float volume)
+        public void SetAudioVolume(float volume)
         {
-            this.volume = Mathf.Clamp01(volume);
-            bgmPlayer.volume = this.volume;
+            AudioVolume = Mathf.Clamp01(volume);
+        }
+
+        public void SetMusicVolume(float volume)
+        {
+            MusicVolume = Mathf.Clamp01(volume);
+            bgmPlayer.volume = AudioVolume;
         }
 
         public void Play(Vector3 pos, string clipName)
         {
-            if (!audioOn) return;
+            if (!IsAudioOn) return;
 
             if (HasAudioClip(clipName))
             {
-                Play(pos, clipName, volume, audioClipDic[clipName].length, true, false);
+                Play(pos, clipName, AudioVolume, audioClipDic[clipName].length, true, false);
             }
         }
 
         public void Play(Vector3 pos, string clipName, float duration)
         {
-            if (!audioOn) return;
+            if (!IsAudioOn) return;
 
             if (HasAudioClip(clipName))
             {
-                Play(pos, clipName, volume, duration, true, false);
+                Play(pos, clipName, AudioVolume, duration, true, false);
             }
         }
 

@@ -3,6 +3,8 @@ namespace TowerDefense
     public static class Res
     {
         public const string Audio = "Audio";
+        public const string LaserTowerAttackAudio = "LaserTowerAttackAudio";
+        public const string MachineGunTowerAttackAudio = "MachineGunTowerAttackAudio";
         public const string ShellExplodeAudio = "ShellExplodeAudio";
         public const string DOTweenSettings = "DOTweenSettings";
         public const string Prefab = "Prefab";
@@ -47,6 +49,7 @@ namespace TowerDefense
         public const string UIMainScene = "UIMainScene";
         public const string UIPausePanel = "UIPausePanel";
         public const string UISelectStage = "UISelectStage";
+        public const string UISettingPanel = "UISettingPanel";
         public const string UIStageBtnPrefab = "UIStageBtnPrefab";
         public const string UIStageFailed = "UIStageFailed";
         public const string UIStageSuccess = "UIStageSuccess";

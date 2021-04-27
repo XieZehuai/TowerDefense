@@ -13,6 +13,8 @@ namespace TowerDefense
         private LineRenderer lineRenderer;
         private static readonly Vector3 laserOriginPos = new Vector3(0f, 0f, -0.5f); // 激光的发射点
 
+        private float attackAudioTimer = 0f;
+
         protected override void OnInstantiate()
         {
             lineRenderer = laser.GetComponent<LineRenderer>();
@@ -49,6 +51,21 @@ namespace TowerDefense
 
             float deltaDamage = Data.LevelData.damage * deltaTime;
             target.GetDamage(deltaDamage, Data.attackType);
+
+            PlayAttackAudio();
+        }
+
+        private void PlayAttackAudio()
+        {
+            if (attackAudioTimer >= 0.1f)
+            {
+                attackAudioTimer = 0f;
+                AudioManager.Instance.Play(transform.localPosition, Res.LaserTowerAttackAudio);
+            }
+            else
+            {
+                attackAudioTimer += Time.deltaTime;
+            }
         }
     }
 }
