@@ -9,7 +9,7 @@ namespace TowerDefense
     // DOING:   成功结算界面，玩家数据管理、失败结算界面、章节选择界面、加速模式
 
     /// <summary>
-    /// 控制游戏主流程
+    /// 游戏管理器
     /// </summary>
     public class GameManager : MonoSingleton<GameManager>
     {

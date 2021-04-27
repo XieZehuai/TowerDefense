@@ -9,13 +9,15 @@ namespace TowerDefense
     }
 
 
-    public partial class UIPausePanel : UIBase
+    /// <summary>
+    /// 暂停界面UI
+    /// </summary>
+    public partial class UIPausePanel : UIBase<UIPausePanelData>
     {
         private StageManager manager;
 
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
-            var data = uiData as UIPausePanelData ?? new UIPausePanelData();
             manager = data.manager;
 
             resumeBtn.onClick.AddListener(OnResumeBtnClick);
@@ -46,7 +48,6 @@ namespace TowerDefense
 
         private void OnOptionsBtnClick()
         {
-            // TODO: 设置界面
             UIManager.Instance.Open<UISettingPanel>(layer: UILayer.Foreground);
         }
 
@@ -55,6 +56,7 @@ namespace TowerDefense
             GameManager.Instance.LoadMainScene();
         }
     }
+
 
     public partial class UIPausePanel
     {

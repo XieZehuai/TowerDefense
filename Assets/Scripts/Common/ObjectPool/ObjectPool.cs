@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 通用对象池，可用于管理所有PoolObject或继承自PoolObject的对象
+    /// </summary>
     public static class ObjectPool
     {
         private static readonly Dictionary<string, Pool> pools = new Dictionary<string, Pool>(); // 储存所有类型的池子

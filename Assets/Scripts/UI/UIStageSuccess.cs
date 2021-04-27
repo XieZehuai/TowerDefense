@@ -11,18 +11,19 @@ namespace TowerDefense
     }
 
 
-    public partial class UIStageSuccess : UIBase
+    /// <summary>
+    /// 关卡成功UI
+    /// </summary>
+    public partial class UIStageSuccess : UIBase<UIStageSuccessData>
     {
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
             continueBtn.onClick.AddListener(OnContinueBtnClick);
             exitBtn.onClick.AddListener(OnExitBtnClick);
         }
 
-        protected override void OnOpen(UIDataBase uiData)
+        protected override void OnOpen()
         {
-            data = uiData as UIStageSuccessData ?? new UIStageSuccessData();
-
             for (int i = 0; i < starImages.Length; i++)
             {
                 starImages[i].color = i < data.starCount ? Color.yellow : Color.gray;
@@ -59,8 +60,6 @@ namespace TowerDefense
 
     public partial class UIStageSuccess
     {
-        private UIStageSuccessData data;
-
         [SerializeField] private Transform background = default;
         [SerializeField] private Image[] starImages = default;
         [SerializeField] private Button continueBtn = default;

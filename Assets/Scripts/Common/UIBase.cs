@@ -1,75 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using DG.Tweening;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 namespace TowerDefense
 {
     /// <summary>
-    /// 传递给UI的参数的基类
+    /// UI行为基类，定义UI拥有的基本方法
     /// </summary>
-    public abstract class UIDataBase
+    public abstract class UIBehaviour : MonoBehaviour
     {
-    }
-
-
-    /// <summary>
-    /// 所有UI的基类
-    /// </summary>
-    public abstract class UIBase : MonoBehaviour
-    {
-        private static readonly List<RaycastResult> raycastResult = new List<RaycastResult>();
-
-        public bool IsOpen { get; private set; }
-
-        public void Init(UIDataBase uiData)
-        {
-            gameObject.SetActive(false);
-            OnInit(uiData);
-        }
-
-        public void Open(UIDataBase uiData)
-        {
-            if (IsOpen) return;
-
-            IsOpen = true;
-            gameObject.SetActive(true);
-            OnOpen(uiData);
-        }
-
-        public void Hide()
-        {
-            if (!IsOpen) return;
-
-            OnHide();
-            gameObject.SetActive(false);
-            IsOpen = false;
-        }
-
-        public void Close()
-        {
-            if (IsOpen)
-            {
-                Hide();
-            }
-
-            OnClose();
-        }
+        /// <summary>
+        /// UI是否已经打开
+        /// </summary>
+        public bool IsOpen { get; protected set; }
 
         /// <summary>
-        /// 在UI被加载时调用
+        /// 初始化UI
         /// </summary>
-        /// <param name="uiData">要传递的参数</param>
-        protected virtual void OnInit(UIDataBase uiData)
+        /// <param name="uiData">参数</param>
+        public abstract void Init(UIDataBase uiData);
+
+        /// <summary>
+        /// 打开UI
+        /// </summary>
+        /// <param name="uiData">参数</param>
+        public abstract void Open(UIDataBase uiData);
+
+        /// <summary>
+        /// 隐藏UI
+        /// </summary>
+        public abstract void Hide();
+
+        /// <summary>
+        /// 关闭UI
+        /// </summary>
+        public abstract void Close();
+
+        /// <summary>
+        /// 初始化UI时调用
+        /// </summary>
+        protected virtual void OnInit()
         {
         }
 
         /// <summary>
         /// 打开UI时调用
         /// </summary>
-        /// <param name="uiData">要传递的参数</param>
-        protected virtual void OnOpen(UIDataBase uiData)
+        protected virtual void OnOpen()
         {
         }
 
@@ -85,6 +60,68 @@ namespace TowerDefense
         /// </summary>
         protected virtual void OnClose()
         {
+        }
+    }
+
+
+    /// <summary>
+    /// 传递给UI的参数的基类
+    /// </summary>
+    public class UIDataBase
+    {
+    }
+
+
+    /// <summary>
+    /// 无自定义参数类型的UI的基类
+    /// </summary>
+    public abstract class UIBase : UIBase<UIDataBase>
+    {
+    }
+
+
+    /// <summary>
+    /// 自定义参数类型的UI的基类
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class UIBase<T> : UIBehaviour where T : UIDataBase, new()
+    {
+        protected T data; // 传递给UI的参数
+
+        public override void Init(UIDataBase uiData)
+        {
+            data = uiData as T ?? new T();
+            gameObject.SetActive(false);
+            OnInit();
+        }
+
+        public override void Open(UIDataBase uiData)
+        {
+            if (IsOpen) return;
+
+            data = uiData as T ?? new T();
+            IsOpen = true;
+            gameObject.SetActive(true);
+            OnOpen();
+        }
+
+        public override void Hide()
+        {
+            if (!IsOpen) return;
+
+            OnHide();
+            gameObject.SetActive(false);
+            IsOpen = false;
+        }
+
+        public override void Close()
+        {
+            if (IsOpen)
+            {
+                Hide();
+            }
+
+            OnClose();
         }
     }
 }

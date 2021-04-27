@@ -13,9 +13,12 @@ namespace TowerDefense
     }
 
 
+    /// <summary>
+    /// UI管理器，管理游戏内所有继承自UIBehaviour的UI
+    /// </summary>
     public class UIManager : MonoSingleton<UIManager>
     {
-        private readonly Dictionary<Type, UIBase> uiDic = new Dictionary<Type, UIBase>();
+        private readonly Dictionary<Type, UIBehaviour> uiDic = new Dictionary<Type, UIBehaviour>();
 
         [SerializeField] private Transform backgroundLayer = default;
         [SerializeField] private Transform commonLayer = default;
@@ -34,10 +37,10 @@ namespace TowerDefense
         /// <summary>
         /// 根据类型打开UI
         /// </summary>
-        /// <typeparam name="T">UI的类型，必须继承自Panel</typeparam>
-        /// <param name="data">要传入的数据，必须继承自PanelData，可以为空</param>
-        /// <returns>UI对象</returns>
-        public T Open<T>(UIDataBase data = null, UILayer layer = UILayer.Common) where T : UIBase
+        /// <typeparam name="T">UI的类型，必须继承自UIBehaviour</typeparam>
+        /// <param name="data">要传入的数据，必须继承自UIDataBase，可以为空</param>
+        /// <returns>打开后的UI的引用</returns>
+        public T Open<T>(UIDataBase data = null, UILayer layer = UILayer.Common) where T : UIBehaviour
         {
             Type type = typeof(T);
 
@@ -76,8 +79,8 @@ namespace TowerDefense
         /// 获取UI实例
         /// </summary>
         /// <typeparam name="T">UI的类型</typeparam>
-        /// <returns>成功获取到返回对应的实力，失败返回null</returns>
-        public T Get<T>() where T : UIBase
+        /// <returns>获取成功返回对象的引用，失败返回null</returns>
+        public T Get<T>() where T : UIBehaviour
         {
             Type type = typeof(T);
 
@@ -93,7 +96,7 @@ namespace TowerDefense
         /// <summary>
         /// 隐藏UI
         /// </summary>
-        public void Hide<T>() where T : UIBase
+        public void Hide<T>() where T : UIBehaviour
         {
             Type type = typeof(T);
 
@@ -109,7 +112,7 @@ namespace TowerDefense
         /// <summary>
         /// 关闭UI
         /// </summary>
-        public void Close<T>() where T : UIBase
+        public void Close<T>() where T : UIBehaviour
         {
             Type type = typeof(T);
 
@@ -129,7 +132,7 @@ namespace TowerDefense
         /// </summary>
         public void CloseAll()
         {
-            foreach (UIBase ui in uiDic.Values)
+            foreach (UIBehaviour ui in uiDic.Values)
             {
                 ui.Close();
                 Destroy(ui.gameObject);

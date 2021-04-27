@@ -43,9 +43,9 @@ MonoBehaviour:
     attackType: 1
     levelDatas:
     - cost: 60
-      attackRange: 0
+      attackRange: 2.5
       attackDuration: 0
-      damage: 0
+      damage: 100
       shellBlastRadius: 0
       decelerationDuration: 0
       decelerationRate: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
     - cost: 100
       attackRange: 3
       attackDuration: 3
-      damage: 100
+      damage: 150
       shellBlastRadius: 1
       decelerationDuration: 0
       decelerationRate: 0

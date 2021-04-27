@@ -11,18 +11,19 @@ namespace TowerDefense
     }
 
 
-    public partial class UIStageFailed : UIBase
+    /// <summary>
+    /// 关卡失败UI
+    /// </summary>
+    public partial class UIStageFailed : UIBase<UIStageFailedData>
     {
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
             replayBtn.onClick.AddListener(OnReplayBtnClick);
             exitBtn.onClick.AddListener(OnExitBtnClick);
         }
 
-        protected override void OnOpen(UIDataBase uiData)
+        protected override void OnOpen()
         {
-            data = uiData as UIStageFailedData ?? new UIStageFailedData();
-
             background.localScale = Vector3.zero;
             background.DOScale(Vector3.one, 0.5f);
         }
@@ -54,10 +55,7 @@ namespace TowerDefense
 
     public partial class UIStageFailed
     {
-        private UIStageFailedData data;
-
         [SerializeField] private Transform background = default;
-
         [SerializeField] private Button replayBtn = default;
         [SerializeField] private Button exitBtn = default;
     }

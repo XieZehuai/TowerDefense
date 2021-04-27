@@ -11,11 +11,14 @@ namespace TowerDefense
     }
 
 
-    public partial class UITowerOption : UIBase
+    /// <summary>
+    /// 炮塔选项UI
+    /// </summary>
+    public partial class UITowerOption : UIBase<UITowerOptionData>
     {
         private bool trackTower;
 
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
             upgradeBtn.onClick.AddListener(OnUpgradeBtnClick);
             sellBtn.onClick.AddListener(OnSellBtnClick);
@@ -24,10 +27,8 @@ namespace TowerDefense
             TypeEventSystem.Register<OnReplay>(OnReplay);
         }
 
-        protected override void OnOpen(UIDataBase uiData)
+        protected override void OnOpen()
         {
-            data = uiData as UITowerOptionData ?? new UITowerOptionData();
-
             SetPosition();
             InitPanelInfo();
             background.localScale = Vector3.zero;
@@ -111,8 +112,6 @@ namespace TowerDefense
 
     public partial class UITowerOption
     {
-        private UITowerOptionData data;
-
         [SerializeField] private Transform background = default;
         [SerializeField] private Button upgradeBtn = default;
         [SerializeField] private Button sellBtn = default;

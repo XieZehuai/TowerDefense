@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 选关界面上的按钮
+    /// </summary>
     [RequireComponent(typeof(Button))]
     public class UIStageBtn : PoolObject
     {

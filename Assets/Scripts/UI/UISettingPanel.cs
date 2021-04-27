@@ -4,9 +4,12 @@ using UnityEngine.UI;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 设置界面UI
+    /// </summary>
     public partial class UISettingPanel : UIBase
     {
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
             closeBtn.onClick.AddListener(OnCloseBtnClick);
             audioVolumeSlider.onValueChanged.AddListener(OnAudioSliderValueChanged);

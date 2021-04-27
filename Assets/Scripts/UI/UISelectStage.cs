@@ -2,11 +2,14 @@
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 选关界面UI
+    /// </summary>
     public partial class UISelectStage : UIBase
     {
         private UIStageBtn[] btns;
 
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
             int stageCount = PlayerManager.Instance.Data.MaxStage;
             btns = new UIStageBtn[stageCount];

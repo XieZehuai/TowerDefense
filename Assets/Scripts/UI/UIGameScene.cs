@@ -9,7 +9,10 @@ namespace TowerDefense
     }
 
 
-    public partial class UIGameScene : UIBase
+    /// <summary>
+    /// 游戏场景UI
+    /// </summary>
+    public partial class UIGameScene : UIBase<UIGameSceneData>
     {
         private StageManager manager;
         private int maxHp;
@@ -17,10 +20,10 @@ namespace TowerDefense
         private int maxWaves;
         private bool isFirstWave;
 
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
-            var data = uiData as UIGameSceneData ?? new UIGameSceneData();
             manager = data.manager;
+
             maxHp = manager.StageConfig.maxHp;
             coins = manager.StageConfig.coins;
             maxWaves = manager.StageConfig.waveDatas.Length;

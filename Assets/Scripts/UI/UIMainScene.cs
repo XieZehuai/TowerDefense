@@ -3,9 +3,12 @@ using UnityEngine.UI;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 主界面UI
+    /// </summary>
     public partial class UIMainScene : UIBase
     {
-        protected override void OnInit(UIDataBase uiData)
+        protected override void OnInit()
         {
             startBtn.onClick.AddListener(OnStartBtnClick);
             settingBtn.onClick.AddListener(OnSettingBtnClick);
