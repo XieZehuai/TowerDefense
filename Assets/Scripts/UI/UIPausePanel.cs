@@ -47,6 +47,7 @@ namespace TowerDefense
         private void OnOptionsBtnClick()
         {
             // TODO: 设置界面
+            UIManager.Instance.Open<UISettingPanel>(layer: UILayer.Foreground);
         }
 
         private void OnExitBtnClick()
