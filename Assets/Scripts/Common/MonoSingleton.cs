@@ -3,13 +3,15 @@
 namespace TowerDefense
 {
     /// <summary>
-    /// MonoBehaviour单例
+    /// MonoBehaviour单例基类
     /// </summary>
-    /// <typeparam name="T">必须传入继承自这个类的类本身</typeparam>
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
         private static T instance;
 
+        /// <summary>
+        /// 单例，如果没有对应的实例，会自动创建一个
+        /// </summary>
         public static T Instance
         {
             get
