@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 敌人
+    /// </summary>
     public class Enemy : PoolObject
     {
         #region 静态方法，用于寻找范围内的敌人
@@ -90,7 +93,8 @@ namespace TowerDefense
         }
         #endregion
 
-        private EnemyData data;
+
+        private EnemyData data; // 敌人的数值
         private float currentHp; // 当前生命值
         private float currentSpeed; // 当前移动速度
 
@@ -98,7 +102,7 @@ namespace TowerDefense
         private int curr; // 当前路径点的索引
         private Vector3 originPos; // 初始位置
         private float distance; // 当前物体距离目标点的距离
-        private float progress;
+        private float progress; // 从当前路径点到目标路径点的移动进度（0 -> 1）
         private Vector3 offset; // 移动时距离目标点的偏移量
         private float hitEffectDuration = 0.1f;
         private float hitEffectTimer;
@@ -110,6 +114,9 @@ namespace TowerDefense
         // 血条
         private HealthBar healthBar;
 
+        /// <summary>
+        /// 敌人的数值配置
+        /// </summary>
         public EnemyData Data
         {
             get => data;
@@ -120,8 +127,6 @@ namespace TowerDefense
                 currentSpeed = data.speed;
             }
         }
-
-        public float Hp => currentHp;
 
         /// <summary>
         /// 敌人的本地坐标
@@ -145,7 +150,6 @@ namespace TowerDefense
             float z = UnityEngine.Random.Range(0f, 0.8f) - 0.4f;
             offset = new Vector3(x, 0.3f, z);
 
-            //healthBar = ObjectPool.Spawn<HealthBar>("HealthBar");
             healthBar = ObjectPool.Spawn<HealthBar>(Res.HealthBarPrefab);
             healthBar.Follow(transform, new Vector3(0f, 0.3f, 0f));
         }
@@ -160,20 +164,20 @@ namespace TowerDefense
             if (path.Count <= 1) Debug.LogError("路径长度太短");
 
             this.path = path;
+            progress = 0f; // 重新设置路径后，移动进度得设置为0，不然会出现瞬移的情况
 
             if (moveToFirstWayPoint)
             {
                 originPos = path[0];
                 transform.localPosition = path[0] + offset;
                 transform.localRotation = Quaternion.LookRotation(path[1] - path[0]);
-                distance = Vector3.Distance(path[1], path[0]);
+                distance = Vector3.Distance(path[0], path[1]);
                 curr = 1;
             }
             else
             {
-                originPos = transform.localPosition;
-                distance = Vector3.Distance(transform.localPosition, path[0]);
-                transform.localPosition += offset;
+                originPos = transform.localPosition - offset;
+                distance = Vector3.Distance(originPos, path[0]);
                 curr = 0;
             }
         }
@@ -188,8 +192,6 @@ namespace TowerDefense
             if (currentHp <= 0)
             {
                 TypeEventSystem.Send(new OnEnemyDestroy { reward = data.reward });
-                //ObjectPool.Spawn("EnemyDestroyEffect", transform.localPosition, Quaternion.identity, Vector3.one)
-                //    .DelayUnspawn(1.5f);
                 ObjectPool.Spawn(Res.EnemyDestroyEffectPrefab, transform.localPosition, Quaternion.identity, Vector3.one)
                     .DelayUnspawn(1.5f);
                 return false;

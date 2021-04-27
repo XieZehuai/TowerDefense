@@ -4,6 +4,9 @@ using UnityEngine.EventSystems;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 游戏内所有炮塔的基类
+    /// </summary>
     [SelectionBase]
     public abstract class Tower : PoolObject
     {
@@ -47,7 +50,6 @@ namespace TowerDefense
 
         public override void OnSpawn()
         {
-            //attackRangeEffect = ObjectPool.Spawn<Particle>("TowerAttackRangeEffect", transform.localPosition);
             attackRangeEffect = ObjectPool.Spawn<Particle>(Res.TowerAttackRangeEffectPrefab, transform.localPosition);
             attackRangeEffect.Stop();
         }
@@ -63,20 +65,31 @@ namespace TowerDefense
             Y = y;
         }
 
-        public void ShowAttackRange(float attackRange)
+        /// <summary>
+        /// 显示攻击范围
+        /// </summary>
+        /// <param name="radius">攻击范围的半径</param>
+        public void ShowAttackRange(float radius)
         {
-            attackRangeEffect.SetFloat("AttackRange", attackRange);
+            attackRangeEffect.SetFloat("AttackRange", radius);
             attackRangeEffect.Replay();
         }
 
+        /// <summary>
+        /// 隐藏攻击范围
+        /// </summary>
         public void HideAttackRange()
         {
             attackRangeEffect.Stop();
         }
 
+        /// <summary>
+        /// 升级炮塔
+        /// </summary>
         public void Upgrade()
         {
-            var result = CanUpgrade();
+            (bool, int) result = CanUpgrade();
+
             if (result.Item1)
             {
                 data.LevelUp();
@@ -85,6 +98,10 @@ namespace TowerDefense
             }
         }
 
+        /// <summary>
+        /// 判断炮塔是否可以升级
+        /// </summary>
+        /// <returns>返回一个二元组，第一个数据是是否可以升级，第二个数据是升级需要的金币</returns>
         public (bool, int) CanUpgrade()
         {
             int cost = data.GetNextLevelCost();
@@ -92,12 +109,19 @@ namespace TowerDefense
             return (cost != -1 && Manager.Coins >= cost, cost);
         }
 
+        /// <summary>
+        /// 卖出炮塔
+        /// </summary>
         public void Sell()
         {
             Manager.Coins += GetSellPrice();
             Manager.TowerManager.RemoveTower(this);
         }
 
+        /// <summary>
+        /// 计算卖出炮塔能获得的金币
+        /// </summary>
+        /// <returns></returns>
         public int GetSellPrice()
         {
             return data.GetTotalCost() / 2;
@@ -150,6 +174,9 @@ namespace TowerDefense
             return true;
         }
 
+        /// <summary>
+        /// 根据炮塔的等级设置炮塔的缩放
+        /// </summary>
         private void SetModelScale()
         {
             model.localScale = (0.2f * data.Level + 0.4f) * Vector3.one;
@@ -157,9 +184,14 @@ namespace TowerDefense
 
         private void OnMouseDown()
         {
+            if (UIManager.Instance.IsMouseOverUI) return;
+
             OnSelected();
         }
 
+        /// <summary>
+        /// 选中炮塔
+        /// </summary>
         private void OnSelected()
         {
             ShowAttackRange(data.LevelData.attackRange);

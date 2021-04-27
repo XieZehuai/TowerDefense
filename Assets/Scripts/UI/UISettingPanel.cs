@@ -16,6 +16,12 @@ namespace TowerDefense
             musicVolumeSlider.onValueChanged.AddListener(OnMusicSliderValueChanged);
         }
 
+        protected override void OnOpen()
+        {
+            audioVolumeSlider.value = AudioManager.Instance.AudioVolume;
+            musicVolumeSlider.value = AudioManager.Instance.MusicVolume;
+        }
+
         protected override void OnClose()
         {
             closeBtn.onClick.RemoveAllListeners();

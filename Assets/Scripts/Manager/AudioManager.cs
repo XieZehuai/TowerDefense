@@ -19,9 +19,12 @@ namespace TowerDefense
 
         protected override void OnInit()
         {
-            IsAudioOn = true;
-            IsMusicOn = true;
-            AudioVolume = 1f;
+            float audioVolume = PlayerPrefs.GetFloat("AudioVolume", 1f);
+            float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+            SetAudioVolume(audioVolume);
+            SetMusicVolume(musicVolume);
+            TurnOnAudio();
+            TurnOnMusic();
         }
 
         public void TurnOnAudio()
@@ -58,12 +61,14 @@ namespace TowerDefense
         public void SetAudioVolume(float volume)
         {
             AudioVolume = Mathf.Clamp01(volume);
+            PlayerPrefs.SetFloat("AudioVolume", AudioVolume);
         }
 
         public void SetMusicVolume(float volume)
         {
             MusicVolume = Mathf.Clamp01(volume);
-            bgmPlayer.volume = AudioVolume;
+            bgmPlayer.volume = MusicVolume;
+            PlayerPrefs.SetFloat("MusicVolume", MusicVolume);
         }
 
         public void Play(Vector3 pos, string clipName)
