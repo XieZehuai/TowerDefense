@@ -11,6 +11,7 @@ namespace TowerDefense
     [Serializable]
     public class EnemySequence
     {
+        // 为方便在编辑器里配置，用一个枚举代替敌人的ID
         public enum EnemyType
         {
             Light_1,
@@ -24,7 +25,7 @@ namespace TowerDefense
             Heavy_3,
         }
 
-        public EnemyType enemyType; // 敌人ID
+        public EnemyType enemyType; // 敌人的类型，取int值就是敌人的ID
         public int count; // 数量
         public float interval; // 敌人的生成间隔
     }

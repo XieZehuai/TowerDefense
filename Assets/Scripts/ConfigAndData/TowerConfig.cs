@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 炮塔的攻击类型
+    /// </summary>
     public enum AttackType
     {
         MachineGun, // 普通机枪
@@ -14,6 +17,9 @@ namespace TowerDefense
     }
 
 
+    /// <summary>
+    /// 炮塔的等级数据
+    /// </summary>
     [Serializable]
     public struct TowerLevelData
     {
@@ -22,21 +28,30 @@ namespace TowerDefense
         public float attackDuration;
         public float damage;
         public float shellBlastRadius;
-        public float decelerationDuration;
-        public float decelerationRate;
+        public float decelerateDuration;
+        public float decelerateRate;
     }
 
 
+    /// <summary>
+    /// 炮塔数据
+    /// </summary>
     [Serializable]
     public struct TowerData
     {
-        public int id;
-        public string name;
-        public AttackType attackType;
-        public TowerLevelData[] levelDatas;
+        public int id; // 炮塔的ID
+        public string name; // 炮塔的名称
+        public AttackType attackType; // 炮塔的攻击类型
+        public TowerLevelData[] levelDatas; // 炮塔每个等级的数据
 
+        /// <summary>
+        /// 炮塔当前的等级
+        /// </summary>
         public int Level { get; private set; }
 
+        /// <summary>
+        /// 炮塔当前等级的数据
+        /// </summary>
         public TowerLevelData LevelData { get; private set; }
 
         public void Init()
@@ -93,6 +108,11 @@ namespace TowerDefense
 
         private Dictionary<int, TowerData> config;
 
+        /// <summary>
+        /// 根据ID获取炮塔数据
+        /// </summary>
+        /// <param name="id">炮塔的ID</param>
+        /// <returns>炮塔的数据</returns>
         public TowerData GetTowerData(int id)
         {
             if (config == null)
@@ -108,6 +128,11 @@ namespace TowerDefense
             return config[id];
         }
 
+        /// <summary>
+        /// 根据炮塔名称获取炮塔数据
+        /// </summary>
+        /// <param name="name">炮塔的名称</param>
+        /// <returns>炮塔的数据</returns>
         public TowerData GetTowerData(string name)
         {
             if (config == null)
@@ -115,15 +140,7 @@ namespace TowerDefense
                 config = GetTowerConfig();
             }
 
-            return config.Values.First(data =>
-            {
-                if (data.name == name)
-                {
-                    return true;
-                }
-
-                return false;
-            });
+            return config.Values.First(data => data.name == name);
         }
 
         private Dictionary<int, TowerData> GetTowerConfig()

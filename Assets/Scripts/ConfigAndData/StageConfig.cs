@@ -15,19 +15,11 @@ namespace TowerDefense
         /// <summary>
         /// 初始血量
         /// </summary>
-        public int maxHp;
+        public int hp;
         /// <summary>
         /// 初始金币
         /// </summary>
         public int coins;
-        /// <summary>
-        /// 每一波的生成间隔
-        /// </summary>
-        public float waveInterval;
-        /// <summary>
-        /// 每一波敌人的配置
-        /// </summary>
-        public WaveConfig[] waveDatas = default;
         /// <summary>
         /// 一星评分需要剩余血量
         /// </summary>
@@ -40,7 +32,20 @@ namespace TowerDefense
         /// 三星评分需要剩余血量
         /// </summary>
         public int threeStarHp;
+        /// <summary>
+        /// 每一波的生成间隔
+        /// </summary>
+        public float waveInterval;
+        /// <summary>
+        /// 每一波敌人的配置
+        /// </summary>
+        public WaveConfig[] waveDatas = default;
 
+        /// <summary>
+        /// 计算关卡的评分
+        /// </summary>
+        /// <param name="hp">剩余血量</param>
+        /// <returns>关卡评分</returns>
         public int GetScore(int hp)
         {
             if (hp >= threeStarHp) return 3;

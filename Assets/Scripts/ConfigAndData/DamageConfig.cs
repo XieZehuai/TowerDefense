@@ -81,6 +81,7 @@ namespace TowerDefense
             throw new ArgumentOutOfRangeException("找不到对应的克制关系" + attackType + " " + armorType);
         }
 
+        // 获取伤害配置表
         private Dictionary<AttackType, Dictionary<ArmorType, float>> CreateDamageConfig()
         {
             Dictionary<AttackType, Dictionary<ArmorType, float>> dic = new Dictionary<AttackType, Dictionary<ArmorType, float>>();
@@ -98,6 +99,7 @@ namespace TowerDefense
             return dic;
         }
 
+        // 获取攻击优先级配置表
         private Dictionary<AttackType, List<ArmorType>> CreateRestraintTable()
         {
             if (config == null)

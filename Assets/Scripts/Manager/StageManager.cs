@@ -86,7 +86,7 @@ namespace TowerDefense
         {
             // 设置关卡数据
             StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Instance.Data.CurrentStage); // 获取关卡数据
-            hp = StageConfig.maxHp;
+            hp = StageConfig.hp;
             coins = StageConfig.coins;
 
             // 初始化子管理器
@@ -183,7 +183,7 @@ namespace TowerDefense
         public void Replay()
         {
             state = State.Preparing;
-            HP = StageConfig.maxHp;
+            HP = StageConfig.hp;
             Coins = StageConfig.coins;
             IsSpeedUp = false;
 

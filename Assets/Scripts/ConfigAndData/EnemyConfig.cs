@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 敌人的护甲类型
+    /// </summary>
     public enum ArmorType
     {
         Light, // 轻甲
@@ -13,6 +16,9 @@ namespace TowerDefense
     }
 
 
+    /// <summary>
+    /// 敌人的数据
+    /// </summary>
     [Serializable]
     public class EnemyData
     {
@@ -23,7 +29,6 @@ namespace TowerDefense
         public float hp; // 生命值
         public float speed; // 移动速度
         public ArmorType armorType; // 护甲类型
-        public float spawnInterval; // 生成延迟
     }
 
 
@@ -34,6 +39,11 @@ namespace TowerDefense
 
         private Dictionary<int, EnemyData> config;
 
+        /// <summary>
+        /// 根据ID获取敌人的数据
+        /// </summary>
+        /// <param name="id">敌人的ID</param>
+        /// <returns>获取到的敌人数据，获取失败返回null</returns>
         public EnemyData GetEnemyData(int id)
         {
             if (config == null)
@@ -50,6 +60,11 @@ namespace TowerDefense
             return config[id];
         }
 
+        /// <summary>
+        /// 根据敌人名称获取敌人数据
+        /// </summary>
+        /// <param name="name">敌人的名称</param>
+        /// <returns>获取到的敌人数据，获取失败返回null</returns>
         public EnemyData GetEnemyData(string name)
         {
             if (config == null)
@@ -60,6 +75,9 @@ namespace TowerDefense
             return config.Values.First(data => data.name == name);
         }
 
+        /// <summary>
+        /// 随机获取敌人数据
+        /// </summary>
         public EnemyData RandomData()
         {
             if (config == null)
@@ -71,6 +89,7 @@ namespace TowerDefense
             return config[id];
         }
 
+        // 获取敌人数据配置表
         private Dictionary<int, EnemyData> GetEnemyConfig()
         {
             Dictionary<int, EnemyData> dic = new Dictionary<int, EnemyData>();

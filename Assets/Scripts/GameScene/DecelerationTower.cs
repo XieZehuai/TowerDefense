@@ -38,7 +38,7 @@ namespace TowerDefense
         {
             Enemy.AttackAll(transform.localPosition, Data.LevelData.attackRange, enemy =>
             {
-                enemy.Decelerate(Data.LevelData.decelerationDuration, Data.LevelData.decelerationRate);
+                enemy.Decelerate(Data.LevelData.decelerateDuration, Data.LevelData.decelerateRate);
             });
 
             //Particle particle = ObjectPool.Spawn<Particle>("DecelerateWave_1_Effect", transform.localPosition);

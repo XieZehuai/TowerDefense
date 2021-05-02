@@ -20,24 +20,24 @@ MonoBehaviour:
     - cost: 50
       attackRange: 2.5
       attackDuration: 0.1
-      damage: 7
+      damage: 10
       shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
+      decelerateDuration: 0
+      decelerateRate: 0
     - cost: 70
       attackRange: 3
       attackDuration: 0.1
-      damage: 10
+      damage: 13
       shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
+      decelerateDuration: 0
+      decelerateRate: 0
     - cost: 100
       attackRange: 3.5
       attackDuration: 0.1
-      damage: 14
+      damage: 18
       shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
+      decelerateDuration: 0
+      decelerateRate: 0
   - id: 1
     name: LaserTower
     attackType: 1
@@ -45,24 +45,24 @@ MonoBehaviour:
     - cost: 60
       attackRange: 2.5
       attackDuration: 0
-      damage: 100
+      damage: 130
       shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
-    - cost: 0
-      attackRange: 0
+      decelerateDuration: 0
+      decelerateRate: 0
+    - cost: 80
+      attackRange: 2.7
       attackDuration: 0
-      damage: 0
+      damage: 160
       shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
-    - cost: 0
-      attackRange: 0
+      decelerateDuration: 0
+      decelerateRate: 0
+    - cost: 110
+      attackRange: 3
       attackDuration: 0
-      damage: 0
+      damage: 200
       shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
+      decelerateDuration: 0
+      decelerateRate: 0
   - id: 2
     name: CannonTower
     attackType: 2
@@ -70,25 +70,46 @@ MonoBehaviour:
     - cost: 100
       attackRange: 3
       attackDuration: 3
-      damage: 150
+      damage: 250
       shellBlastRadius: 1
-      decelerationDuration: 0
-      decelerationRate: 0
-    - cost: 0
-      attackRange: 0
-      attackDuration: 0
-      damage: 0
-      shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
-    - cost: 0
-      attackRange: 0
-      attackDuration: 0
-      damage: 0
-      shellBlastRadius: 0
-      decelerationDuration: 0
-      decelerationRate: 0
+      decelerateDuration: 0
+      decelerateRate: 0
+    - cost: 130
+      attackRange: 3.5
+      attackDuration: 2.7
+      damage: 300
+      shellBlastRadius: 1
+      decelerateDuration: 0
+      decelerateRate: 0
+    - cost: 160
+      attackRange: 4
+      attackDuration: 2.5
+      damage: 350
+      shellBlastRadius: 1
+      decelerateDuration: 0
+      decelerateRate: 0
   - id: 3
     name: DecelerationTower
     attackType: 3
-    levelDatas: []
+    levelDatas:
+    - cost: 80
+      attackRange: 3
+      attackDuration: 3
+      damage: 0
+      shellBlastRadius: 0
+      decelerateDuration: 2
+      decelerateRate: 0.7
+    - cost: 100
+      attackRange: 3
+      attackDuration: 2.5
+      damage: 0
+      shellBlastRadius: 0
+      decelerateDuration: 2
+      decelerateRate: 0.6
+    - cost: 120
+      attackRange: 3
+      attackDuration: 2
+      damage: 0
+      shellBlastRadius: 0
+      decelerateDuration: 2
+      decelerateRate: 0.5

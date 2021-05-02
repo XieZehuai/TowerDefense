@@ -24,7 +24,7 @@ namespace TowerDefense
         {
             manager = data.manager;
 
-            maxHp = manager.StageConfig.maxHp;
+            maxHp = manager.StageConfig.hp;
             coins = manager.StageConfig.coins;
             maxWaves = manager.StageConfig.waveDatas.Length;
 
