@@ -4,9 +4,13 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 管理玩家的数据
+    /// </summary>
     public class PlayerManager : Singleton<PlayerManager>
     {
-        #region 玩家数据类
+        #region 玩家数据
+
         /// <summary>
         /// 玩家数据
         /// </summary>
@@ -15,34 +19,39 @@ namespace TowerDefense
             /// <summary>
             /// 当前正在玩的关卡
             /// </summary>
-            public int CurrentStage { get; set; }
+            public int currentStage;
 
             /// <summary>
             /// 玩家已解锁的最大关卡
             /// </summary>
-            public int ReachStage { get; set; }
+            public int reachStage;
 
             /// <summary>
             /// 每一个关卡的评分
             /// </summary>
-            public List<int> StageData { get; set; }
+            public List<int> stageData;
 
             /// <summary>
             /// 游戏内的最大关卡数量
             /// </summary>
-            public int MaxStage => StageData.Count;
+            public int MaxStage => stageData.Count;
 
             public PlayerData(int currentStage, int reachStage, List<int> stageData)
             {
-                CurrentStage = currentStage;
-                ReachStage = reachStage;
-                StageData = stageData;
+                this.currentStage = currentStage;
+                this.reachStage = reachStage;
+                this.stageData = stageData;
             }
         }
+
         #endregion
 
 
         private PlayerData data;
+
+        /// <summary>
+        /// 玩家数据
+        /// </summary>
         public PlayerData Data => data;
 
         protected override void OnInit()
@@ -56,23 +65,21 @@ namespace TowerDefense
         /// <param name="starCount">关卡评分</param>
         public void StageSuccess(int starCount)
         {
-            if (starCount > GetStageStar(data.CurrentStage))
+            if (starCount > GetStageStar(data.currentStage))
             {
-                SetStageStar(data.CurrentStage, starCount);
+                SetStageStar(data.currentStage, starCount);
             }
 
             // 如果当前通过的关卡是已解锁的最大关卡，就解锁下一关
-            if (data.CurrentStage == data.ReachStage)
+            if (data.currentStage == data.reachStage)
             {
-                data.ReachStage++;
+                data.reachStage++;
                 // 解锁的关卡超过的最大关卡数，添加一个新关卡的数据
-                if (data.ReachStage > data.MaxStage)
+                if (data.reachStage > data.MaxStage)
                 {
                     Debug.Log("抵达最大关卡数");
-                    data.StageData.Add(0);
+                    data.stageData.Add(0);
                 }
-
-                // 更新完后保存数据
             }
 
             SavePlayerData();
@@ -84,13 +91,13 @@ namespace TowerDefense
         /// <param name="stage">目标关卡数</param>
         public void ChangeCurrentStage(int stage)
         {
-            if (stage > data.ReachStage)
+            if (stage > data.reachStage)
             {
                 Debug.LogError("当前关卡还没解锁: " + stage);
             }
             else
             {
-                data.CurrentStage = stage;
+                data.currentStage = stage;
             }
         }
 
@@ -99,7 +106,7 @@ namespace TowerDefense
         /// </summary>
         public void NextStage()
         {
-            data.CurrentStage++;
+            data.currentStage++;
             SavePlayerData();
         }
 
@@ -110,7 +117,7 @@ namespace TowerDefense
         /// <returns>关卡评分</returns>
         public int GetStageStar(int stage)
         {
-            return data.StageData[stage - 1];
+            return data.stageData[stage - 1];
         }
 
         /// <summary>
@@ -120,7 +127,7 @@ namespace TowerDefense
         /// <param name="starCount">关卡评分</param>
         public void SetStageStar(int stage, int starCount)
         {
-            data.StageData[stage - 1] = starCount;
+            data.stageData[stage - 1] = starCount;
         }
 
         /// <summary>
@@ -136,13 +143,13 @@ namespace TowerDefense
 
             using (var writer = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
-                writer.Write(data.CurrentStage);
-                writer.Write(data.ReachStage);
+                writer.Write(data.currentStage);
+                writer.Write(data.reachStage);
                 writer.Write(data.MaxStage);
 
                 for (int i = 0; i < data.MaxStage; i++)
                 {
-                    writer.Write(data.StageData[i]);
+                    writer.Write(data.stageData[i]);
                 }
             }
         }

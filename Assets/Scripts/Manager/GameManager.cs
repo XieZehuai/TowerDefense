@@ -1,15 +1,13 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 
-namespace TowerDefense
-{
-    // TODO:    音效管理、设置界面、玩家数据增加每关的评分
-    // TODO:    多个关卡、所有炮塔数据、点击炮塔类型后显示炮塔模型
-    // BUG:     
-    // DOING:   成功结算界面，玩家数据管理、失败结算界面、章节选择界面、加速模式
+// TODO:    点击炮塔类型后显示炮塔模型
+// BUG:    
 
+namespace TowerDefense
+{ 
     /// <summary>
-    /// 游戏管理器
+    /// 游戏主管理器，管理整个游戏的配置以及流程
     /// </summary>
     public class GameManager : MonoSingleton<GameManager>
     {
@@ -43,15 +41,6 @@ namespace TowerDefense
         }
 
         /// <summary>
-        /// 加载游戏场景
-        /// </summary>
-        public void LoadGameScene()
-        {
-            UIManager.Instance.CloseAll();
-            SceneManager.LoadScene("GameScene");
-        }
-
-        /// <summary>
         /// 加载主场景
         /// </summary>
         public void LoadMainScene()
@@ -59,6 +48,46 @@ namespace TowerDefense
             UIManager.Instance.CloseAll();
             SceneManager.LoadScene("MainScene");
             UIManager.Instance.Open<UIMainScene>();
+        }
+
+        /// <summary>
+        /// 加载关卡
+        /// </summary>
+        /// <param name="stage">关卡数</param>
+        public void LoadStage(int stage)
+        {
+            PlayerManager.Instance.ChangeCurrentStage(stage);
+            LoadGameScene();
+        }
+
+        /// <summary>
+        /// 加载下一关
+        /// </summary>
+        public void LoadNextStage()
+        {
+            PlayerManager.Instance.NextStage();
+            LoadGameScene();
+        }
+
+        /// <summary>
+        /// 退出游戏
+        /// </summary>
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+        /// <summary>
+        /// 加载游戏场景
+        /// </summary>
+        private void LoadGameScene()
+        {
+            UIManager.Instance.CloseAll();
+            SceneManager.LoadScene("GameScene");
         }
 
         /// <summary>

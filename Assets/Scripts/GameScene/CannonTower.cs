@@ -73,7 +73,7 @@ namespace TowerDefense
             turret.localRotation = Quaternion.LookRotation(rot);
 
             Vector3 velocity = new Vector3(s * cosTheta * dir.x, s * sinTheta, s * cosTheta * dir.y);
-            warEntityManager.LaunchShell(Data.LevelData.shellBlastRadius, Data.LevelData.damage, shootPos, targetPos, velocity);
+            Manager.WarEntityManager.LaunchShell(Data.LevelData.shellBlastRadius, Data.LevelData.damage, shootPos, targetPos, velocity);
         }
     }
 }

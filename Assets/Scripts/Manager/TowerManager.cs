@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 管理关卡场景内所有炮塔相关的操作
+    /// </summary>
     public class TowerManager : SubStageManager
     {
         private readonly List<Tower> towers = new List<Tower>();
@@ -32,7 +35,7 @@ namespace TowerDefense
             {
                 if (manager.MapManager.TryPlaceTower(position, out int x, out int y, out Vector3 towerPos))
                 {
-                    Tower tower = CreateTower(towerId, towerPos);
+                    Tower tower = CreateTower(data.name, towerPos);
                     tower.Data = data;
                     tower.SetCoordinate(x, y);
                     towers.Add(tower);
@@ -44,44 +47,24 @@ namespace TowerDefense
             return false;
         }
 
-        private Tower CreateTower(int towerId, Vector3 towerPos)
+        /// <summary>
+        /// 加载炮塔
+        /// </summary>
+        /// <param name="towerName">炮塔的名称</param>
+        /// <param name="towerPos">炮塔要实例化的位置</param>
+        /// <returns>加载的炮塔</returns>
+        private Tower CreateTower(string towerName, Vector3 towerPos)
         {
-            Tower tower = null;
-
-            switch (towerId)
-            {
-                case 0:
-                    //tower = ObjectPool.Spawn<MachineGunTower>("MachineGunTower", towerPos);
-                    tower = ObjectPool.Spawn<MachineGunTower>(Res.MachineGunTowerPrefab, towerPos);
-                    break;
-
-                case 1:
-                    //tower = ObjectPool.Spawn<LaserTower>("LaserTower", towerPos);
-                    tower = ObjectPool.Spawn<LaserTower>(Res.LaserTowerPrefab, towerPos);
-                    break;
-
-                case 2:
-                    //tower = ObjectPool.Spawn<CannonTower>("CannonTower", towerPos)
-                    //    .SetWarEntityManager(manager.WarEntityManager);
-                    tower = ObjectPool.Spawn<CannonTower>(Res.CannonTowerPrefab, towerPos)
-                        .SetWarEntityManager(manager.WarEntityManager);
-                    break;
-
-                case 3:
-                    //tower = ObjectPool.Spawn<DecelerationTower>("DecelerationTower", towerPos);
-                    tower = ObjectPool.Spawn<DecelerationTower>(Res.DecelerationTowerPrefab, towerPos);
-                    break;
-
-                default:
-                    Debug.LogError("没有ID为" + towerId + "的炮塔");
-                    break;
-            }
-
+            Tower tower = ObjectPool.Spawn<Tower>(towerName + "Prefab", towerPos);
             tower.Manager = manager;
 
             return tower;
         }
 
+        /// <summary>
+        /// 移除炮塔
+        /// </summary>
+        /// <param name="tower">要移除的炮塔</param>
         public void RemoveTower(Tower tower)
         {
             manager.MapManager.RemoveTower(tower.X, tower.Y);
@@ -94,10 +77,11 @@ namespace TowerDefense
             if (towers.Count == 0) return;
 
             manager.MapManager.RemoveAllTower();
-            ObjectPool.UnspawnAll("MachineGunTower");
-            ObjectPool.UnspawnAll("LaserTower");
-            ObjectPool.UnspawnAll("CannonTower");
-            ObjectPool.UnspawnAll("DecelerationTower");
+
+            for (int i = 0; i < towers.Count; i++)
+            {
+                ObjectPool.Unspawn(towers[i]);
+            }
             towers.Clear();
         }
 

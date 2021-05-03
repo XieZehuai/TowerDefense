@@ -10,7 +10,6 @@ namespace TowerDefense
 
         protected override bool FindPath(Vector2Int startPos, Vector2Int endPos, ref List<Vector2Int> path)
         {
-            int cnt = 0;
             List<PathNode> openList = new List<PathNode>();
             HashSet<PathNode> closeList = new HashSet<PathNode>();
 
@@ -23,13 +22,6 @@ namespace TowerDefense
             openList.Add(start);
             while (openList.Count > 0)
             {
-                cnt++;
-                if (cnt > 10000)
-                {
-                    Debug.Log("cnt > 10000");
-                    break;
-                }
-
                 PathNode currentNode = openList[0];
                 for (int i = 1; i < openList.Count; i++)
                 {

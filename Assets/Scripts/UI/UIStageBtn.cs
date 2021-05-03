@@ -17,7 +17,7 @@ namespace TowerDefense
 
         protected override void OnInstantiate()
         {
-            button.onClick.AddListener(ChangeStage);
+            button.onClick.AddListener(SelectStage);
         }
         
         /// <summary>
@@ -29,7 +29,7 @@ namespace TowerDefense
         {
             this.stage = stage;
             text.text = $"第 {stage} 关";
-            button.interactable = stage <= PlayerManager.Instance.Data.ReachStage;
+            button.interactable = stage <= PlayerManager.Instance.Data.reachStage;
 
             for (int i = 0; i < starImages.Length; i++)
             {
@@ -42,10 +42,9 @@ namespace TowerDefense
             button.onClick.RemoveAllListeners();
         }
 
-        private void ChangeStage()
+        private void SelectStage()
         {
-            PlayerManager.Instance.ChangeCurrentStage(stage);
-            GameManager.Instance.LoadGameScene();
+            GameManager.Instance.LoadStage(stage);
         }
     }
 }

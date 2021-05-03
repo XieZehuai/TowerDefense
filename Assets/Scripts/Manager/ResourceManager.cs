@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 管理所有资源的加载
+    /// </summary>
     public static class ResourceManager
     {
         /// <summary>

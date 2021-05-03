@@ -2,6 +2,9 @@
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// StageManager的子管理器，实现关卡管理模块的部分功能
+    /// </summary>
     public abstract class SubStageManager : IDisposable
     {
         protected StageManager manager;

@@ -29,16 +29,15 @@ namespace TowerDefense
         private State state = State.Preparing; // 当前游戏的状态
         private State stateTemp; // 在暂停时保存原状态，继续游戏后恢复原状态
 
-        #region 实现各种功能的子管理器
-
         private PathFinder pathFinder;
+
+        #region 实现各种功能的子管理器
         public InputManager InputManager { get; private set; }
         public MapManager MapManager { get; private set; }
         public EnemyManager EnemyManager { get; private set; }
         public TowerManager TowerManager { get; private set; }
         public WarEntityManager WarEntityManager { get; private set; }
         public PathIndicator PathIndicator { get; private set; }
-
         #endregion
 
         public bool IsPreparing => state == State.Preparing;
@@ -85,7 +84,7 @@ namespace TowerDefense
         private void Awake()
         {
             // 设置关卡数据
-            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Instance.Data.CurrentStage); // 获取关卡数据
+            StageConfig = GameManager.Instance.GetStageConfig(PlayerManager.Instance.Data.currentStage); // 获取关卡数据
             hp = StageConfig.hp;
             coins = StageConfig.coins;
 
@@ -107,10 +106,7 @@ namespace TowerDefense
             LoadMapData();
 
             // 打开游戏UI
-            UIManager.Instance.Open<UIGameScene>(new UIGameSceneData
-            {
-                manager = this
-            });
+            UIManager.Instance.Open<UIGameScene>(new UIGameSceneData { manager = this });
 
             // 设置相机的初始位置
             CameraController.Instance.ResetPosition();
@@ -119,9 +115,9 @@ namespace TowerDefense
         private void Update()
         {
             float deltaTime = Time.deltaTime;
-            if (IsSpeedUp) deltaTime *= 2f;
+            InputManager.OnUpdate(deltaTime); // 玩家输入不受加速或减速影响
 
-            InputManager.OnUpdate(deltaTime);
+            if (IsSpeedUp) deltaTime *= 2f; // 加速模式游戏速度变为原来的两倍
 
             if (IsPlaying)
             {
@@ -129,6 +125,11 @@ namespace TowerDefense
                 Physics.SyncTransforms(); // 敌人移动后把Transform信息同步到物理引擎，避免炮塔检测敌人出错
                 TowerManager.OnUpdate(deltaTime);
                 WarEntityManager.OnUpdate(deltaTime);
+
+                if (CheckGameOver())
+                {
+                    GameOver();
+                }
             }
         }
 
@@ -195,6 +196,15 @@ namespace TowerDefense
         }
 
         /// <summary>
+        /// 检查游戏是否结束
+        /// </summary>
+        public bool CheckGameOver()
+        {
+            // 游戏结束的条件是消灭了所有敌人或没有生命值
+            return EnemyManager.IsAllEnemyDestroy() || hp <= 0;
+        }
+
+        /// <summary>
         /// 游戏结束，进行结算
         /// </summary>
         public void GameOver()
@@ -207,7 +217,7 @@ namespace TowerDefense
                 PlayerManager.Instance.StageSuccess(starCount);
                 UIManager.Instance.Open<UIStageSuccess>(new UIStageSuccessData
                 {
-                    stage = PlayerManager.Instance.Data.CurrentStage,
+                    stage = PlayerManager.Instance.Data.currentStage,
                     starCount = starCount
                 });
             }
@@ -232,7 +242,7 @@ namespace TowerDefense
         public void SaveMapData()
         {
             Debug.Log("保存地图数据");
-            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Instance.Data.CurrentStage);
+            MapManager.SaveMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Instance.Data.currentStage);
         }
 
         /// <summary>
@@ -240,7 +250,8 @@ namespace TowerDefense
         /// </summary>
         public void LoadMapData()
         {
-            MapManager.LoadMapData(Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Instance.Data.CurrentStage);
+            string fileName = Utils.MAP_DATA_FILENAME_PREFIX + PlayerManager.Instance.Data.currentStage; // 获取当前关卡对应地图数据的文件名
+            MapManager.LoadMapData(fileName); // 根据文件名读取地图数据并生成地图
         }
 
         /// <summary>

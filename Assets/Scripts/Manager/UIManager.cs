@@ -5,6 +5,9 @@ using UnityEngine.EventSystems;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// UI面板的显示层级
+    /// </summary>
     public enum UILayer
     {
         Background,

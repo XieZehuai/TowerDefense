@@ -45,9 +45,9 @@ namespace TowerDefense
         /// 相机移动
         /// </summary>
         /// <param name="movement">XZ平面上的位移</param>
-        public void Move(Vector2 movement)
+        public void Move(float deltaTime, Vector2 movement)
         {
-            movement *= moveSpeed * Time.deltaTime;
+            movement *= moveSpeed * deltaTime;
             Vector3 forward = transform.forward;
             forward.y = 0f;
             forward.Normalize();
@@ -63,11 +63,11 @@ namespace TowerDefense
         /// </summary>
         /// <param name="x">水平方向上的旋转</param>
         /// <param name="y">垂直方向上的旋转</param>
-        public void Rotate(float x, float y)
+        public void Rotate(float deltaTime, float x, float y)
         {
             x *= horizontalSpeed;
             y *= verticalSpeed;
-            rotation += new Vector3(-y, x, 0f) * Time.deltaTime;
+            rotation += new Vector3(-y, x, 0f) * deltaTime;
             rotation.x = Mathf.Clamp(rotation.x, minAngle, maxAngle);
             transform.localRotation = Quaternion.Euler(rotation);
         }

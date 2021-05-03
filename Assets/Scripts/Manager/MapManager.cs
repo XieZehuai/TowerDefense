@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
+    /// <summary>
+    /// 管理关卡场景所有地图相关的操作
+    /// </summary>
     public class MapManager : SubStageManager
     {
         /// <summary>
@@ -30,7 +33,7 @@ namespace TowerDefense
         private PoolObject[,] models; // 地图格子模型
         private MapObject destination; // 目标点
 
-        // 记录摆放格子命令，实现撤销功能
+        // 每次修改地图后记录反向操作，实现撤销操作的功能
         private readonly Stack<System.Action> commandBuffer = new Stack<System.Action>();
 
         public MapManager(StageManager stageManager) : base(stageManager)
@@ -40,8 +43,13 @@ namespace TowerDefense
 
         #region 创建以及加载地图
 
-        // 创建默认地图数据
-        public void CreateMap(int width, int height, int cellSize)
+        /// <summary>
+        /// 创建只有一个出生点和一个目标点的空地图
+        /// </summary>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        /// <param name="cellSize">单元格大小</param>
+        private void CreateEmptyMap(int width, int height, int cellSize)
         {
             this.Width = width;
             this.Height = height;
@@ -52,11 +60,11 @@ namespace TowerDefense
             LoadMap();
         }
 
-        public void CreateMap(int width, int height, MapObjectType[] datas, int cellSize)
-        {
-            CreateMap(ToMapObjectData(width, height, datas), cellSize);
-        }
-
+        /// <summary>
+        /// 使用输入的地图数据创建地图
+        /// </summary>
+        /// <param name="data">地图数据</param>
+        /// <param name="cellSize">单元格大小</param>
         public void CreateMap(MapObject[,] data, int cellSize)
         {
             Width = data.GetLength(0);
@@ -66,21 +74,6 @@ namespace TowerDefense
             models = new PoolObject[Width, Height];
             Map = new Map(data, cellSize, new Vector3(-Width / 2f, 0f, -Height / 2f) * cellSize);
             LoadMap();
-        }
-
-        private MapObject[,] ToMapObjectData(int width, int height, MapObjectType[] datas)
-        {
-            MapObject[,] mapData = new MapObject[width, height];
-
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    mapData[x, y] = new MapObject(datas[x * height + y], x, y);
-                }
-            }
-
-            return mapData;
         }
 
         // 加载地图模型以及设置出生点和目标点
@@ -161,7 +154,7 @@ namespace TowerDefense
             else
             {
                 Debug.LogWarning("没有地图数据" + fileName);
-                CreateMap(20, 20, Utils.MAP_CELL_SIZE);
+                CreateEmptyMap(20, 20, Utils.MAP_CELL_SIZE);
                 SaveMapData(fileName);
             }
         }
@@ -248,11 +241,23 @@ namespace TowerDefense
 
         #region 格子相关功能
 
+        /// <summary>
+        /// 根据世界坐标获取格子的二维坐标
+        /// </summary>
+        /// <param name="worldPosition">世界坐标</param>
+        /// <param name="x">保存获得的坐标的X轴值</param>
+        /// <param name="y">保存获得的坐标的Y轴值</param>
+        /// <returns>获取成功或失败</returns>
         public bool GetGridPosition(Vector3 worldPosition, out int x, out int y)
         {
             return Map.GetGridPosition(worldPosition, out x, out y);
         }
 
+        /// <summary>
+        /// 获取格子的中心点的世界坐标
+        /// </summary>
+        /// <param name="pos">格子的坐标</param>
+        /// <returns>格子中心点的世界坐标</returns>
         public Vector3 GetCenterPosition(Vector2Int pos)
         {
             return GetCenterPosition(pos.x, pos.y);

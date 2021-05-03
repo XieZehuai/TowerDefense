@@ -4,22 +4,21 @@ using UnityEngine;
 namespace TowerDefense
 {
     /// <summary>
-    /// 管理所有敌人
+    /// 管理所有敌人相关的操作
     /// </summary>
     public class EnemyManager : SubStageManager
     {
-        // 关卡敌人数据
-        private readonly float waveInterval; // 每一波的间隔
-        private readonly WaveConfig[] waveDatas; // 每一波的数据
+        private readonly float waveInterval; // 每波敌人的生成间隔
+        private readonly WaveConfig[] waveDatas; // 每波敌人的配置
 
         private float spawnTimer = 0f; // 敌人生成计时器
         private float spawnInterval; // 下一个敌人的生成间隔
         private int currentWaveIndex; // 当前是第几波敌人
-        private int currentEnemySequenceCount; // 当前生成到第几个敌人
+        private int currentEnemySequenceCount; // 当前生成到敌人序列的第几个
         private bool isSpawning; // 是否正在生成敌人
         private bool isNextWave; // 是否开始生成下一波敌人
         private IEnumerator<EnemySequence> enumerator; // 当前这波敌人的枚举器
-        private List<Vector3>[] spawnPointPaths; // 从生成点到终点的所有路径
+        private List<Vector3>[] spawnPointPaths; // 所有出生点到目标点的路径
 
         public List<Enemy> Enemys { get; } = new List<Enemy>(); // 保存所有敌人的引用
 
@@ -32,7 +31,7 @@ namespace TowerDefense
         }
 
         /// <summary>
-        /// 设置所有出生点到终点的路径
+        /// 设置所有出生点到目标点的路径
         /// </summary>
         /// <param name="paths">路径</param>
         public void SetSpawnPointPaths(List<Vector2Int>[] paths)
@@ -77,9 +76,9 @@ namespace TowerDefense
 
         public override void OnUpdate(float deltaTime)
         {
-            if (isSpawning || isNextWave)
+            if (isSpawning || isNextWave) // 正在生成敌人
             {
-                spawnTimer += deltaTime;
+                spawnTimer += deltaTime; // 生成计时器计数
 
                 if (isSpawning && spawnTimer >= spawnInterval) // 生成敌人
                 {
@@ -179,19 +178,21 @@ namespace TowerDefense
             Enemys.Add(enemy);
         }
 
+        /// <summary>
+        /// 是否消灭了所有敌人
+        /// </summary>
+        public bool IsAllEnemyDestroy()
+        {
+            return Enemys.Count == 0 && !isSpawning && currentWaveIndex + 1 >= waveDatas.Length;
+        }
+
         // 执行所有敌人的更新逻辑
         private void UpdateEnemys(float deltaTime)
         {
             // 场景中敌人数量为空，判断是否需要生成下一波敌人并返回
             if (Enemys.Count == 0)
             {
-                isNextWave = !isSpawning && currentWaveIndex + 1 < waveDatas.Length;
-
-                if (!isSpawning && currentWaveIndex + 1 >= waveDatas.Length)
-                {
-                    manager.GameOver();
-                }
-
+                isNextWave = !isSpawning && currentWaveIndex + 1 < waveDatas.Length; // 判断是否还有下一波
                 return;
             }
 

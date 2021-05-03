@@ -47,8 +47,9 @@ namespace TowerDefense
 
         private void OnContinueBtnClick()
         {
-            PlayerManager.Instance.NextStage();
-            GameManager.Instance.LoadGameScene();
+            //PlayerManager.Instance.NextStage();
+            //GameManager.Instance.LoadGameScene();
+            GameManager.Instance.LoadNextStage();
         }
 
         private void OnExitBtnClick()
