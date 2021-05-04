@@ -81,6 +81,12 @@ namespace TowerDefense
             attackRangeEffect.Stop();
         }
 
+        public void LevelUp()
+        {
+            data.LevelUp();
+            SetModelScale();
+        }
+
         /// <summary>
         /// 升级炮塔
         /// </summary>

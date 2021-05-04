@@ -72,6 +72,23 @@ namespace TowerDefense
             towers.Remove(tower);
         }
 
+        public void UpgradeTower(Tower tower)
+        {
+            int cost = tower.Data.GetNextLevelCost();
+
+            if (cost != -1 && manager.Coins >= cost)
+            {
+                manager.Coins -= cost;
+                tower.LevelUp();
+            }
+        }
+
+        public void SellTower(Tower tower)
+        {
+            manager.Coins += tower.GetSellPrice();
+            RemoveTower(tower);
+        }
+
         public void Replay()
         {
             if (towers.Count == 0) return;

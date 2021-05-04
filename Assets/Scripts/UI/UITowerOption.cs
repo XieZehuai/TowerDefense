@@ -1,5 +1,4 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +7,7 @@ namespace TowerDefense
     public class UITowerOptionData : UIDataBase
     {
         public Tower tower;
+        public Vector3 towerPos;
     }
 
 
