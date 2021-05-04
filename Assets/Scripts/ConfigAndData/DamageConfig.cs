@@ -63,7 +63,7 @@ namespace TowerDefense
         /// <param name="attackType">攻击类型</param>
         /// <param name="armorType">护甲类型</param>
         /// <returns>优先级</returns>
-        public int GetArmorPriority(AttackType attackType, ArmorType armorType)
+        public int GetAttackPriority(AttackType attackType, ArmorType armorType)
         {
             if (restraintTable == null)
             {

@@ -6,11 +6,11 @@ namespace TowerDefense
 {
     public class Pool
     {
-        public string tag; // 池子的标签
-        public GameObject prefab; // 物体的预设
-        public readonly int capacity; // 最大容量
-        public HashSet<PoolObject> activeList = new HashSet<PoolObject>(); // 保存所有激活状态的对象（不可用）
-        public HashSet<PoolObject> inactiveList = new HashSet<PoolObject>(); // 保存所有非激活状态的对象（可用）
+        private string tag; // 池子的标签
+        private GameObject prefab; // 物体的预设
+        private readonly int capacity; // 最大容量
+        private HashSet<PoolObject> activeList = new HashSet<PoolObject>(); // 保存所有激活状态的对象（不可用）
+        private HashSet<PoolObject> inactiveList = new HashSet<PoolObject>(); // 保存所有非激活状态的对象（可用）
 
         public Pool(string tag, GameObject prefab, int capacity)
         {
@@ -41,17 +41,18 @@ namespace TowerDefense
 
         public T Spawn<T>(Vector3 pos, Quaternion rot, Vector3 scale, Transform parent) where T : PoolObject
         {
-            PoolObject obj = null;
-
+            T obj = null;
+            
             if (inactiveList.Count == 0 && activeList.Count < capacity)
             {
                 obj = Object.Instantiate(prefab, pos, rot, parent).GetComponent<T>();
-                obj.Instantiate(tag, true);
+                obj.Instantiate(tag);
             }
             else if (inactiveList.Count > 0)
             {
-                obj = inactiveList.First(); // 从可用列表中取出第一个
-                inactiveList.Remove(obj); // 从可用列表中移除
+                PoolObject temp = inactiveList.First(); // 从可用列表中取出第一个
+                obj = temp as T;
+                inactiveList.Remove(temp); // 从可用列表中移除
 
                 obj.gameObject.SetActive(true);
                 Transform transform = obj.transform;
@@ -67,7 +68,35 @@ namespace TowerDefense
                 activeList.Add(obj);
             }
 
-            return obj as T;
+            return obj;
+
+            // PoolObject obj = null;
+            //
+            // if (inactiveList.Count == 0 && activeList.Count < capacity)
+            // {
+            //     obj = Object.Instantiate(prefab, pos, rot, parent).GetComponent<T>();
+            //     obj.Instantiate(tag);
+            // }
+            // else if (inactiveList.Count > 0)
+            // {
+            //     obj = inactiveList.First(); // 从可用列表中取出第一个
+            //     inactiveList.Remove(obj); // 从可用列表中移除
+            //
+            //     obj.gameObject.SetActive(true);
+            //     Transform transform = obj.transform;
+            //     transform.SetParent(parent);
+            //     transform.localPosition = pos;
+            //     transform.localRotation = rot;
+            //     transform.localScale = scale;
+            // }
+            //
+            // if (obj != null)
+            // {
+            //     obj.OnSpawn();
+            //     activeList.Add(obj);
+            // }
+            //
+            // return obj as T;
         }
 
         public void Unspawn(PoolObject obj)

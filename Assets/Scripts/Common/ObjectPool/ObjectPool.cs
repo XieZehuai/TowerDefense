@@ -42,7 +42,6 @@ namespace TowerDefense
         {
             if (!ContainsPool(tag))
             {
-                //GameObject prefab = ResourceManager.Load<GameObject>(tag + "Prefab");
                 GameObject prefab = ResourceManager.Load<GameObject>(tag);
                 CreatePool(tag, prefab);
             }
@@ -108,7 +107,6 @@ namespace TowerDefense
         {
             if (!ContainsPool(tag))
             {
-                //GameObject prefab = ResourceManager.Load<GameObject>(tag + "Prefab");
                 GameObject prefab = ResourceManager.Load<GameObject>(tag);
                 CreatePool(tag, prefab);
             }

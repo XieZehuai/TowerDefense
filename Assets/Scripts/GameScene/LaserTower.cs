@@ -24,7 +24,7 @@ namespace TowerDefense
         {
             if (TrackTarget(ref target) || FindTarget(out target))
             {
-                Shoot(deltaTime);
+                Attack(deltaTime);
             }
             else
             {
@@ -37,7 +37,7 @@ namespace TowerDefense
             lineRenderer.SetPosition(1, laserOriginPos);
         }
 
-        private void Shoot(float deltaTime)
+        private void Attack(float deltaTime)
         {
             Vector3 pos = target.LocalPosition;
             pos.y = 0f;

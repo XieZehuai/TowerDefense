@@ -56,13 +56,13 @@ namespace TowerDefense
             // DamageConfig damageConfig = ConfigManager.Instance.DamageConfig;
             DamageConfig damageConfig = GameManager.Instance.DamageConfig;
 
-            int priority = damageConfig.GetArmorPriority(attackType, target.ArmorType);
+            int priority = damageConfig.GetAttackPriority(attackType, target.ArmorType);
             if (priority == 0) return target;
 
             for (int i = 1; i < TargetCount; i++)
             {
                 Enemy tempTarget = GetTarget(i);
-                int tempPriority = damageConfig.GetArmorPriority(attackType, tempTarget.ArmorType);
+                int tempPriority = damageConfig.GetAttackPriority(attackType, tempTarget.ArmorType);
 
                 if (tempPriority < priority)
                 {

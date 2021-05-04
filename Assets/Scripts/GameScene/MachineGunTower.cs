@@ -12,6 +12,7 @@ namespace TowerDefense
 
         private Enemy target;
         private float attackTimer;
+        private int counter;
 
         protected override void OnSetData()
         {
@@ -47,8 +48,6 @@ namespace TowerDefense
             pos += turret.position;
             turret.LookAt(pos);
         }
-
-        private int counter;
 
         private void Idle()
         {

@@ -49,7 +49,7 @@ namespace TowerDefense
         /// </summary>
         /// <param name="url">资源路径</param>
         /// <returns>资源内容</returns>
-        public static string GetFileContent(string url)
+        private static string GetFileContent(string url)
         {
             WWW www = new WWW(url);
 
