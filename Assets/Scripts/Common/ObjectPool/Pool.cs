@@ -69,34 +69,6 @@ namespace TowerDefense
             }
 
             return obj;
-
-            // PoolObject obj = null;
-            //
-            // if (inactiveList.Count == 0 && activeList.Count < capacity)
-            // {
-            //     obj = Object.Instantiate(prefab, pos, rot, parent).GetComponent<T>();
-            //     obj.Instantiate(tag);
-            // }
-            // else if (inactiveList.Count > 0)
-            // {
-            //     obj = inactiveList.First(); // 从可用列表中取出第一个
-            //     inactiveList.Remove(obj); // 从可用列表中移除
-            //
-            //     obj.gameObject.SetActive(true);
-            //     Transform transform = obj.transform;
-            //     transform.SetParent(parent);
-            //     transform.localPosition = pos;
-            //     transform.localRotation = rot;
-            //     transform.localScale = scale;
-            // }
-            //
-            // if (obj != null)
-            // {
-            //     obj.OnSpawn();
-            //     activeList.Add(obj);
-            // }
-            //
-            // return obj as T;
         }
 
         public void Unspawn(PoolObject obj)

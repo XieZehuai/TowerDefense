@@ -34,7 +34,7 @@ namespace TowerDefense.Test
                     mapDatas[x, y] = new MapObject(MapObjectType.Road, x, y);
                 }
             }
-            //SetWall();
+            SetWall();
 
             startPoints = new Vector2Int[startPointCount];
             for (int i = 0; i < startPointCount; i++)

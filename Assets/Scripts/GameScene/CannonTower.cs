@@ -7,8 +7,7 @@ namespace TowerDefense
         [SerializeField] private Transform turretBase = default;
         [SerializeField] private Transform turret = default;
         [SerializeField] private Transform attackPoint = default;
-
-        private WarEntityManager warEntityManager;
+        
         private float attackTimer;
         private float shootSpeed; // 炮弹初始发射速度
 
@@ -34,18 +33,6 @@ namespace TowerDefense
                     attackTimer = 0f;
                 }
             }
-        }
-
-        public override void OnUnspawn()
-        {
-            base.OnUnspawn();
-            warEntityManager = null;
-        }
-
-        public CannonTower SetWarEntityManager(WarEntityManager warEntityManager)
-        {
-            this.warEntityManager = warEntityManager;
-            return this;
         }
 
         private void Attack(Enemy target)

@@ -492,6 +492,29 @@ PrefabInstance:
       propertyPath: stage
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 994268176811265511, guid: 21e395f65f796224a93f3098b84fb03a,
+        type: 3}
+      propertyPath: stageConfigs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 994268176811265511, guid: 21e395f65f796224a93f3098b84fb03a,
+        type: 3}
+      propertyPath: stageConfigs.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ac3a083d2354b441a25f3d1f164958f,
+        type: 2}
+    - target: {fileID: 994268176811265511, guid: 21e395f65f796224a93f3098b84fb03a,
+        type: 3}
+      propertyPath: stageConfigs.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ac3a083d2354b441a25f3d1f164958f,
+        type: 2}
+    - target: {fileID: 994268176811265511, guid: 21e395f65f796224a93f3098b84fb03a,
+        type: 3}
+      propertyPath: stageConfigs.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ac3a083d2354b441a25f3d1f164958f,
+        type: 2}
     - target: {fileID: 6176174286920778636, guid: 21e395f65f796224a93f3098b84fb03a,
         type: 3}
       propertyPath: m_Name

@@ -11,7 +11,7 @@ namespace TowerDefense
 
         protected override void OnInit()
         {
-            int stageCount = PlayerManager.Instance.Data.MaxStage;
+            int stageCount = Mathf.Max(GameManager.Instance.MaxStageCount, PlayerManager.Instance.Data.MaxStage);
             btns = new UIStageBtn[stageCount];
 
             for (int i = 0; i < stageCount; i++)

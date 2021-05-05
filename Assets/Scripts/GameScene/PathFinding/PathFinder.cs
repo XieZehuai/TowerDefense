@@ -86,7 +86,7 @@ namespace TowerDefense
 
             if (showResult)
             {
-                Debug.Log(pathFindingStrategy.Name + " 寻路" + (success ? "成功" : "失败") +
+                Debug.Log(pathFindingStrategy.Name + " 寻路" + (success ? "成功，" : "失败，") +
                     "寻路时间：" + (Time.realtimeSinceStartup - startTime) * 1000f + "毫秒");
             }
 
